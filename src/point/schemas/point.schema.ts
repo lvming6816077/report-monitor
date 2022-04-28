@@ -6,7 +6,7 @@ export type PointDocument = Point & Document;
 @Schema({timestamps:{createdAt: 'create',updatedAt:'update'}})
 export class Point {
 
-    @Prop()
+    @Prop({unique:true})
     desc: string;
 
     @Prop()
