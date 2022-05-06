@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from 'mongoose';
+import { Document, Schema as _Schema} from 'mongoose';
+import { Tag } from "./tag.schema";
 
 export type PointDocument = Point & Document;
 
@@ -11,6 +12,9 @@ export class Point {
 
     @Prop()
     code: string;
+
+    @Prop({ type: _Schema.Types.ObjectId, ref: 'Tag',required:true })
+    tag: Tag;
 
     @Prop({ type: Date, default: Date.now })
     create: string;
