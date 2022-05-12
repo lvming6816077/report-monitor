@@ -9,8 +9,8 @@ export class ResponseTransformInterceptor implements NestInterceptor {
       map((data) => {
         return {
           data,
-          code: 200,
-          message: '请求成功',
+          code: 0,
+          message: 'success',
         };
       }),
     );

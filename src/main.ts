@@ -9,6 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule,{
     
   });
+  app.setGlobalPrefix('rapi');
   app.useGlobalPipes(new ValidationPipe({
     disableErrorMessages: false, // 不显示错误信息
     whitelist: false, // 开启过滤 多传字段不报错

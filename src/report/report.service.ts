@@ -29,7 +29,8 @@ export class ReportService {
     async findAllByCode(code: string, start: string, end: string,unit:number): Promise<Report[]> {
         const data: any[] = await this.pointService.findOneByCode(code)
         if (data.length) {
-            return await this.reportModel.aggregate([
+            // const result = []
+            const result = await this.reportModel.aggregate([
                 {
                     $match: {
                         $and: [{ point: data[0]._id }, { create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]
@@ -42,7 +43,7 @@ export class ReportService {
                             "year": { "$year": "$create" },
                             "month": { "$month": "$create" },
                             "day": { "$dayOfMonth": "$create" },
-                            "hour": { "$hour": {"date":"$create",timezone: "+08:00" }},
+                            "hour": { "$hour": {"date":"$create","timezone": "+08:00" }},
                             "minute": {
                                 "$subtract": [
                                     { "$minute": "$create" },
@@ -55,6 +56,13 @@ export class ReportService {
                 { "$group": { "_id": "$dateStr", "count": { "$sum": 1 } } },
                 { $sort: { "_id": 1 } }
             ]).exec()
+
+            return result.map(o=>{
+                return {
+                    ...o,
+                    desc:data[0].desc
+                }
+            })
         }
         throw new HttpException('point.code不存在', 500);
     }
