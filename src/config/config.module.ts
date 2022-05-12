@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
 import { WinstonConfigService } from './winston-config/winston-config.service';
+import { RedisInstanceService } from './redis-config/redis.service';
 // import { JwtConfigService } from './jwt-config/jwt-config.service';
 // import { JwtModule } from '@nestjs/jwt';
 // import { jwtConstants } from 'src/constants';
@@ -10,7 +11,7 @@ import { WinstonConfigService } from './winston-config/winston-config.service';
 import { join } from 'path';
 // import { TypeOrmConfigService } from 'src/config/typeorm-config/typeorm-config.service';
 // import { TypeOrmModule } from '@nestjs/typeorm';
-
+import { RedisModule} from 'nestjs-redis'
 @Global()
 @Module({
   imports: [
@@ -28,6 +29,12 @@ import { join } from 'path';
     //   ],
     // }),
     // PassportModule.register({ defaultStrategy: 'jwt' }),
+    RedisModule.register({
+        port: 6379,
+        host: '127.0.0.1',
+        password: '',
+        db: 0
+    }),
     WinstonModule.forRootAsync({
       useClass: WinstonConfigService,
     }),
@@ -36,7 +43,7 @@ import { join } from 'path';
     //   signOptions: { expiresIn: '10h' },
     // }),
   ],
-  providers: [/*JwtStrategy, JwtConfigService, */WinstonConfigService],
-  exports: [/*JwtConfigService,*/ WinstonConfigService],
+  providers: [/*JwtStrategy, JwtConfigService, */WinstonConfigService,RedisInstanceService],
+  exports: [/*JwtConfigService,*/ WinstonConfigService,RedisInstanceService],
 })
 export class ConfigModule {}

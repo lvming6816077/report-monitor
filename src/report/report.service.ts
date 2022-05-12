@@ -1,14 +1,23 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable,Inject } from "@nestjs/common";
 import { InjectModel } from '@nestjs/mongoose';
 import { Report, ReportDocument } from './schemas/report.schema';
 import { Model } from 'mongoose';
 import { PointService } from '../point/point.service';
 import { HttpException } from '@nestjs/common';
+import { RedisInstanceService } from "src/config/redis-config/redis.service";
 
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger  } from 'winston';
 
 @Injectable()
 export class ReportService {
-    constructor(@InjectModel(Report.name) private readonly reportModel: Model<ReportDocument>, private readonly pointService: PointService) { }
+    constructor(
+        @InjectModel(Report.name) private readonly reportModel: Model<ReportDocument>, 
+        private readonly pointService: PointService,
+        @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+        private redisService: RedisInstanceService) { 
+
+        }
 
     async findOne(id: string): Promise<Report> {
         return this.reportModel.findOne({ _id: id }).exec();
@@ -51,15 +60,24 @@ export class ReportService {
     }
 
     async create(code: string): Promise<Report> {
+
+        await this.redisService.lpush('report_monitor_ls', JSON.stringify({
+            code:code,
+            create:new Date()
+        }));
+        return 'success' as any
+
+    }
+    async createByTask(code: string,date:Date): Promise<Report> {
         const data: any = await this.pointService.findOneByCode(code)
 
         if (data.length) {
             return await this.reportModel.create({
                 point: data[0]._id,
+                create:date
             })
         }
-
-        throw new HttpException('point.code不存在', 500);
+        this.logger.error('point.code不存在:'+code)
 
     }
 

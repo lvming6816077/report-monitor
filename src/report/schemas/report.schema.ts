@@ -5,7 +5,8 @@ import { Point, PointSchema } from "../../point/schemas/point.schema";
 
 export type ReportDocument = Report & Document;
 
-@Schema({timestamps:{createdAt: 'create',updatedAt:'update'}})
+// @Schema({timestamps:{createdAt: 'create'}})
+@Schema()
 export class Report {
 
     @Prop({ type: _Schema.Types.ObjectId, ref: 'Point',required:true })
@@ -13,10 +14,6 @@ export class Report {
 
     @Prop({ type: Date, default: Date.now() })
     create: string;
-
-    @Prop({ type: Date, default: Date.now() })
-    update: string;
-
 }
 
 export const ReportSchema = SchemaFactory.createForClass(Report);

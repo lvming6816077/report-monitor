@@ -1,8 +1,9 @@
-import { Body, Controller, Query, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Query, Get, Param, Post, Injectable } from '@nestjs/common';
 import { ReportService } from './report.service';
 const parser = require('cron-parser');
 import { Report } from './schemas/report.schema';
 import * as moment from 'moment'
+
 
 const unit = 10// 分钟
 @Controller('report')
@@ -11,7 +12,7 @@ export class ReportController {
 
   @Get('create')
   async create(@Query() query:any) {
-    //   console.log(query)
+
       return await this.reportService.create(query.code);
   }
 
@@ -29,7 +30,7 @@ export class ReportController {
   }
 
   @Post('getReportsGroupToday')
-  async getReportsGroupToday(@Body() body): Promise<any> {
+  async getReportsGroupToday(@Body() body): Promise<unknown> {
     let codes:string[] = body.codes||[]
     let start:string = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss')
     let end:string = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss')
