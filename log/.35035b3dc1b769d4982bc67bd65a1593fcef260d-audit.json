@@ -6,14 +6,43 @@
     "auditLog": "log\\.35035b3dc1b769d4982bc67bd65a1593fcef260d-audit.json",
     "files": [
         {
+<<<<<<< HEAD
+=======
+            "date": 1650761675420,
+            "name": "log\\app-error-2022-04-24.log",
+            "hash": "205afa8c3a8d59c0897b90966a40147e"
+        },
+        {
+            "date": 1650847610694,
+            "name": "log\\app-error-2022-04-25.log",
+            "hash": "632edb6aa6f502f3f1232450360ba3be"
+        },
+        {
+            "date": 1651055150040,
+            "name": "log\\app-error-2022-04-27.log",
+            "hash": "dcb45ebe6aa120067c818ce623872bf1"
+        },
+        {
+            "date": 1651106752687,
+            "name": "log\\app-error-2022-04-28.log",
+            "hash": "5aca33721196dffc89c6b47d324be454"
+        },
+        {
+>>>>>>> e2f32501fe4fdfb0011b6f20b02dc9b3066131d2
             "date": 1651195448012,
             "name": "log\\app-error-2022-04-29.log",
             "hash": "a963b4181b3ffadbf9495eb86a92ddd5"
         },
         {
+<<<<<<< HEAD
             "date": 1652341228767,
             "name": "log\\app-error-2022-05-12.log",
             "hash": "ab545cebf624de01d65a899bf3c6eaee"
+=======
+            "date": 1651806799395,
+            "name": "log\\app-error-2022-05-06.log",
+            "hash": "fa21e9dfb407a02b4d00c0378acd0d36"
+>>>>>>> e2f32501fe4fdfb0011b6f20b02dc9b3066131d2
         }
     ],
     "hashType": "md5"
