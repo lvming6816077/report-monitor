@@ -8,7 +8,11 @@ import { RedisInstanceService } from "src/config/redis-config/redis.service";
 
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger  } from 'winston';
-
+import { Point } from "src/point/schemas/point.schema";
+export type resultVo = {
+    list?:Report[],
+    desc?:string
+};
 @Injectable()
 export class ReportService {
     constructor(
@@ -26,14 +30,15 @@ export class ReportService {
     async findAll(): Promise<Report[]> {
         return this.reportModel.find({}).exec();
     }
-    async findAllByCode(code: string, start: string, end: string,unit:number): Promise<Report[]> {
-        const data: any[] = await this.pointService.findOneByCode(code)
-        if (data.length) {
-            // const result = []
+
+
+    async findAllByCode(code: string, start: string, end: string,unit:number): Promise<resultVo> {
+        const data: Point = await this.pointService.findOneByCode(code)
+        if (data) {
             const result = await this.reportModel.aggregate([
                 {
                     $match: {
-                        $and: [{ point: data[0]._id }, { create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]
+                        $and: [{ point: (data as any)._id }, { create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]
                     }
                 },
                 {
@@ -57,12 +62,10 @@ export class ReportService {
                 { $sort: { "_id": 1 } }
             ]).exec()
 
-            return result.map(o=>{
-                return {
-                    ...o,
-                    desc:data[0].desc
-                }
-            })
+            return {
+                list: result,
+                desc:data.desc+'3'
+            }
         }
         throw new HttpException('point.code不存在', 500);
     }
@@ -76,7 +79,23 @@ export class ReportService {
         return 'success' as any
 
     }
-    async createByTask(code: string,date:Date): Promise<Report> {
+    async createByTask(): Promise<any> {
+        try {
+            let n = 10000// 每次定时任务最大次数
+            while(n > 0){
+                let res = await this.redisService.rpop('report_monitor_ls')
+    
+                if (res == null) break
+                res = JSON.parse(res)
+                this.createItem(res.code,res.create)
+                n--
+            }
+        }catch(e){
+            console.log(e)
+        }
+    }
+    private async createItem(code: string,date:Date): Promise<Report> {
+
         const data: any = await this.pointService.findOneByCode(code)
 
         if (data.length) {
@@ -88,6 +107,8 @@ export class ReportService {
         this.logger.error('point.code不存在:'+code)
 
     }
+
+
 
     /*async updateUser(userId: string, userUpdates: UpdateUserDto): Promise<User> {
         return this.usersRepository.findOneAndUpdate({ userId }, userUpdates);

@@ -37,8 +37,8 @@ export class PointService {
         }
         return result
     }
-    async findOneByCode(code:string): Promise<Point[]> {
-        return this.pointModel.find({code:code}).exec();
+    async findOneByCode(code:string): Promise<Point> {
+        return this.pointModel.findOne({code:code}).exec();
     }
 
     async createTag(desc:string): Promise<Tag> {

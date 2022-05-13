@@ -1,5 +1,5 @@
 import { Body, Controller, Query, Get, Param, Post, Injectable } from '@nestjs/common';
-import { ReportService } from './report.service';
+import { ReportService,resultVo } from './report.service';
 const parser = require('cron-parser');
 import { Report } from './schemas/report.schema';
 import * as moment from 'moment'
@@ -21,12 +21,12 @@ export class ReportController {
     return this.reportService.findAll();
   }
 
-  @Get('getReportsGroup')
-  async getReportsGroup(@Query() query: any): Promise<Report[]> {
-    let start: string = query.start, end: string = query.end
-    let data: any[] = await this.reportService.findAllByCode(query.code, start, end, unit);
+  @Post('getReportsGroup')
+  async getReportsGroup(@Body() body): Promise<Report[]> {
+    let start: string = body.start, end: string = body.end
+    let data: resultVo = await this.reportService.findAllByCode(body.code, start, end, unit);
 
-    return this.formatData(data, start, end)
+    return this.formatData(data.list, start, end)
   }
 
   @Post('getReportsGroupToday')
@@ -39,13 +39,13 @@ export class ReportController {
 
     for (let i = 0; i < codes.length; i++) {
 
-      let data: any[] = await this.reportService.findAllByCode(codes[i], start, end, unit);
-      
-      // console.log(data)
+      let data: resultVo = await this.reportService.findAllByCode(codes[i], start, end, unit);
+      console.log(data)
+
       res.push({
         code: codes[i],
-        desc:data[i].desc,
-        list: this.formatData(data, start, end)
+        desc:data.desc,
+        list: this.formatData(data.list, start, end)
       })
 
     }

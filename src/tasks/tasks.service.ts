@@ -2,13 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, Interval, Timeout } from '@nestjs/schedule';
 import { ReportService } from 'src/report/report.service';
 import { RedisInstanceService } from 'src/config/redis-config/redis.service';
-import { Redis } from 'ioredis';
+
 
 @Injectable()
 export class TasksService {
     constructor(
         private readonly reportService: ReportService,
-        private redisService: RedisInstanceService) { 
+        ) { 
 
         }
 
@@ -21,16 +21,8 @@ export class TasksService {
 
   @Interval(10000)
   async handleInterval() {
-    try {
-        let res = await this.redisService.rpop('report_monitor_ls')
 
-        if (res == null) return
-        res = JSON.parse(res)
-        this.reportService.createByTask(res.code,res.create)
-
-    }catch(e){
-        console.log(e)
-    }
+    this.reportService.createByTask()
     
   }
 
