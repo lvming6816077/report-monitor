@@ -8,7 +8,7 @@ import { RedisInstanceService } from "src/config/redis-config/redis.service";
 
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger  } from 'winston';
-import { Point } from "src/point/schemas/point.schema";
+import { Point,PointDocument } from "src/point/schemas/point.schema";
 export type resultVo = {
     list?:Report[],
     desc?:string
@@ -97,12 +97,12 @@ export class ReportService {
     }
     private async createItem(code: string,date:Date): Promise<Report> {
 
-        const data: any = await this.pointService.findOneByCode(code)
+        const data: Point = await this.pointService.findOneByCode(code)
         
         if (data) {
             
             const item = await this.reportModel.create({
-                point: data._id,
+                point: (data as any)._id,
                 create:date
             })
 

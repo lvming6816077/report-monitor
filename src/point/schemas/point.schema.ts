@@ -4,6 +4,12 @@ import { Tag } from "./tag.schema";
 
 export type PointDocument = Point & Document;
 
+// interface Point extends Document {
+
+//     _id: string;
+//     create?: string;
+// }
+
 @Schema({timestamps:{createdAt: 'create',updatedAt:'update'}})
 export class Point {
 

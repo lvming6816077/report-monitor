@@ -5,6 +5,8 @@ import { Point, PointSchema } from "../../point/schemas/point.schema";
 
 export type ReportDocument = Report & Document;
 
+
+
 // @Schema({timestamps:{createdAt: 'create'}})
 @Schema()
 export class Report {
