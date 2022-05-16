@@ -12,7 +12,7 @@ export class Report {
     @Prop({ type: _Schema.Types.ObjectId, ref: 'Point',required:true })
     point: Point;
 
-    @Prop({ type: Date, default: Date.now() })
+    @Prop({ type: Date, required:true })
     create: string;
 }
 

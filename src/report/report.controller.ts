@@ -20,7 +20,7 @@ export class ReportController {
   async getReports(): Promise<Report[]> {
     return this.reportService.findAll();
   }
-
+  
   @Post('getReportsGroup')
   async getReportsGroup(@Body() body): Promise<Report[]> {
     let start: string = body.start, end: string = body.end
