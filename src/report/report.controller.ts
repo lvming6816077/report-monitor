@@ -20,7 +20,7 @@ export class ReportController {
   async getReports(): Promise<Report[]> {
     return this.reportService.findAll();
   }
-  
+
   @Post('getReportsGroup')
   async getReportsGroup(@Body() body): Promise<Report[]> {
     let start: string = body.start, end: string = body.end
@@ -40,7 +40,6 @@ export class ReportController {
     for (let i = 0; i < codes.length; i++) {
 
       let data: resultVo = await this.reportService.findAllByCode(codes[i], start, end, unit);
-      console.log(data)
 
       res.push({
         code: codes[i],

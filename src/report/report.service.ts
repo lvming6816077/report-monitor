@@ -64,7 +64,7 @@ export class ReportService {
 
             return {
                 list: result,
-                desc:data.desc+'3'
+                desc:data.desc
             }
         }
         throw new HttpException('point.code不存在', 500);
@@ -80,11 +80,12 @@ export class ReportService {
 
     }
     async createByTask(): Promise<any> {
+
         try {
             let n = 10000// 每次定时任务最大次数
             while(n > 0){
                 let res = await this.redisService.rpop('report_monitor_ls')
-    
+
                 if (res == null) break
                 res = JSON.parse(res)
                 this.createItem(res.code,res.create)
@@ -97,12 +98,15 @@ export class ReportService {
     private async createItem(code: string,date:Date): Promise<Report> {
 
         const data: any = await this.pointService.findOneByCode(code)
-
-        if (data.length) {
-            return await this.reportModel.create({
-                point: data[0]._id,
+        
+        if (data) {
+            
+            const item = await this.reportModel.create({
+                point: data._id,
                 create:date
             })
+
+            return item
         }
         this.logger.error('point.code不存在:'+code)
 

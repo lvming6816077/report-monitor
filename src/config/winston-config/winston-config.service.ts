@@ -38,9 +38,11 @@ export class WinstonConfigService implements WinstonModuleOptionsFactory {
     }
     return {
       transports: transports,
-      format: combine(timestamp(), json()),
+      format: combine(timestamp({
+          format:'YYYY-MM-DD HH:mm:ss'
+      }), json()),
       defaultMeta: {
-        appName: 'app',
+        appName: 'Report',
       },
     };
   }
