@@ -5,6 +5,7 @@ import { Document,Schema as _Schema} from 'mongoose';
 export type UserDocument = User & Document;
 
 
+
 @Schema({timestamps:{createdAt: 'create',updatedAt:'update'}})
 export class User {
 

@@ -37,13 +37,13 @@ export class UserController {
             throw new HttpException('验证码错误', 200);
         }
 
-        const u:any = await this.userService.findUser(body.username,body.password)
+        const u:User = await this.userService.findUser(body.username,body.password)
         if (u) {
-
-            return this.jwt.login({username:u.username,userId:u.userid});
+            return this.jwt.login(u);
         }
         return null
     }
+
 
     @Post('regis')
     async regis(@Body() body: LoginDto,@Req() req) {
