@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, Schema as _Schema} from 'mongoose';
+import mongoose,{ Document, Schema as _Schema} from 'mongoose';
+
 import { Tag } from "./tag.schema";
+import * as mongoosePaginate from 'mongoose-paginate';
 
 export type PointDocument = Point & Document;
 
@@ -31,6 +33,8 @@ export class Point {
 }
 
 export const PointSchema = SchemaFactory.createForClass(Point);
+
+PointSchema.plugin(mongoosePaginate)
 
 /*var mongoose = require('mongoose');
 
