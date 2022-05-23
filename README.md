@@ -1,4 +1,6 @@
+<p align="center">
 ![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/logo.png)
+  </p>
 # 【Report Monitor】一款完整、高性能、高可用的打点监控和统计平台
 [![Node](https://img.shields.io/badge/Node.js-v14.15.3-brightgreen)](https://nodejs.org/en/)
 [![Nest](https://img.shields.io/badge/nestjs-7.5.1-brightgreen)](https://eggjs.org/)
