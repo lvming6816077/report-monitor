@@ -93,9 +93,9 @@ Redis:
 ![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_%20(1).png)
 ![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_%20(2).png)
 
-### 交流和建议群
-* 自发布以来有感兴趣的童鞋遇到了各种问题，大部分情况下是通过邮件进行沟通，为了方便解决大家部署中遇到的各种问题，下面贴出一个QQ交流群，有问题或者建议可提出。
-![](https://qiniu.nihaoshijie.com.cn/qunmingp.jpg "")
+### 交流和建议
+
+相关建议+共同开发联系：*441403517@qq.com*
 
 
 
