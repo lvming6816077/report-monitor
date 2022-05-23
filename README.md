@@ -8,6 +8,7 @@
 # 技术栈
 
 后端：Nest.js+TypeScript+MongoDB+Redis
+
 前端：React.js+TypeScript
 
 ## 项目说明
@@ -34,8 +35,8 @@ navigator.sendBeacon(href)
 ### Java
 
 ```java
-String href = '网站域名'+'/rapi/report/create?code=xxxx'
 
+String href = '网站域名'+'/rapi/report/create?code=xxxx'
 CloseableHttpClient httpclient = HttpClients.createDefault();
 httpclient.execute(new HttpGet(href));
 
@@ -59,10 +60,13 @@ requests.get(href)
 ### 安装mongoDB和Redis
 
 MongoDB:
+
 [Windows 平台安装 MongoDB](https://www.runoob.com/mongodb/mongodb-window-install.html)
+
 [Linux 平台安装 MongoDB](https://www.runoob.com/mongodb/mongodb-linux-install.html)
 
 Redis:
+
 [Redis 安装](https://www.runoob.com/redis/redis-install.html)
 
 
@@ -79,7 +83,10 @@ Redis:
 
 ## 展示效果
 
-
+![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_login.png)
+![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_%20(1).png)
+![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_%20(2).png)
+![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_.png)
 
 ### 交流和建议群
 * 自发布以来有感兴趣的童鞋遇到了各种问题，大部分情况下是通过邮件进行沟通，为了方便解决大家部署中遇到的各种问题，下面贴出一个QQ交流群，有问题或者建议可提出。
