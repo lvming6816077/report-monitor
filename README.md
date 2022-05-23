@@ -1,73 +1,92 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Report Monitor一款完整、高性能、高可用的打点监控和统计平台
+[![Node](https://img.shields.io/badge/Node.js-v14.15.3-brightgreen)](https://nodejs.org/en/)
+[![Nest](https://img.shields.io/badge/nestjs-7.5.1-brightgreen)](https://eggjs.org/)
+[![Mongodb](https://img.shields.io/badge/mogodb-4.0+-brightgreen.svg?style=plastic)](https://www.mongodb.com/)
+[![Redis](https://img.shields.io/badge/redis-5.0+-green.svg?style=plastic)](https://redis.io/)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# 技术栈
 
-## Description
+后端：Nest.js+TypeScript+MongoDB+Redis
+前端：React.js+TypeScript
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 项目说明
+* 项目已部署到正式环境，并已稳定运行一段时间，请放心使用。
+* 前期推荐使用单机数据库或者Mongodb副本集架构，后期根据自身需求考虑是否使用集群分片
+* 目前4核8G单机服务器大概能支撑每日50-100W的pv,8核16G单机服务器可支撑100W-500W的PV流量
+* 项目后台查询性能增加合适的索引之后，千万以上的数据量可在100ms-2s之内查询出来，平均100-300ms(单机/副本集)
 
-## Installation
+## 打点上报使用说明
+### 浏览器
 
-```bash
-$ npm install
+一行代码上报：
+```javascript
+
+const href = '网站域名'+'/rapi/report/create?code=xxxx'
+
+new Image().src = href
+
+or
+
+navigator.sendBeacon(href)
 ```
 
-## Running the app
+### Java
 
-```bash
-# development
-$ npm run start
+```java
+String href = '网站域名'+'/rapi/report/create?code=xxxx'
 
-# watch mode
-$ npm run start:dev
+CloseableHttpClient httpclient = HttpClients.createDefault();
+httpclient.execute(new HttpGet(href));
 
-# production mode
-$ npm run start:prod
 ```
 
-## Test
+### python
 
-```bash
-# unit tests
-$ npm run test
+```python
+import  requests
+href = '网站域名'+'/rapi/report/create?code=xxxx'
+requests.get(href)
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Support
+其他语言类似，只许发送一条简单的get请求。
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 项目部署和启动
 
-## License
+### 安装mongoDB和Redis
 
-Nest is [MIT licensed](LICENSE).
+MongoDB:
+[Windows 平台安装 MongoDB](https://www.runoob.com/mongodb/mongodb-window-install.html)
+[Linux 平台安装 MongoDB](https://www.runoob.com/mongodb/mongodb-linux-install.html)
+
+Redis:
+[Redis 安装](https://www.runoob.com/redis/redis-install.html)
+
+
+### 启动
+
+```bash
+
+开发：npm run start:dev
+
+生产：npm run build
+
+```
+
+
+## 展示效果
+
+
+
+### 交流和建议群
+* 自发布以来有感兴趣的童鞋遇到了各种问题，大部分情况下是通过邮件进行沟通，为了方便解决大家部署中遇到的各种问题，下面贴出一个QQ交流群，有问题或者建议可提出。
+![](https://qiniu.nihaoshijie.com.cn/qunmingp.jpg "")
+
+
+
+
+
+
