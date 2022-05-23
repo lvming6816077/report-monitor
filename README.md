@@ -1,4 +1,5 @@
-# Report Monitor一款完整、高性能、高可用的打点监控和统计平台
+![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/logo.png)
+# 【Report Monitor】一款完整、高性能、高可用的打点监控和统计平台
 [![Node](https://img.shields.io/badge/Node.js-v14.15.3-brightgreen)](https://nodejs.org/en/)
 [![Nest](https://img.shields.io/badge/nestjs-7.5.1-brightgreen)](https://eggjs.org/)
 [![Mongodb](https://img.shields.io/badge/mogodb-4.0+-brightgreen.svg?style=plastic)](https://www.mongodb.com/)
@@ -84,14 +85,13 @@ Redis:
 ## 展示效果
 
 ![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_login.png)
+![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_login1.png)
 ![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_%20(1).png)
 ![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_%20(2).png)
-![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_.png)
 
 ### 交流和建议群
 * 自发布以来有感兴趣的童鞋遇到了各种问题，大部分情况下是通过邮件进行沟通，为了方便解决大家部署中遇到的各种问题，下面贴出一个QQ交流群，有问题或者建议可提出。
 ![](https://qiniu.nihaoshijie.com.cn/qunmingp.jpg "")
-
 
 
 
