@@ -9,10 +9,10 @@ export type UserDocument = User & Document;
 @Schema({timestamps:{createdAt: 'create',updatedAt:'update'}})
 export class User {
 
-    @Prop({ required:true,unique:true,dropDups: true })// 用户id
+    @Prop({ required:true,unique:true})// 用户id
     userid: string;
 
-    @Prop({ required:true,unique:true,dropDups: true })// 用户名称
+    @Prop({ required:true,unique:true })// 用户名称
     username: string;
 
     @Prop({ required:true })// 用户密码

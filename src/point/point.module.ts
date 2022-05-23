@@ -11,6 +11,6 @@ import { PointService } from "./point.service";
     controllers: [PointController],
     providers: [PointService],
 
-    exports: [PointService],
+    exports: [PointService,MongooseModule.forFeature([{ name: Point.name, schema: PointSchema }])],
 })
 export class PointModule {}

@@ -1,4 +1,4 @@
-import { Body, Controller, Query, Get, Param, Post,Inject,UseGuards} from '@nestjs/common';
+import { Body, Controller, Query, Get, Param, Post,Inject,UseGuards,Request} from '@nestjs/common';
 import { PointService } from './point.service';
 import { Point, PointDocument } from './schemas/point.schema';
 import { Tag } from './schemas/tag.schema';
@@ -9,6 +9,7 @@ import { CreatePointDto } from './dto/create-point.dto'
 import { CreateTagDto } from './dto/create-tag.dto'
 import { QueryPageDto } from './dto/query-page.dto'
 import { PaginateResult } from 'mongoose';
+import {DeleteResult} from 'mongodb'
 
 @Controller('point')
 @UseGuards(JwtAuthGuard)
@@ -17,14 +18,14 @@ export class PointController {
 
 
   @Post('create')
-  async createPoint(@Body() dto:CreatePointDto) {
+  async createPoint(@Body() dto:CreatePointDto,@Request() req: any) {
       console.log(dto)
-      return await this.pointService.create(dto);
+      return await this.pointService.create(dto,req.user.userId);
   }
   @Post('createtag')
-  async createTag(@Body() dto:CreateTagDto) {
-      console.log(dto)
-      return await this.pointService.createTag(dto.desc);
+  async createTag(@Body() dto:CreateTagDto,@Request() req: any) {
+      console.log(req.user)
+      return await this.pointService.createTag(dto.desc,req.user.userId);
   }
 
   @Get('getPoints')
@@ -48,7 +49,7 @@ export class PointController {
   }
 
   @Get('deletePoint/:id')
-  async deletePoint(@Param('id') id: string): Promise<Point> {
+  async deletePoint(@Param('id') id: string): Promise<DeleteResult> {
     return this.pointService.deleteById(id);
   }
 

@@ -17,7 +17,8 @@ export type resultVo = {
 export class ReportService {
     constructor(
         @InjectModel(Report.name) private readonly reportModel: Model<ReportDocument>, 
-        private readonly pointService: PointService,
+        @InjectModel(Point.name) private readonly pointModel: Model<PointDocument>,
+        // private readonly pointService: PointService,
         @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
         private redisService: RedisInstanceService) { 
 
@@ -31,9 +32,8 @@ export class ReportService {
         return this.reportModel.find({}).exec();
     }
 
-
     async findAllByCode(code: string, start: string, end: string,unit:number): Promise<resultVo> {
-        const data: Point = await this.pointService.findOneByCode(code)
+        const data: Point = await this.pointModel.findOne({code:code});
         if (data) {
             const result = await this.reportModel.aggregate([
                 {
@@ -67,7 +67,10 @@ export class ReportService {
                 desc:data.desc
             }
         }
-        throw new HttpException('point.code不存在', 500);
+        return {
+            list: [],
+            desc:null
+        }
     }
 
     async create(code: string): Promise<Report> {
@@ -95,9 +98,10 @@ export class ReportService {
             console.log(e)
         }
     }
+
     private async createItem(code: string,date:Date): Promise<Report> {
 
-        const data: Point = await this.pointService.findOneByCode(code)
+        const data: Point = await this.pointModel.findOne({code:code});
         
         if (data) {
             
@@ -108,7 +112,9 @@ export class ReportService {
 
             return item
         }
-        this.logger.error('point.code不存在:'+code)
+        this.logger.error('point.code不存在:'+code,{
+            context: ReportService.name,
+        })
 
     }
 
