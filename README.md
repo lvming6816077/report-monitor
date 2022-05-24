@@ -25,7 +25,7 @@
 ## 项目设计思路
 
 <div align="center">
-<img src="https://github.com/lvming6816077/report-monitor-server/blob/main/demo/logo.png" />
+<img src="https://github.com/lvming6816077/report-monitor-server/blob/main/demo/%E6%B5%81%E7%A8%8B.png" />
 </div>
 
 ## 打点上报使用说明
