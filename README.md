@@ -10,7 +10,7 @@
 [![Redis](https://img.shields.io/badge/redis-5.0+-green.svg?style=plastic)](https://redis.io/)
 
 
-# 技术栈
+## 技术栈
 
 后端：Nest.js+TypeScript+MongoDB+Redis
 
