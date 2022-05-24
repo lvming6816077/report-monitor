@@ -22,6 +22,12 @@
 * 目前4核8G单机服务器大概能支撑每日50-100W的pv,8核16G单机服务器可支撑100W-500W的PV流量
 * 项目后台查询性能增加合适的索引之后，千万以上的数据量可在100ms-2s之内查询出来，平均100-300ms(单机/副本集)
 
+## 项目设计思路
+
+<div align="center">
+<img src="https://github.com/lvming6816077/report-monitor-server/blob/main/demo/logo.png" />
+</div>
+
 ## 打点上报使用说明
 ### 浏览器
 
