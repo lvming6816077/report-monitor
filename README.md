@@ -12,7 +12,7 @@
 
 
 
-# 技术栈
+## 技术栈
 
 后端：Nest.js+TypeScript+MongoDB+Redis
 
