@@ -14,9 +14,9 @@
 
 ## 技术栈
 
-后端：Nest.js+TypeScript+MongoDB+Redis
+后端：Nest.js+TypeScript+MongoDB+Redis [传送门](https://github.com/lvming6816077/report-monitor-server)
 
-前端：React.js+TypeScript
+前端：React.js+TypeScript [传送门](https://github.com/lvming6816077/report-monitor)
 
 ## 项目说明
 * 项目已部署到正式环境，并已稳定运行一段时间，请放心使用。
