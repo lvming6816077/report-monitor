@@ -1,4 +1,4 @@
-import { Injectable,Inject } from "@nestjs/common";
+import { Injectable,Inject, forwardRef } from "@nestjs/common";
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import mongoose, { Model, PaginateModel, PaginateResult } from 'mongoose';
@@ -13,12 +13,16 @@ import { Logger  } from 'winston';
 @Injectable()
 export class UserService {
     constructor(
-        @InjectModel(User.name) private readonly userModel: PaginateModel<UserDocument>, 
+        @InjectModel(User.name)
+        private readonly userModel: PaginateModel<UserDocument>, 
 
-        @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) { 
+        @Inject(forwardRef(() => PointService))
+        private readonly pointService: PointService,
+
+        @Inject(WINSTON_MODULE_PROVIDER)
+        private readonly logger: Logger) { 
 
         }
-
 
 
     async createUser(username: string, password: string): Promise<User> {
@@ -49,6 +53,22 @@ export class UserService {
     async findUserByUserId(userid: string): Promise<User> {
         return await this.userModel.findOne({userid})
     }
+    async findUserPointSet(userid: string): Promise<string> {
+
+        const { pointset } = await this.userModel.findOne({userid});
+
+        let arr = pointset.split(',')
+        let res = []
+
+        for (let i = 0 ; i < arr.length ; i++) {
+            const p = await this.pointService.findOneByCode(arr[i])
+            if (p) {
+                res.push(p.code)
+            }
+        }
+
+        return res.join(',')
+    }
 
     async updateUser(pointset:string,userid:string):Promise<User> {
         const u = await this.userModel.findOneAndUpdate({ userid }, {pointset});
@@ -64,11 +84,11 @@ export class UserService {
         if (query.username) {
             q.username = {$regex: query.username, $options: 'i'}
         }
-        // let d = await this.userModel.find({})
-        console.log(q)
+
 
         const result = await this.userModel.paginate(q,options)
-        console.log(result)
+
         return result
     }
+    
 }
