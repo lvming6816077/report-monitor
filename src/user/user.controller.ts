@@ -1,10 +1,11 @@
-import { Body, Controller, Req, Get, Res, Post, Injectable } from '@nestjs/common';
+import { Body, Controller, Req, Get, Res, Post, Injectable, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 const parser = require('cron-parser');
 import { JwtConfigService } from 'src/config/jwt-config/jwt-config.service';
 import { User } from './schemas/user.schema';
 import { HttpException } from '@nestjs/common';
 import { LoginDto } from './dto/login';
+import { QueryUserDto } from './dto/query-user.dto'
 
 import * as svgCaptcha from 'svg-captcha';
 
@@ -56,6 +57,26 @@ export class UserController {
         return await this.userService.createUser(body.username,body.password)
 
     }
+    @Get('getUsersList')
+    async getUsersList(@Query() query: QueryUserDto) {
+        const result = await this.userService.findAllByPage(query.pageStart,query.pageSize,query)
+        const l = result.docs.map(i=>{
+            return {
+                username:i.username,
+                create:i.create,
+                _id:i._id,
+                level:i.level,
+            }
+        })
+        return {
+            ...result,
+            docs:l,
+        }
+
+    }
+
+
+    
 
 
 

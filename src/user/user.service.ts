@@ -1,7 +1,7 @@
 import { Injectable,Inject } from "@nestjs/common";
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model, PaginateModel, PaginateResult } from 'mongoose';
 import { PointService } from '../point/point.service';
 import { HttpException } from '@nestjs/common';
 import { customAlphabet } from 'nanoid'
@@ -13,7 +13,7 @@ import { Logger  } from 'winston';
 @Injectable()
 export class UserService {
     constructor(
-        @InjectModel(User.name) private readonly userModel: Model<UserDocument>, 
+        @InjectModel(User.name) private readonly userModel: PaginateModel<UserDocument>, 
 
         @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) { 
 
@@ -45,5 +45,30 @@ export class UserService {
 
         return u
 
+    }
+    async findUserByUserId(userid: string): Promise<User> {
+        return await this.userModel.findOne({userid})
+    }
+
+    async updateUser(pointset:string,userid:string):Promise<User> {
+        const u = await this.userModel.findOneAndUpdate({ userid }, {pointset});
+
+        return u
+    }
+    async findAllByPage(pageStart:string='1', pageSize: string='10',query:User): Promise<PaginateResult<UserDocument>> {
+        const options = {
+            page: Number(pageStart),
+            limit: Number(pageSize),
+        };
+        const q:any = {}
+        if (query.username) {
+            q.username = {$regex: query.username, $options: 'i'}
+        }
+        // let d = await this.userModel.find({})
+        console.log(q)
+
+        const result = await this.userModel.paginate(q,options)
+        console.log(result)
+        return result
     }
 }

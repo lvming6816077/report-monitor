@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document,Schema as _Schema} from 'mongoose';
 
+import * as mongoosePaginate from 'mongoose-paginate-v2';
 
 export type UserDocument = User & Document;
 
@@ -21,6 +22,9 @@ export class User {
     @Prop({ required:true,default:1 }) // 用户等级（0：管理员，1：普通用户）
     level: number;
 
+    @Prop() // 用户预设point
+    pointset: string;
+
     @Prop({ type: Date, default: Date.now })
     create: string;
 
@@ -30,18 +34,4 @@ export class User {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-/*var mongoose = require('mongoose');
-
-var Schema = mongoose.Schema;
-
-var CommentSchema = new mongoose.Schema({
-  content: String,
-  post:{ type: Schema.Types.ObjectId, ref: 'Post',required:true },
-  user:{ type: Schema.Types.ObjectId, ref: 'User',required:true },
-  create: { type: Date, default: Date.now },
-  update: { type: Date, default: Date.now },
-}, {timestamps:{createdAt: 'create',updatedAt:'update'}});
-
-
-
-module.exports = mongoose.model('Comment', CommentSchema);*/
+UserSchema.plugin(mongoosePaginate)

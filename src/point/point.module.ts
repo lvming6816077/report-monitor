@@ -5,9 +5,10 @@ import { Point, PointSchema } from "./schemas/point.schema";
 import { Tag, TagSchema } from "./schemas/tag.schema";
 import { PointController } from "./point.controller";
 import { PointService } from "./point.service";
+import { UserModule } from "src/user/user.module";
 
 @Module({
-    imports: [MongooseModule.forFeature([{ name: Point.name, schema: PointSchema },{ name: Tag.name, schema: TagSchema }])],
+    imports: [UserModule,MongooseModule.forFeature([{ name: Point.name, schema: PointSchema },{ name: Tag.name, schema: TagSchema }])],
     controllers: [PointController],
     providers: [PointService],
 

@@ -4,12 +4,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Point, PointDocument } from './schemas/point.schema';
 
 import { Tag, TagDocument } from './schemas/tag.schema';
-import { Model,PaginateModel,PaginateResult } from 'mongoose';
+import mongoose,{ Model,PaginateModel,PaginateResult } from 'mongoose';
 import { customAlphabet } from 'nanoid'
 import {DeleteResult} from "mongodb";
 import { CreateTagDto } from "./dto/create-tag.dto";
 
 import { REQUEST } from "@nestjs/core";
+import { UserService } from "src/user/user.service";
+import { QueryPointDto } from "./dto/query-point.dto";
 
 export type CURUSER = {
     user:{
