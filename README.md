@@ -1,6 +1,6 @@
 
 <div align="center">
-<img src="https://github.com/lvming6816077/report-monitor-server/blob/main/demo/logo.png" />
+<img src="https://github.com/lvming6816077/report-monitor-server/blob/main/report-monitor-server/demo/logo.png" />
 </div>
 
 # 【Report Monitor】一款完整、高性能、高可用的打点监控和统计平台
@@ -14,9 +14,9 @@
 
 ## 技术栈
 
-后端：Nest.js+TypeScript+MongoDB+Redis [传送门](https://github.com/lvming6816077/report-monitor-server)
+后端：Nest.js+TypeScript+MongoDB+Redis [传送门](https://github.com/lvming6816077/report-monitor-server/tree/main/report-monitor-server)
 
-前端：React.js+TypeScript [传送门](https://github.com/lvming6816077/report-monitor)
+前端：React.js+TypeScript [传送门](https://github.com/lvming6816077/report-monitor-server/tree/main/report-monitor-frontend)
 
 ## 项目说明
 * 项目已部署到正式环境，并已稳定运行一段时间，请放心使用。
@@ -29,7 +29,7 @@
 ## 项目设计思路
 
 <div align="center">
-<img src="https://github.com/lvming6816077/report-monitor-server/blob/main/demo/logo.png" />
+<img src="https://github.com/lvming6816077/report-monitor-server/blob/main/report-monitor-server/demo/流程.png" />
 </div>
 
 ## 打点上报使用说明
@@ -105,10 +105,10 @@ npm run build
 
 ## 展示效果
 
-![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_login.png)
-![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_login1.png)
-![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_%20(1).png)
-![](https://github.com/lvming6816077/report-monitor-server/blob/main/demo/localhost_3002_%20(2).png)
+![](https://github.com/lvming6816077/report-monitor-server/blob/main/report-monitor-server/demo/localhost_3002_login.png)
+![](https://github.com/lvming6816077/report-monitor-server/blob/main/report-monitor-server/demo/localhost_3002_login1.png)
+![](https://github.com/lvming6816077/report-monitor-server/blob/main/report-monitor-server/demo/localhost_3002_%20(1).png)
+![](https://github.com/lvming6816077/report-monitor-server/blob/main/report-monitor-server/demo/localhost_3002_%20(2).png)
 
 ## 交流和建议
 
