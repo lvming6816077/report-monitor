@@ -11,7 +11,7 @@ export type ReportDocument = Report & Document;
 @Schema()
 export class Report {
 
-    @Prop({ type: _Schema.Types.ObjectId, ref: 'Point',required:true })
+    @Prop({ type: _Schema.Types.ObjectId, ref: 'Point',required:true,index:true })
     point: Point;
 
     @Prop({ type: Date, required:true })
