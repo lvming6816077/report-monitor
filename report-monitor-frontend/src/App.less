@@ -1,0 +1,48 @@
+.container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    
+    .left-bar {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        top:60px;
+        width: 200px;
+    }
+    .nav-bar {
+        position: absolute;
+        top:0 ;
+        left: 0;
+        right: 0;
+        height: 60px;
+    }
+    .main-content {
+        position: absolute;
+        top:60px ;
+        left: 200px;
+        right: 0;
+        bottom: 0;
+        
+        padding: 15px;
+        &.all {
+            top:0;
+            left: 0;
+            padding: 0;
+        }
+    }
+    .page-title {
+        padding-left: 8px;
+        &::before {
+            content: '';
+            width: 3px;
+            height: 22px;
+            background-color: #009688;
+            display: inline-block;
+            vertical-align: -6px;
+            margin-right: 8px;
+        }
+    }
+}

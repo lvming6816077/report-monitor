@@ -34,7 +34,7 @@ export class UserService {
         const hash = await bcrypt.hash(password, saltOrRounds);
         const nanoid = customAlphabet('123456789xsdqw', 10)
         const userid = nanoid() // 随机且唯一userid
-        return await this.userModel.create({ username,userid,password:hash,level:1 });
+        return await this.userModel.create({ username,userid,password:hash,level:[1] });
     }
     async findUser(username: string, password: string): Promise<User> {
         const u = await this.userModel.findOne({username})

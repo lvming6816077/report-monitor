@@ -8,7 +8,7 @@ export class QueryUserDto implements QueryPageDto,User {
     userid: string;
     username: string;
     password: string;
-    level: number;
+    level: [];
     pointset: string;
     
     readonly pageStart: string;

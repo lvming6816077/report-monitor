@@ -19,8 +19,8 @@ export class User {
     @Prop({ required:true })// 用户密码
     password: string;
 
-    @Prop({ required:true,default:1 }) // 用户等级（0：管理员，1：普通用户）
-    level: number;
+    @Prop({ required:true,default:[1] }) // 用户等级（0：管理员，1：普通用户）
+    level: [];
 
     @Prop() // 用户预设point
     pointset: string;

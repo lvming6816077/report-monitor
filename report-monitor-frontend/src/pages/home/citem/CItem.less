@@ -1,0 +1,57 @@
+.c-content {
+    width: 100%;
+    height: 400px;
+    margin-bottom: 40px;
+    .inner {
+        height: 100%;
+        text-align: center;
+        position: relative;
+    }
+    .item {
+        margin-top:20px;
+        width: 100%;
+        height: 100%;
+    }
+    .search-btn {
+        margin-left: 8px;
+        font-size: 18px;
+        cursor: pointer;
+        width: 10%;;
+
+    }
+    .title {
+        text-align: center;
+        font-size: 18px;
+    }
+    .datepick {
+        display: flex;
+        align-items: center;
+        margin-bottom: -40px;
+        margin-top: 20px;
+        position: relative;
+        z-index: 2;
+    }
+    .loading {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 40px;
+        z-index: 3;
+        background-color: #00000024;
+        // display: flex;
+    }
+    .loading-icon {
+        font-size: 18px;
+        margin: 0 auto;
+        margin-top: 100px;
+        color: #009688;
+    }
+    .no-data {
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+    }
+}
