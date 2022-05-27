@@ -5,6 +5,7 @@ import { CheckSquareTwoTone, Loading3QuartersOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import moment, { Moment } from 'moment'
 // import * as moment from "moment";
+import { tranNumber} from '@/utils/num.js'
 const RangePicker: any = DatePicker.RangePicker
 
 import './CItem.less'
@@ -61,7 +62,13 @@ export const CItem: React.FC<Props> = React.memo(({ data, code, desc }) => {
             },
             yAxis: {
                 type: 'value',
-                boundaryGap: [0, '100%']
+                boundaryGap: [0, '100%'],
+                axisLabel: {
+                    formatter: (v:string)=>{
+                        console.log(v)
+                        return tranNumber(v,2)
+                    },
+                }
             },
 
             series: [
