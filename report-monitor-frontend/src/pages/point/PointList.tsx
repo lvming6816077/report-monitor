@@ -173,7 +173,7 @@ export const PointList: React.FC = () => {
                             history.push('/createtag')
                         }} style={{ marginLeft: 20 }}>创建类目</Button>
                         <pre className='tips'>
-                            上报地址：{window.location.host+'/rapi/point/create?code=xxxx'}
+                            上报地址：{window.location.host+'/rapi/report/create?code=xxxx'}
                         </pre>
                     </div>
                     
