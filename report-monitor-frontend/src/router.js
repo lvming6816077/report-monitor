@@ -40,7 +40,7 @@ const routes = [
     path: "/userlist",
     name: "userlist",
     component: UserList,
-    auth: [1,0,3]
+    auth: [1,0]
   },
   {
     path: "/taglist",
