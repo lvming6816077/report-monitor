@@ -10,22 +10,25 @@ const RangePicker: any = DatePicker.RangePicker
 
 import './CItem.less'
 type Props = {
-    data: [];
+    data: ChartDataItem[];
     code: string;
-    desc: string
+    desc: string,
+    changeData:(cur:[],code:string)=>void,
 }
-type ChartDataItem = {
+export type ChartDataItem = {
     time: string,
     total: number
 }
 
-export const CItem: React.FC<Props> = React.memo(({ data, code, desc }) => {
+export const CItem: React.FC<Props> = React.memo(({ data, code, desc,changeData }) => {
 
     const [showDatePicker, setShowDatePicker] = useState<Boolean>(false)
     const [showLoading, setShowLoading] = useState<Boolean>(false)
 
+    
 
-    const initChart = (_data: []) => {
+
+    const initChart = (_data: ChartDataItem[]) => {
         const xAxis = _data.map((i: ChartDataItem) => {
             return i.time
         })
@@ -85,22 +88,28 @@ export const CItem: React.FC<Props> = React.memo(({ data, code, desc }) => {
                 }
             ]
         };
+
         const chartmei = (window as any).echarts.init(document.getElementById(code));
         chartmei.setOption(option)
     }
     useEffect(() => {
         if (data.length) {
-            setValue([moment().startOf('day'), moment().endOf('day')]);
             initChart(data)
         }
     }, [data]);
 
 
+    useEffect(()=>{
+        setValue([moment().startOf('day'), moment().endOf('day')]);
+    },[])
 
     const [dates, setDates] = useState<Moment[]>([]);
     const [value, setValue] = useState<Moment[]>([]);
 
+
+
     const search = async () => {
+        if (!value.length) return
         setShowLoading(true)
         const result = await axios.post('/rapi/report/getReportsGroup', {
             start: value[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
@@ -108,7 +117,7 @@ export const CItem: React.FC<Props> = React.memo(({ data, code, desc }) => {
             code: code
         });
         setShowLoading(false)
-        initChart(result.data.data)
+        changeData(result.data.data,code)
     }
 
     const disabledDate = (current: Moment) => {

@@ -5,14 +5,20 @@ import axios from 'axios'
 import './Home.less'
 import { CItem } from './citem/CItem';
 import { Loading3QuartersOutlined } from '@ant-design/icons';
+import {ChartDataItem} from './citem/CItem'
 
 const antIcon = <Loading3QuartersOutlined style={{ fontSize: 24 }} spin />;
 
+export type ChartListItemType = {
+    code:string,
+    desc:string,
+    list:ChartDataItem[]
+}
 export const Home: React.FC = () => {
 
     const [treeData, setTreeData] = useState<TreeItem[]>([])
     const [codes, setCodes] = useState<string[]>([])
-    const [chartList, setChartList] = useState<any[][]>()
+    const [chartList, setChartList] = useState<ChartListItemType[][]>([])
     const [loading, setLoading] = useState<boolean>(false)
 
 
@@ -24,7 +30,7 @@ export const Home: React.FC = () => {
                         o.map(k => {
                             return (
                                 <Col span={8} key={k.code}>
-                                    <CItem data={k.list} code={k.code} desc={k.desc}></CItem>
+                                    <CItem data={k.list} code={k.code} desc={k.desc} changeData={changeData}></CItem>
                                 </Col>
                             )
                         })
@@ -33,6 +39,19 @@ export const Home: React.FC = () => {
             )
         })
     }, [chartList])
+    const changeData = (cur:[],code:string)=>{
+
+        let cls = JSON.parse(JSON.stringify(chartList))
+        let m = cls.length,n = cls[0].length
+        for (let i = 0 ; i < m ; i++) {
+            for (let j = 0 ; j < n ; j++) {
+                if (cls[i][j].code == code) {
+                    cls[i][j].list = cur
+                }
+            }
+        }
+        setChartList(cls)
+    }
     const getChartData = (_codes:string[]) => {
         const fetchData = async () => {
             setLoading(true)

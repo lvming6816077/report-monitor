@@ -34,6 +34,9 @@ export class ReportService {
 
     async findAllByCode(code: string, start: string, end: string,unit:number): Promise<resultVo> {
         const data: Point = await this.pointModel.findOne({code:code});
+
+        let r = await this.reportModel.find({$and: [{ point: (data as any)._id }, { create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]}).exec()
+
         if (data) {
             const result = await this.reportModel.aggregate([
                 {
@@ -47,7 +50,7 @@ export class ReportService {
                         "dateStr": {
                             "year": { "$year": "$create" },
                             "month": { "$month": "$create" },
-                            "day": { "$dayOfMonth": "$create" },
+                            "day": { "$dayOfMonth": {"date":"$create","timezone": "+08:00" } },
                             "hour": { "$hour": {"date":"$create","timezone": "+08:00" }},
                             "minute": {
                                 "$subtract": [
@@ -61,7 +64,6 @@ export class ReportService {
                 { "$group": { "_id": "$dateStr", "count": { "$sum": 1 } } },
                 { $sort: { "_id": 1 } }
             ]).exec()
-
             return {
                 list: result,
                 desc:data.desc
