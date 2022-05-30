@@ -4,6 +4,10 @@ import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { User } from 'src/user/schemas/user.schema';
 import { Tag } from '../schemas/tag.schema';
 export class QueryPointDto implements QueryPageDto,Point {
+    @IsString()
+    pageStart: string;
+    @IsString()
+    pageSize: string;
     
     readonly desc: string;
     readonly code: string;
@@ -11,8 +15,7 @@ export class QueryPointDto implements QueryPageDto,Point {
     readonly user: User;
     readonly create: string;
     readonly update: string;
-    readonly pageStart: string;
-    readonly pageSize: string;
+
 
 
 }

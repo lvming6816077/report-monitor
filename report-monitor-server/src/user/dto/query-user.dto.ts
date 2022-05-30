@@ -11,8 +11,10 @@ export class QueryUserDto implements QueryPageDto,User {
     level: [];
     pointset: string;
     
-    readonly pageStart: string;
-    readonly pageSize: string;
+    @IsString()
+    pageStart: string;
+    @IsString()
+    pageSize: string;
 
 
 }

@@ -2,11 +2,11 @@ import { IsInt, IsString,IsEmpty,IsNotEmpty, Allow, isString, IsOptional } from 
 
 export class QueryPageDto {
 
-  @IsString()
+
   readonly pageStart: string;
 
-  @IsString()
+
   readonly pageSize: string;
 
-//   readonly ss:string;
+
 }

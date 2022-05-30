@@ -11,7 +11,7 @@ export class ReportController {
   constructor(private readonly reportService: ReportService) { }
 
   @Get('create')
-  async create(@Query() query: any) {
+  async create(@Query() query) {
 
     return await this.reportService.create(query.code);
   }

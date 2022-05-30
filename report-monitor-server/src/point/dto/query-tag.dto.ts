@@ -9,8 +9,10 @@ export class QueryTagDto implements QueryPageDto,Tag {
     readonly user: User;
     readonly create: string;
     readonly update: string;
-    readonly pageStart: string;
-    readonly pageSize: string;
+    @IsString()
+    pageStart: string;
+    @IsString()
+    pageSize: string;
 
 
 }
