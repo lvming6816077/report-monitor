@@ -67,7 +67,7 @@ export const CreateTag: React.FC = () => {
                             name="desc"
                             rules={[{ required: true, message: '请输入类目名称' }]}
                         >
-                            <Input />
+                            <Input  placeholder='请输入类目名称'/>
                         </Form.Item>
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                             <Button type="primary" htmlType="submit">

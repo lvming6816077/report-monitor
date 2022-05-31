@@ -7,10 +7,16 @@ import './PointList.less'
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { PlusSquareOutlined } from '@ant-design/icons';
+import { ColumnsType } from 'antd/lib/table';
 
-
+type DataType  = {
+    desc: string;
+    code: string;
+    create:string;
+    _id:string;
+}
 export const PointList: React.FC = () => {
-    const columns: any = [
+    const columns: ColumnsType<DataType> = [
         {
             title: '数据点名称',
             dataIndex: 'desc',
@@ -22,18 +28,16 @@ export const PointList: React.FC = () => {
         {
             title: '所属类目',
             dataIndex: ['tag', 'desc'],
-            // key: 'tag',
-            // render:(v:any)=>v.desc
         },
         {
             title: '创建时间',
             dataIndex: 'create',
-            render: (v: any) => moment(v).format('YYYY-MM-DD HH:mm:ss')
+            render: (v,item) => moment(item.create).format('YYYY-MM-DD HH:mm:ss')
         },
         {
             title: '操作',
             dataIndex: 'action',
-            render: (v: any, item: any) => {
+            render: (v, item) => {
                 return <a onClick={() => deletePoint(item)}>删除</a>
             }
         },

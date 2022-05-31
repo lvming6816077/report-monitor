@@ -1,8 +1,8 @@
 import { IsInt, IsString,IsEmpty,IsNotEmpty, Allow, isString, IsOptional } from 'class-validator';
 
-export class QueryPageDto {
+export interface QueryPageDto {
 
-
+  
   readonly pageStart: string;
 
 

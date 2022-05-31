@@ -7,10 +7,15 @@ import './TagList.less'
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { PlusSquareOutlined } from '@ant-design/icons';
+import { ColumnsType } from 'antd/lib/table';
 
-
+type DataType  = {
+    desc: string;
+    create:string;
+    _id:string;
+}
 export const TagList: React.FC = () => {
-    const columns: any = [
+    const columns: ColumnsType<DataType> = [
         {
             title: '类目名称',
             dataIndex: 'desc',
@@ -19,12 +24,12 @@ export const TagList: React.FC = () => {
         {
             title: '创建时间',
             dataIndex: 'create',
-            render: (v: any) => moment(v).format('YYYY-MM-DD HH:mm:ss')
+            render: (v) => moment(v).format('YYYY-MM-DD HH:mm:ss')
         },
         {
             title: '操作',
             dataIndex: 'action',
-            render: (v: any, item: any) => {
+            render: (v, item) => {
                 return <a onClick={() => deleteTag(item)}>删除</a>
             }
         },

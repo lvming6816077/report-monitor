@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger  } from 'winston';
+import { UpdateUserDto } from "./dto/update-user.dto";
 
 @Injectable()
 export class UserService {
@@ -25,7 +26,7 @@ export class UserService {
         }
 
 
-    async createUser(username: string, password: string): Promise<User> {
+    async createUser(username: string, password: string,nickname:string): Promise<User> {
         const u = await this.userModel.findOne({username})
         if (u) {
             throw new HttpException('用户已存在', 200);
@@ -34,7 +35,7 @@ export class UserService {
         const hash = await bcrypt.hash(password, saltOrRounds);
         const nanoid = customAlphabet('123456789xsdqw', 10)
         const userid = nanoid() // 随机且唯一userid
-        return await this.userModel.create({ username,userid,password:hash,level:[1] });
+        return await this.userModel.create({ username,userid,password:hash,level:[1],nickname });
     }
     async findUser(username: string, password: string): Promise<User> {
         const u = await this.userModel.findOne({username})
@@ -57,7 +58,7 @@ export class UserService {
 
         const { pointset } = await this.userModel.findOne({userid});
 
-        let arr = pointset.split(',')
+        let arr = pointset?.split(',')||[]
         let res = []
 
         for (let i = 0 ; i < arr.length ; i++) {
@@ -70,10 +71,8 @@ export class UserService {
         return res.join(',')
     }
 
-    async updateUser(pointset:string,userid:string):Promise<User> {
-        const u = await this.userModel.findOneAndUpdate({ userid }, {pointset});
-
-        return u
+    async updateUser(userid:string,userDto:UpdateUserDto):Promise<User> {
+        return await this.userModel.findOneAndUpdate({ userid }, userDto).exec();
     }
     async findAllByPage(pageStart:string='1', pageSize: string='10',query:User): Promise<PaginateResult<UserDocument>> {
         const options = {
@@ -83,6 +82,9 @@ export class UserService {
         const q:any = {}
         if (query.username) {
             q.username = {$regex: query.username, $options: 'i'}
+        }
+        if (query.nickname) {
+            q.nickname = {$regex: query.nickname, $options: 'i'}
         }
 
 

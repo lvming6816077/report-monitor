@@ -9,4 +9,7 @@ export class LoginDto {
   readonly password: string;
   @IsString()
   readonly checkcode: string;
+  @IsString()
+  @IsOptional()
+  readonly nickname?: string;
 }

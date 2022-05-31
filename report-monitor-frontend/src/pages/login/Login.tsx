@@ -7,6 +7,7 @@ import queryString from 'query-string';
 import { useDispatch } from 'react-redux'
 import { actionTypes } from '@/reducers/user/index'
 import axios from 'axios'
+import randomName from '@/utils/nickname'
 import './Login.less'
 
 export const Login: React.FC = () => {
@@ -50,7 +51,8 @@ export const Login: React.FC = () => {
         const result = await axios.post('/rapi/user/regis', {
             username: values.username,
             password: values.password,
-            checkcode: values.checkcode
+            checkcode: values.checkcode,
+            nickname:randomName.getNickName()
         });
         if (result.data.code == 0) {
             message.success('注册成功，请登陆')
@@ -64,7 +66,7 @@ export const Login: React.FC = () => {
         const result = await axios.post('/rapi/user/login', {
             username: values.username,
             password: values.password,
-            checkcode: values.checkcode
+            checkcode: values.checkcode,
         });
         if (result.data.code == 0) {
             localStorage.setItem('token',result.data.data.access_token)

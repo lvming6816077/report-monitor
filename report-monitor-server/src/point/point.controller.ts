@@ -37,7 +37,9 @@ export class PointController {
     @Post('savePointSet')
     async savePointSet(@Body() dto:{codes?:string[]}, @Request() req: any) {
 
-        let u = await this.userService.updateUser(dto.codes.join(','), req.user.userId);
+        let u = await this.userService.updateUser(req.user.userId,{
+            pointset:dto.codes.join(',')
+        });
         return u.pointset
     }
 

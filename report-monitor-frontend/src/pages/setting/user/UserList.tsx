@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Button, Col, Row, Modal, Form, Input, Table, Tag } from 'antd';
+import type { ColumnsType } from 'antd/lib/table';
 import { message } from 'antd';
 import axios from 'axios'
 import moment from 'moment';
@@ -7,43 +8,54 @@ import './UserList.less'
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { PlusSquareOutlined } from '@ant-design/icons';
+import { UserModal } from './UserModal';
 
 const roleMap = {
-    '1':'普通用户',
-    '0':'管理员'
+    '1': '普通用户',
+    '0': '管理员'
+}
+export type DataType  = {
+    username: string;
+    nickname: string;
+    level: number[];
+    _id:string;
+    userid:string;
 }
 export const UserList: React.FC = () => {
-    const columns: any = [
+    const columns: ColumnsType<DataType> = [
         {
-            title: '用户名',
+            title: '用户账号',
             dataIndex: 'username',
+        },
+        {
+            title: '用户昵称',
+            dataIndex: 'nickname',
         },
         {
             title: '用户权限',
             dataIndex: 'level',
             render: (v: []) => {
-                return v.map(i=><Tag>{roleMap[i]}</Tag>)
+                return v.map(i => <Tag key={i}>{roleMap[i]}</Tag>)
             }
         },
 
         {
             title: '创建时间',
             dataIndex: 'create',
-            render: (v: any) => moment(v).format('YYYY-MM-DD HH:mm:ss')
+            render: (v) => moment(v).format('YYYY-MM-DD HH:mm:ss')
         },
-        // {
-        //     title: '操作',
-        //     dataIndex: 'action',
-        //     render: (v: any, item: any) => {
-        //         return <a onClick={() => deletePoint(item)}>删除</a>
-        //     }
-        // },
+        {
+            title: '操作',
+            dataIndex: 'action',
+            render: (v, item) => {
+                return <a onClick={() => updateUser(item)}>编辑</a>
+            }
+        },
     ]
 
 
     const [dataSource, setDateSource] = useState<[]>([])
     const history = useHistory()
-    const [modal, contextHolder] = Modal.useModal();
 
     const [page, setPage] = useState<PageType>({
         pageStart: 1,
@@ -72,18 +84,10 @@ export const UserList: React.FC = () => {
         })()
     }, [page.pageSize, page.pageStart])
 
-    const deletePoint = async (item: any) => {
-        modal.confirm({
-            title: '确认删除?',
-            onOk: async () => {
-                const result = await axios.get('/rapi/point/deletePoint/' + item._id);
-                if (result.data.code == 0) {
-                    message.success('删除成功')
-                    resetList()
 
-                }
-            }
-        })
+    const updateUser = async (item: DataType) => {
+
+        childRef.current.showModal(item)
 
     }
     const getList = async (params = {}) => {
@@ -117,6 +121,12 @@ export const UserList: React.FC = () => {
         form.resetFields();
     }
 
+    const childRef = useRef<any>();
+    const updateCallback = ()=>{
+        message.success('修改成功')
+        resetList()
+    }
+
 
     return (
         <>
@@ -135,10 +145,18 @@ export const UserList: React.FC = () => {
                         <Row justify="center" align="middle">
                             <Col span={8}>
                                 <Form.Item
-                                    label="用户名"
+                                    label="用户账号"
                                     name="username"
                                 >
-                                    <Input placeholder={'请输入用户名名称'} />
+                                    <Input placeholder={'请输入用户账号'} />
+                                </Form.Item>
+                            </Col>
+                            <Col span={8}>
+                                <Form.Item
+                                    label="用户昵称"
+                                    name="nickname"
+                                >
+                                    <Input placeholder={'请输入用户账号'} />
                                 </Form.Item>
                             </Col>
 
@@ -158,22 +176,9 @@ export const UserList: React.FC = () => {
                     </Form>
                 </div>
                 <div className='table-content'>
-                    {/* <div className='btn-content'>
-                        <Button type="primary" icon={<PlusSquareOutlined />} onClick={() => {
-                            history.push('/createpoint')
-                        }}>创建数据点</Button>
-
-                        <Button type="primary" icon={<PlusSquareOutlined />} onClick={() => {
-                            history.push('/createtag')
-                        }} style={{ marginLeft: 20 }}>创建类目</Button>
-                        <pre className='tips'>
-                            上报地址：{window.location.host+'/rapi/point/create?code=xxxx'}
-                        </pre>
-                    </div> */}
-                    
+                    <UserModal onRef={childRef} updateCallback={updateCallback}></UserModal>
                     <Table dataSource={dataSource} columns={columns} pagination={paginationProps} rowKey={'_id'} />;
                 </div>
-                {contextHolder}
 
             </div>
         </>

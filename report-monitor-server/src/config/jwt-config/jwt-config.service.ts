@@ -15,7 +15,8 @@ export class JwtConfigService {
       user:{
           username:user.username,
           userid:user.userid,
-          level:user.level
+          level:user.level,
+          nickname:user.nickname
       },
       access_token: this.jwtService.sign(payload),
     };

@@ -70,7 +70,7 @@ declare module '*.module.sass' {
   export default classes;
 }
 
-interface Window {
+declare interface Window {
     $: any; 
 }
 interface TreeItem  {
@@ -80,7 +80,7 @@ interface TreeItem  {
     children: []
 }
 
-interface PageType {
+declare interface PageType {
     pageStart?: number,
     pageSize?: number,
     total?: number

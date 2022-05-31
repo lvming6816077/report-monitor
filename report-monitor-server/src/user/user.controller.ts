@@ -8,6 +8,7 @@ import { LoginDto } from './dto/login';
 import { QueryUserDto } from './dto/query-user.dto'
 
 import * as svgCaptcha from 'svg-captcha';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 
 @Controller('user')
@@ -54,7 +55,24 @@ export class UserController {
             throw new HttpException('验证码错误', 200);
         }
 
-        return await this.userService.createUser(body.username,body.password)
+        return await this.userService.createUser(body.username,body.password,body.nickname)
+
+    }
+    @Post('update')
+    async update(@Body() body: UpdateUserDto,@Req() req) {
+        delete body.username
+
+        const level = body.level.map(d=>Number(d))
+        
+        const u = await this.userService.updateUser(body.userid,{
+            ...body,
+            level
+        })
+        if (u.userid) {
+            return 'success'
+        }
+
+        return 'error'
 
     }
     @Get('getUsersList')
@@ -64,7 +82,9 @@ export class UserController {
             return {
                 username:i.username,
                 create:i.create,
+                nickname:i.nickname,
                 _id:i._id,
+                userid:i.userid,
                 level:i.level,
             }
         })

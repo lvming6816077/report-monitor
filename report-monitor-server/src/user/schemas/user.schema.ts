@@ -13,8 +13,11 @@ export class User {
     @Prop({ required:true,unique:true})// 用户id
     userid: string;
 
-    @Prop({ required:true,unique:true })// 用户名称
+    @Prop({ required:true,unique:true })// 用户账号
     username: string;
+
+    @Prop()// 用户昵称
+    nickname: string;
 
     @Prop({ required:true })// 用户密码
     password: string;
@@ -22,7 +25,7 @@ export class User {
     @Prop({ required:true,default:[1] }) // 用户等级（0：管理员，1：普通用户）
     level: [];
 
-    @Prop() // 用户预设point
+    @Prop({default:''}) // 用户预设point
     pointset: string;
 
     @Prop({ type: Date, default: Date.now })
