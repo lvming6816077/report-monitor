@@ -89,16 +89,27 @@ export const PointList: React.FC = () => {
         })
 
     }
-    const getList = async (params = {}) => {
-        const result = await axios.get('/rapi/point/getPointsList?pageStart=' + page.pageStart + '&pageSize=' + page.pageSize, {
+    const getList = async (params = {},isReset = false) => {
+        const p = isReset ? {
+            pageSize: 10,
+            pageStart: 1,
+        } : page
+        const result = await axios.get('/rapi/point/getPointsList?pageStart=' + p.pageStart + '&pageSize=' + p.pageSize, {
             params: {
                 ...params
             }
         });
-        setPage({
-            ...page,
-            total: result.data.data.totalDocs
-        })
+        if (isReset) {
+            setPage({
+                ...p,
+                total: result.data.data.totalDocs
+            })
+        } else {
+            setPage({
+                ...page,
+                total: result.data.data.totalDocs
+            })
+        }
         setDateSource(result.data.data.docs)
     }
 
@@ -111,12 +122,7 @@ export const PointList: React.FC = () => {
     }
 
     const resetList = () => {
-        setPage({
-            pageSize: 10,
-            pageStart: 1,
-            total: 0
-        })
-        onFinish({})
+        getList({},true)
         form.resetFields();
     }
 
@@ -177,7 +183,7 @@ export const PointList: React.FC = () => {
                             history.push('/createtag')
                         }} style={{ marginLeft: 20 }}>创建类目</Button>
                         <pre className='tips'>
-                            上报地址：{window.location.host+'/rapi/report/create?code=xxxx'}
+                            上报地址：https://{window.location.host+'/rapi/report/create?code=xxxx'}
                         </pre>
                     </div>
                     

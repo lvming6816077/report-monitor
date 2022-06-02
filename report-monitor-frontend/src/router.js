@@ -5,7 +5,8 @@ import { CreatePoint } from './pages/point/CreatePoint'
 import { PointList } from './pages/point/PointList'
 import { UserList } from './pages/setting/user/UserList'
 import { TagList } from './pages/point/TagList'
-import { PointSet } from './pages/setting/PointSet'
+import { PointSet } from './pages/setting/point/PointSet'
+import { PointAllList } from './pages/setting/point/PointAllList'
 import { Login } from './pages/login/Login'
 
 
@@ -35,6 +36,12 @@ const routes = [
     name: "pointlist",
     component: PointList,
     auth: [1]
+  },
+  {
+    path: "/pointalllist",
+    name: "pointalllist",
+    component: PointAllList,
+    auth: [1,0]
   },
   {
     path: "/userlist",

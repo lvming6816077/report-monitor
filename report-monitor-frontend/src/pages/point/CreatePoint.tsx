@@ -14,7 +14,7 @@ export const CreatePoint: React.FC = () => {
     }
 
     const [tagList, setTagList] = useState<Item[]>([])
-    const [curPoint, setPoint] = useState<string>('')
+    const [curPoint, setPoint] = useState<Item>()
 
     const [form] = Form.useForm();
 
@@ -27,7 +27,7 @@ export const CreatePoint: React.FC = () => {
         });
         if (result.data.code == 0) {
             message.success('保存成功')
-            setPoint(JSON.stringify(result.data.data, null, 4))
+            setPoint(result.data.data)
 
             form.resetFields()
         } else {
@@ -98,9 +98,9 @@ export const CreatePoint: React.FC = () => {
 
                 </Row>
                 {curPoint ? <div>
-                    <div>数据点信息：</div>
+                    <div>上报地址：</div>
                     <pre className='pre'>
-                        {curPoint}
+                        https://{window.location.host+'/rapi/report/create?code='}{curPoint.code}
                     </pre>
                 </div> : null}
             </div>

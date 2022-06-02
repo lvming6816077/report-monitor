@@ -4,6 +4,7 @@ import { Report, ReportDocument } from './schemas/report.schema';
 import { Model } from 'mongoose';
 import { PointService } from '../point/point.service';
 import { HttpException } from '@nestjs/common';
+import { DeleteResult } from "mongodb";
 import { RedisInstanceService } from "src/config/redis-config/redis.service";
 
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
@@ -31,6 +32,11 @@ export class ReportService {
     async findAll(): Promise<Report[]> {
         return this.reportModel.find({}).exec();
     }
+
+    async deleteOneByPoint(pointid:string):Promise<DeleteResult> {
+        return this.reportModel.deleteMany({ point: pointid }).exec();
+    }
+
 
     async findAllByCode(code: string, start: string, end: string,unit:number): Promise<resultVo> {
         const data: Point = await this.pointModel.findOne({code:code});
@@ -97,7 +103,9 @@ export class ReportService {
                 n--
             }
         }catch(e){
-            console.log(e)
+            this.logger.error(e,{
+                context: ReportService.name,
+            })
         }
     }
 
@@ -106,7 +114,7 @@ export class ReportService {
         const data: Point = await this.pointModel.findOne({code:code});
         
         if (data) {
-            
+            if (data.isBlock) return 
             const item = await this.reportModel.create({
                 point: (data as any)._id,
                 create:date

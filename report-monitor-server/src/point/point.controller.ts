@@ -1,4 +1,4 @@
-import { Body, Controller, Query, Get, Param, Post, Inject, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Query, Get, Param, Post, Inject, UseGuards, Request, HttpException } from '@nestjs/common';
 import { PointService } from './point.service';
 import { Point, PointDocument } from './schemas/point.schema';
 import { Tag, TagDocument } from './schemas/tag.schema';
@@ -12,6 +12,7 @@ import { QueryTagDto } from './dto/query-tag.dto'
 import { PaginateResult } from 'mongoose';
 import { DeleteResult } from 'mongodb'
 import { UserService } from 'src/user/user.service';
+import { UpdatePointDto } from './dto/update-point.dto';
 
 @Controller('point')
 @UseGuards(JwtAuthGuard)
@@ -66,6 +67,10 @@ export class PointController {
     async getTagsList(@Query() query: QueryTagDto): Promise<PaginateResult<TagDocument>> {
         return this.pointService.findAllTagByPage(query.pageStart, query.pageSize, query);
     }
+    @Get('getPointsAllList')
+    async getPointsAllList(@Query() query: QueryPointDto): Promise<PaginateResult<PointDocument>> {
+        return this.pointService.findAllAdminByPage(query.pageStart, query.pageSize, query);
+    }
 
 
     @Get('getTags')
@@ -88,6 +93,15 @@ export class PointController {
     async deleteTag(@Param('id') id: string): Promise<DeleteResult> {
 
         return this.pointService.deleteTagById(id);
+    }
+
+    @Post('updatePoint')
+    async updatePoint(@Body() dto:UpdatePointDto, @Request() req: any) {
+
+        if (!dto._id) {
+            throw new HttpException('id缺失', 200); 
+        }
+        return await this.pointService.updatePoint(dto._id,dto);
     }
 
     //   @Delete(':id')

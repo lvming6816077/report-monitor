@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Row, Modal, Form, Input, Table } from 'antd';
+import { Button, Col, Row, Modal, Form, Input, Table, Switch } from 'antd';
 import { message } from 'antd';
 import axios from 'axios'
 import moment from 'moment';
-import './TagList.less'
+import './PointAllList.less'
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { PlusSquareOutlined } from '@ant-design/icons';
@@ -11,29 +11,55 @@ import { ColumnsType } from 'antd/lib/table';
 
 type DataType  = {
     desc: string;
+    code: string;
     create:string;
     _id:string;
+    isBlock:boolean;
 }
-export const TagList: React.FC = () => {
+export const PointAllList: React.FC = () => {
     const columns: ColumnsType<DataType> = [
         {
-            title: '类目名称',
+            title: '数据点名称',
             dataIndex: 'desc',
         },
-
+        {
+            title: '数据点code',
+            dataIndex: 'code',
+        },
+        {
+            title: '所属类目',
+            dataIndex: ['tag', 'desc'],
+        },
         {
             title: '创建时间',
             dataIndex: 'create',
-            render: (v) => moment(v).format('YYYY-MM-DD HH:mm:ss')
+            render: (v,item) => moment(item.create).format('YYYY-MM-DD HH:mm:ss')
+        },
+        {
+            title: '是否禁用',
+            dataIndex: 'isBlock',
+            render: (v,item) => <Switch defaultChecked={item.isBlock} onChange={()=>onChange(item)} />
         },
         {
             title: '操作',
             dataIndex: 'action',
             render: (v, item) => {
-                return <a onClick={() => deleteTag(item)}>删除</a>
+                return <a onClick={() => deletePoint(item)}>删除</a>
             }
         },
     ]
+
+    const onChange = async (item:DataType)=>{
+        const result = await axios.post('/rapi/point/updatePoint/',{
+            _id:item._id,
+            isBlock:!item.isBlock
+        });
+        if (result.data.code == 0) {
+            message.success('操作成功')
+            // resetList()
+
+        }
+    }
 
 
     const [dataSource, setDateSource] = useState<[]>([])
@@ -67,11 +93,11 @@ export const TagList: React.FC = () => {
         })()
     }, [page.pageSize, page.pageStart])
 
-    const deleteTag = async (item: any) => {
+    const deletePoint = async (item: any) => {
         modal.confirm({
             title: '确认删除?',
             onOk: async () => {
-                const result = await axios.get('/rapi/point/deleteTag/' + item._id);
+                const result = await axios.get('/rapi/point/deletePoint/' + item._id);
                 if (result.data.code == 0) {
                     message.success('删除成功')
                     resetList()
@@ -86,7 +112,7 @@ export const TagList: React.FC = () => {
             pageSize: 10,
             pageStart: 1,
         } : page
-        const result = await axios.get('/rapi/point/getTagsList?pageStart=' + p.pageStart + '&pageSize=' + p.pageSize, {
+        const result = await axios.get('/rapi/point/getPointsAllList?pageStart=' + p.pageStart + '&pageSize=' + p.pageSize, {
             params: {
                 ...params
             }
@@ -102,6 +128,7 @@ export const TagList: React.FC = () => {
                 total: result.data.data.totalDocs
             })
         }
+        
         setDateSource(result.data.data.docs)
     }
 
@@ -122,8 +149,8 @@ export const TagList: React.FC = () => {
 
     return (
         <>
-            <div className='page-title'>类目管理</div>
-            <div className='taglist-content'>
+            <div className='page-title'>数据点管理</div>
+            <div className='pointalllist-content'>
                 <div className='query-content'>
                     <Form
                         form={form}
@@ -137,13 +164,20 @@ export const TagList: React.FC = () => {
                         <Row justify="center" align="middle">
                             <Col span={8}>
                                 <Form.Item
-                                    label="类目名称"
+                                    label="数据点名称"
                                     name="desc"
                                 >
-                                    <Input placeholder={'请输入类目名称'} />
+                                    <Input placeholder={'请输入数据点名称'} />
                                 </Form.Item>
                             </Col>
-
+                            <Col span={8}>
+                                <Form.Item
+                                    label="数据code"
+                                    name="code"
+                                >
+                                    <Input placeholder={'请输入数据code'} />
+                                </Form.Item>
+                            </Col>
                             <Col span={8}>
                                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                                     <Button type="primary" htmlType="submit">
@@ -154,17 +188,15 @@ export const TagList: React.FC = () => {
                                     </Button>
                                 </Form.Item>
                             </Col>
+
+
                         </Row>
                     </Form>
                 </div>
                 <div className='table-content'>
-                    <div className='btn-content'>
-                        <Button type="primary" icon={<PlusSquareOutlined />} onClick={() => {
-                            history.push('/createtag')
-                        }} style={{ marginLeft: 20 }}>创建类目</Button>
 
-                    </div>
-                    <Table dataSource={dataSource} columns={columns} pagination={paginationProps} rowKey={'_id'} />;
+                    
+                    <Table dataSource={dataSource} columns={columns} pagination={paginationProps} rowKey={'code'} />;
                 </div>
                 {contextHolder}
 

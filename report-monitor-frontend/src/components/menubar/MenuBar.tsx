@@ -49,6 +49,8 @@ const items: MenuItem[] = [
         key: 'item-3', 
         children: [
             { label: '数据点预设', key: '/pointset'},
+            { label: '数据点管理(admin)', key: '/pointalllist'},
+            
             { label: '用户管理', key: '/userlist'},
         ],
         icon:<SettingOutlined />

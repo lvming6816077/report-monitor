@@ -4,6 +4,7 @@ import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { User } from 'src/user/schemas/user.schema';
 import { Tag } from '../schemas/tag.schema';
 export class QueryPointDto implements QueryPageDto,Point {
+    isBlock: boolean;
     @IsString()
     pageStart: string;
     @IsString()

@@ -6,9 +6,10 @@ import { Tag, TagSchema } from "./schemas/tag.schema";
 import { PointController } from "./point.controller";
 import { PointService } from "./point.service";
 import { UserModule } from "src/user/user.module";
+import { ReportModule } from "src/report/report.module";
 
 @Module({
-    imports: [UserModule,MongooseModule.forFeature([{ name: Point.name, schema: PointSchema },{ name: Tag.name, schema: TagSchema }])],
+    imports: [forwardRef(() => ReportModule),UserModule,MongooseModule.forFeature([{ name: Point.name, schema: PointSchema },{ name: Tag.name, schema: TagSchema }])],
     controllers: [PointController],
     providers: [PointService],
 

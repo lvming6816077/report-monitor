@@ -1,4 +1,4 @@
-import { Inject, Injectable, Scope } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, Scope } from "@nestjs/common";
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Point, PointDocument } from './schemas/point.schema';
@@ -12,6 +12,7 @@ import { CreateTagDto } from "./dto/create-tag.dto";
 import { REQUEST } from "@nestjs/core";
 import { UserService } from "src/user/user.service";
 import { QueryPointDto } from "./dto/query-point.dto";
+import { ReportService } from "src/report/report.service";
 
 export type CURUSER = {
     user: {
@@ -24,7 +25,12 @@ export class PointService {
 
     constructor(
         @InjectModel(Point.name) private readonly pointModel: PaginateModel<PointDocument>,
+        
         @InjectModel(Tag.name) private readonly tagModel: PaginateModel<TagDocument>,
+
+        @Inject(forwardRef(() => ReportService))
+        private readonly reportService: ReportService,
+
         @Inject(REQUEST) private readonly req: CURUSER) { }
 
     async findOne(id: string): Promise<Point> {
@@ -54,13 +60,13 @@ export class PointService {
         }
         return result
     }
-    async findAllByPage(pageStart: string = '1', pageSize: string = '10', query: Point): Promise<PaginateResult<PointDocument>> {
+    async findAllByPage(pageStart: string = '1', pageSize: string = '10', query: Point,isAll=false): Promise<PaginateResult<PointDocument>> {
         const options = {
             populate: ['tag'],
             page: Number(pageStart),
             limit: Number(pageSize),
         };
-        const q: any = { user: this.req.user.userId }
+        const q: any = isAll ? {} : { user: this.req.user.userId }
         if (query.desc) {
             q.desc = { $regex: query.desc, $options: 'i' }
         }
@@ -70,6 +76,12 @@ export class PointService {
         const result = await this.pointModel.paginate(q, options)
         return result
     }
+    async findAllAdminByPage(pageStart: string = '1', pageSize: string = '10', query: Point): Promise<PaginateResult<PointDocument>> {
+        const res = await this.findAllByPage(pageStart,pageSize,query,true)
+        return res
+    }
+
+    
     async findAllTagByPage(pageStart: string = '1', pageSize: string = '10', query: Tag): Promise<PaginateResult<TagDocument>> {
         const options = {
             page: Number(pageStart),
@@ -109,8 +121,11 @@ export class PointService {
         return list
     }
 
-    deleteById(id: string): Promise<DeleteResult> {
-        return this.pointModel.deleteOne({ _id: id }).exec();
+    async deleteById(id: string): Promise<DeleteResult> {
+        // 删除关联的report
+        await this.reportService.deleteOneByPoint(id)
+        
+        return await this.pointModel.deleteOne({ _id: id }).exec();
 
     }
     async deleteTagById(id: string): Promise<DeleteResult> {
@@ -118,6 +133,11 @@ export class PointService {
         await this.pointModel.deleteMany({ tag: id })
 
         return this.tagModel.deleteOne({ _id: id }).exec();
+
+    }
+    async updatePoint(id: string,dto): Promise<Point> {
+        // console.log(dto)
+        return await this.pointModel.findOneAndUpdate({_id:id},dto).exec()
 
     }
     /*async updateUser(userId: string, userUpdates: UpdateUserDto): Promise<User> {

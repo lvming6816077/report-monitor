@@ -23,6 +23,9 @@ export class Point {
     @Prop({ type: String, ref: 'User',required:true })
     user: User;
 
+    @Prop({ default: false }) // 是否禁用
+    isBlock: boolean;
+
     @Prop({ type: Date, default: Date.now })
     create: string;
 
