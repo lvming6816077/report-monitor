@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Col, Row, Modal, Form, Input, Table } from 'antd';
+import React, { useState, useEffect, useRef } from 'react'
+import { Button, Col, Row, Modal, Form, Input, Table, Space } from 'antd';
 import { message } from 'antd';
 import axios from 'axios'
 import moment from 'moment';
@@ -8,11 +8,13 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { PlusSquareOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/lib/table';
+import { WarningModal, WarningType } from './WarningModal';
 
-type DataType  = {
+export type DataType  = {
     desc: string;
     code: string;
     create:string;
+    warning:WarningType;
     _id:string;
 }
 export const PointList: React.FC = () => {
@@ -38,7 +40,7 @@ export const PointList: React.FC = () => {
             title: '操作',
             dataIndex: 'action',
             render: (v, item) => {
-                return <a onClick={() => deletePoint(item)}>删除</a>
+                return <Space><a onClick={() => deletePoint(item)}>删除</a> <a onClick={() => warningPoint(item)}>告警设置</a></Space>
             }
         },
     ]
@@ -75,7 +77,7 @@ export const PointList: React.FC = () => {
         })()
     }, [page.pageSize, page.pageStart])
 
-    const deletePoint = async (item: any) => {
+    const deletePoint = async (item: DataType) => {
         modal.confirm({
             title: '确认删除?',
             onOk: async () => {
@@ -87,6 +89,17 @@ export const PointList: React.FC = () => {
                 }
             }
         })
+
+    }
+
+    const childRef = useRef<any>();
+    const updateCallback = ()=>{
+        message.success('修改成功')
+        resetList()
+    }
+    
+    const warningPoint = async (item: DataType) => {
+        childRef.current.showModal(item)
 
     }
     const getList = async (params = {},isReset = false) => {
@@ -189,6 +202,7 @@ export const PointList: React.FC = () => {
                     
                     <Table dataSource={dataSource} columns={columns} pagination={paginationProps} rowKey={'code'} />;
                 </div>
+                <WarningModal onRef={childRef} updateCallback={updateCallback}></WarningModal>
                 {contextHolder}
 
             </div>

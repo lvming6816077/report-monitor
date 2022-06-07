@@ -2,7 +2,7 @@
 import { Home } from './pages/home/Home'
 import { CreateTag } from './pages/point/CreateTag'
 import { CreatePoint } from './pages/point/CreatePoint'
-import { PointList } from './pages/point/PointList'
+import { PointList } from './pages/point/pointlist/PointList'
 import { UserList } from './pages/setting/user/UserList'
 import { TagList } from './pages/point/TagList'
 import { PointSet } from './pages/setting/point/PointSet'

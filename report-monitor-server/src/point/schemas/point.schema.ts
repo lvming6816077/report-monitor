@@ -5,7 +5,9 @@ import { Tag } from "./tag.schema";
 import * as mongoosePaginate from 'mongoose-paginate-v2';
 import { User } from "src/user/schemas/user.schema";
 
-export type PointDocument = Point & Document;
+export type PointDocument = Point & Document &{
+    warning?:Object
+};
 
 
 @Schema({timestamps:{createdAt: 'create',updatedAt:'update'}})

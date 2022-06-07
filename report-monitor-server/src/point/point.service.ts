@@ -13,6 +13,8 @@ import { REQUEST } from "@nestjs/core";
 import { UserService } from "src/user/user.service";
 import { QueryPointDto } from "./dto/query-point.dto";
 import { ReportService } from "src/report/report.service";
+import { WarningService } from "src/warning/warning.service";
+import { setDefaultResultOrder } from "dns";
 
 export type CURUSER = {
     user: {
@@ -30,6 +32,7 @@ export class PointService {
 
         @Inject(forwardRef(() => ReportService))
         private readonly reportService: ReportService,
+
 
         @Inject(REQUEST) private readonly req: CURUSER) { }
 
@@ -74,7 +77,10 @@ export class PointService {
             q.code = { $regex: query.code, $options: 'i' }
         }
         const result = await this.pointModel.paginate(q, options)
+
         return result
+
+
     }
     async findAllAdminByPage(pageStart: string = '1', pageSize: string = '10', query: Point): Promise<PaginateResult<PointDocument>> {
         const res = await this.findAllByPage(pageStart,pageSize,query,true)

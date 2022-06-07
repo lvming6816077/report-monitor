@@ -41,7 +41,7 @@ export class ReportService {
     async findAllByCode(code: string, start: string, end: string,unit:number): Promise<resultVo> {
         const data: Point = await this.pointModel.findOne({code:code});
 
-        let r = await this.reportModel.find({$and: [{ point: (data as any)._id }, { create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]}).exec()
+        //let r = await this.reportModel.find({$and: [{ point: (data as any)._id }, { create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]}).exec()
 
         if (data) {
             const result = await this.reportModel.aggregate([

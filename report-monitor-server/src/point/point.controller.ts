@@ -13,6 +13,7 @@ import { PaginateResult } from 'mongoose';
 import { DeleteResult } from 'mongodb'
 import { UserService } from 'src/user/user.service';
 import { UpdatePointDto } from './dto/update-point.dto';
+import { WarningService } from 'src/warning/warning.service';
 
 @Controller('point')
 @UseGuards(JwtAuthGuard)
@@ -20,6 +21,9 @@ export class PointController {
     constructor(
         private readonly pointService: PointService,
         @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+
+        
+        private readonly warningService: WarningService,
 
         private readonly userService: UserService,
     ) { }
@@ -60,8 +64,31 @@ export class PointController {
         }
     }
     @Get('getPointsList')
-    async getPointsList(@Query() query: QueryPointDto): Promise<PaginateResult<PointDocument>> {
-        return this.pointService.findAllByPage(query.pageStart, query.pageSize, query);
+    async getPointsList(@Query() query: QueryPointDto) {
+        let result = await this.pointService.findAllByPage(query.pageStart, query.pageSize, query);
+        const l = []
+
+        for (var i = 0 ; i < result.docs.length ; i++) {
+            var k = result.docs[i]
+            const warning = await this.warningService.findByPoint(k._id)
+            var o = {
+                _id:k._id,
+                code: k.code,
+                create: k.create,
+                desc: k.desc,
+                isBlock: k.isBlock,
+                tag: k.tag,
+                update: k.update,
+                user: k.user,
+                warning
+            }
+            l.push(o)
+        } 
+
+        return {
+            ...result,
+            docs:l,
+        }
     }
     @Get('getTagsList')
     async getTagsList(@Query() query: QueryTagDto): Promise<PaginateResult<TagDocument>> {
