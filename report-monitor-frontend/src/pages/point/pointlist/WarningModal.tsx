@@ -143,21 +143,21 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
                             <Form.Item label="是否开启" name="isOpen" valuePropName="checked" rules={[{ required: true, message: '请选择' }]}>
                                 <Switch />
                             </Form.Item>
-                            <Form.Item
+                            {/* <Form.Item
                                 label="最大触发次数"
                                 name="triggerMax"
 
                                 rules={[{ required: true, message: '请输入最大触发次数' }]}
                             >
                                 <InputNumber placeholder='最大触发次数' min={1} disabled={true} />
-                            </Form.Item>
-                            <Form.Item
+                            </Form.Item> */}
+                            {/* <Form.Item
                                 label="清零触发次数"
                                 name="triggerCount"
                                 rules={[{ required: false, }]}
                             >
                                 <RedoOutlined style={{ fontSize: 18, cursor: 'pointer' }} onClick={resetCount} />
-                            </Form.Item>
+                            </Form.Item> */}
                             <Form.Item
                                 label="监控间隔"
                                 name="interval"

@@ -67,10 +67,10 @@ export class WarningService {
 
     async updateWarningTrigger(id: string, num?: number): Promise<WarningDocument> {
 
-        const r = await this.warningModel.findById(id).exec()
+        // const r = await this.warningModel.findById(id).exec()
 
         return await this.warningModel.findOneAndUpdate({ _id: id }, {
-            triggerCount: num !== undefined ? num : r.triggerCount + 1,
+            lastTriggerDate:moment().format('YYYY-MM-DD HH:mm:ss'),
         })
 
     }
@@ -103,12 +103,12 @@ export class WarningService {
 
         for (var i = 0; i < result.list.length; i++) {
             var o = result.list[i] as any
-            const { triggerCount, triggerMax } = await this.findById(item._id)
+            const { lastTriggerDate } = await this.findById(item._id)
 
-            if (o.count >= max && triggerCount < triggerMax) {
+            if (o.count >= max && (!lastTriggerDate || moment(lastTriggerDate).add(interval,'minute').isSameOrBefore(moment()))) { // 在时间间隔内只出发一次
 
                 this.trigger(item)
-                // 触发次数加1
+                // 更新最近触发时间
                 this.updateWarningTrigger(item._id)
                 break
             }
@@ -142,13 +142,12 @@ export class WarningService {
             return new Function('locals', 'return locals.' + s1)(locals);
         });
         
-
-        const u = await this.userModel.findOne({userid:(item.point.user) as unknown as string})
+        const u = await this.userModel.findOne({userid:(item.point.user) as unknown as string}).exec()
 
         if (u.email) {
             this.mailerService
             .sendMail({
-                to: '441403517@qq.com',
+                to: u.email,
                 from: '441403517@qq.com',
                 subject: msg,
                 html: html,
