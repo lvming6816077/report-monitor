@@ -10,6 +10,6 @@ import { PointModule } from '../point/point.module';
     imports: [forwardRef(() => PointModule),MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
     controllers: [UserController],
     providers: [UserService],
-    exports: [UserService],
+    exports: [UserService,MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
 })
 export class UserModule {}

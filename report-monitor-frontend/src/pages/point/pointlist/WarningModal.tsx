@@ -9,13 +9,14 @@ import { useHistory } from 'react-router-dom';
 import { PlusSquareOutlined, RedoOutlined } from '@ant-design/icons';
 import { DataType } from './PointList'
 
-export type WarningType  = {
+export type WarningType = {
     max: number;
-    min:number;
-    isOpen:boolean;
+    min: number;
+    isOpen: boolean;
     message: string;
-    create:string;
-    _id:string;
+    create: string;
+    interval: number;
+    _id: string;
 }
 
 type Props = {
@@ -29,8 +30,7 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
     const history = useHistory()
 
 
-    const [pointid, setpointid] = useState<string>('')
-    const [warningid, setwarningid] = useState<string>('')
+    const [curItem, setCurItem] = useState<DataType>()
     const [form] = Form.useForm();
 
 
@@ -45,21 +45,37 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
     const showModal = (item: DataType) => {
         form.resetFields()
         setIsModalVisible(true);
-        setpointid(item._id);
-        setwarningid(item.warning._id)
+
+        setCurItem(item)
 
         form.setFieldsValue({
             ...item.warning,
-            isOpen:item.warning.isOpen
+            isOpen: item.warning.isOpen
         })
+
+
     };
+
+    // useEffect(() => {
+    //     form.setFieldsValue({
+    //     })
+    // }, [])
+
+    // 初次触发
+    useEffect(() => {
+        if (curItem) {
+            changeV(curItem?.warning.interval, 'interval')
+            changeV(curItem?.warning.max, 'max')
+            changeV(curItem?.warning.min, 'min')
+        }
+    }, [curItem])
 
     const handleOk = async () => {
         const values = await form.validateFields()
 
         const result = await axios.post('/rapi/warning/addWarningSet', {
             ...values,
-            pointId: pointid
+            pointId: curItem?._id
         });
         if (result.data.code == 0) {
             updateCallback()
@@ -67,10 +83,10 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
         setIsModalVisible(false);
     };
 
-    const resetCount = async ()=>{
+    const resetCount = async () => {
         const result = await axios.get('/rapi/warning/resetWarningCount', {
-            params:{
-                id:warningid
+            params: {
+                id: curItem?.warning?._id
             }
         });
 
@@ -83,6 +99,33 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
         setIsModalVisible(false);
     };
 
+    let intervalStr = '', maxStr = '', minStr = ''
+    const changeV = (v: any, type: any) => {
+
+
+        if (type == 'interval' && v) {
+            intervalStr = '【' + curItem?.code + '】【' + curItem?.desc + '】在时间间隔' + v + '分钟内，触发了'
+        }
+        if (type == 'max' && v) {
+            maxStr = '，最大值：' + v + '的监控告警'
+        }
+
+        if (type == 'min' && v) {
+            minStr = '，最小值：' + v + '的监控告警'
+        }
+
+        let message = ''
+
+        if (!intervalStr) {
+            message = ''
+        } else {
+            message = intervalStr + maxStr + minStr + '。'
+        }
+
+        form.setFieldsValue({
+            message
+        })
+    }
 
     return (
         <>
@@ -103,8 +146,8 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
                             <Form.Item
                                 label="最大触发次数"
                                 name="triggerMax"
-                                
-                                rules={[{ required: true,message: '请输入最大触发次数'  }]}
+
+                                rules={[{ required: true, message: '请输入最大触发次数' }]}
                             >
                                 <InputNumber placeholder='最大触发次数' min={1} disabled={true} />
                             </Form.Item>
@@ -113,29 +156,29 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
                                 name="triggerCount"
                                 rules={[{ required: false, }]}
                             >
-                                <RedoOutlined style={{fontSize:18,cursor:'pointer'}} onClick={resetCount}/>
+                                <RedoOutlined style={{ fontSize: 18, cursor: 'pointer' }} onClick={resetCount} />
                             </Form.Item>
                             <Form.Item
                                 label="监控间隔"
                                 name="interval"
-                                
+
                                 rules={[{ required: true, message: '请输入监控间隔' }]}
                             >
-                                <InputNumber min={1} max={60} addonAfter="分钟"/>
+                                <InputNumber min={1} max={60} addonAfter="分钟" onChange={(v) => changeV(v, 'interval')} />
                             </Form.Item>
                             <Form.Item
                                 label="最大值"
                                 name="max"
                                 rules={[{ required: false }]}
                             >
-                                <InputNumber placeholder='最大值' min={1} />
+                                <InputNumber placeholder='最大值' min={1} onChange={(v) => changeV(v, 'max')} />
                             </Form.Item>
                             <Form.Item
                                 label="最小值"
                                 name="min"
                                 rules={[{ required: false }]}
                             >
-                                <InputNumber placeholder='最小值' min={1} />
+                                <InputNumber placeholder='最小值' min={1} onChange={(v) => changeV(v, 'min')} />
                             </Form.Item>
 
                             <Form.Item
@@ -143,7 +186,7 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
                                 label="告警文案"
                                 rules={[{ required: true, message: '请输入告警文案' }]}
                             >
-                                <Input.TextArea showCount maxLength={100} />
+                                <Input.TextArea showCount maxLength={100} style={{ height: 100 }} disabled />
                             </Form.Item>
 
                         </Form>

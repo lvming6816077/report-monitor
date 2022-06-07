@@ -3,6 +3,8 @@ import { IsInt, IsString,IsEmpty,IsNotEmpty, Allow, isString, IsOptional } from 
 import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { User } from 'src/user/schemas/user.schema';
 export class QueryUserDto implements QueryPageDto,User {
+    email: string;
+    phone: string;
     nickname: string;
     create: string;
     update: string;

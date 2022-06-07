@@ -1,4 +1,4 @@
-import { IsInt, IsString,IsEmpty,IsNotEmpty,  isString, IsOptional, IsArray } from 'class-validator';
+import { IsInt, IsString,IsEmpty,IsNotEmpty,  isString, IsOptional, IsArray, IsPhoneNumber, IsEmail } from 'class-validator';
 
 import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { User } from 'src/user/schemas/user.schema';
@@ -12,6 +12,7 @@ export class UpdateUserDto  {
     username?: string;
 
     @IsArray()
+    @IsOptional()
     level?: number[];
     
     @IsString()
@@ -20,6 +21,14 @@ export class UpdateUserDto  {
 
     @IsString()
     userid?:string
+
+    @IsEmail()
+    @IsOptional()
+    email?:string
+
+    @IsString()
+    @IsOptional()
+    phone?:string
 
 
 }

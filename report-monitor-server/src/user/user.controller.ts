@@ -62,12 +62,17 @@ export class UserController {
     async update(@Body() body: UpdateUserDto,@Req() req) {
         delete body.username
 
-        const level = body.level.map(d=>Number(d))
-        
-        const u = await this.userService.updateUser(body.userid,{
+        const level = body.level ? body.level.map(d=>Number(d)) : null
+
+        const opt = {
             ...body,
-            level
-        })
+        }
+
+        if (level) {
+            opt.level = level
+        }
+        
+        const u = await this.userService.updateUser(body.userid,opt)
         if (u.userid) {
             return 'success'
         }
@@ -93,6 +98,18 @@ export class UserController {
             docs:l,
         }
 
+    }
+
+    @Get('getUserById')
+    async getUserById(@Query() query) {
+        const u = await this.userService.findUserByUserId(query.id)
+
+        return  {
+            level: u.level,
+            email:u.email,
+            phone: u.phone,
+            username: u.username
+        }
     }
 
 

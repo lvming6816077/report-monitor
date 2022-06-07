@@ -35,7 +35,7 @@ export const UserList: React.FC = () => {
             title: '用户权限',
             dataIndex: 'level',
             render: (v: []) => {
-                return v.map(i => <Tag key={i}>{roleMap[i]}</Tag>)
+                return v?.map(i => <Tag key={i}>{roleMap[i]}</Tag>)
             }
         },
 

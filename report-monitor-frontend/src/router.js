@@ -8,6 +8,7 @@ import { TagList } from './pages/point/TagList'
 import { PointSet } from './pages/setting/point/PointSet'
 import { PointAllList } from './pages/setting/point/PointAllList'
 import { Login } from './pages/login/Login'
+import { UserInfo } from './pages/setting/user/UserInfo'
 
 
 const routes = [
@@ -48,6 +49,12 @@ const routes = [
     name: "userlist",
     component: UserList,
     auth: [1,0]
+  },
+  {
+    path: "/userinfo",
+    name: "userinfo",
+    component: UserInfo,
+    auth: [1]
   },
   {
     path: "/taglist",

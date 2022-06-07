@@ -36,6 +36,8 @@
     "cookie-parser": "^1.4.6",
     "cron-parser": "^4.3.0",
     "dayjs": "^1.11.1",
+    "echarts": "^5.3.2",
+    "ejs": "^3.1.8",
     "express-session": "^1.17.3",
     "install": "^0.13.0",
     "mongoose": "^6.3.0",

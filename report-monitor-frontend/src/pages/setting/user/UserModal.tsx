@@ -40,7 +40,7 @@ export const UserModal: React.FC<Props> = ({ updateCallback, onRef }) => {
 
         form.setFieldsValue({
             ...item,
-            level:item.level.map(d=>d.toString())
+            level:item.level?.map(d=>d.toString())
         })
     };
 

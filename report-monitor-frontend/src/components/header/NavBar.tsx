@@ -24,7 +24,7 @@ export const NavBar: React.FC = () => {
     const shortUsername = nickname[0]
 
     const handleMenuClick:MenuProps['onClick'] = (e) => {
-        console.log(e)
+
         if (e.key == 'logout') {
             logout()
             return

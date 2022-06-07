@@ -16,7 +16,7 @@ export default (state = initialState, action: UserActionTypes):initialStateType 
 
     switch (action.type) {
         case SET_USER:
-            const u = { ...state, userInfo: { username: action.data?.username,level:action.data?.level,nickname:action.data?.nickname } }
+            const u = { ...state, userInfo: { username: action.data?.username,level:action.data?.level,nickname:action.data?.nickname,userid:action.data?.userid } }
             localStorage.setItem('cuser', JSON.stringify(u))
             return u
 
