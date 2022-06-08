@@ -32,11 +32,8 @@ export class Warning {
     @Prop()
     message: string;// 告警文案
 
-    @Prop()
-    triggerMax: number;// 最多触发次数
-
-    @Prop({type: Number,default:0})
-    triggerCount: number;// 触发次数
+    @Prop({ default:''}) // 最近触发时间
+    lastTriggerDate: string;
 
     @Prop({ type: _Schema.Types.ObjectId, ref: 'Point',required:true})
     point: Point;
