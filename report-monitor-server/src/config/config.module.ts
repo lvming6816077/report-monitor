@@ -34,8 +34,7 @@ import { RedisModule } from 'nestjs-redis'
                 host: "smtp.exmail.qq.com",
                 port: "465",
                 auth: {
-                  user: "monitor@nihaoshijie.com.cn",
-                  pass: "HyqeEKHg3kLecfhh"
+
                 }
             },
         }),
