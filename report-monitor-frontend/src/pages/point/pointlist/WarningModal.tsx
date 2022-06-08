@@ -50,7 +50,7 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
 
         form.setFieldsValue({
             ...item.warning,
-            isOpen: item.warning.isOpen
+            isOpen: item?.warning?.isOpen || false
         })
 
 
@@ -63,7 +63,7 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
 
     // 初次触发
     useEffect(() => {
-        if (curItem) {
+        if (curItem && curItem.warning) {
             changeV(curItem?.warning.interval, 'interval')
             changeV(curItem?.warning.max, 'max')
             changeV(curItem?.warning.min, 'min')
@@ -149,7 +149,7 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
 
                                 rules={[{ required: true, message: '请输入最大触发次数' }]}
                             >
-                                <InputNumber placeholder='最大触发次数' min={1} disabled={true} />
+                                <InputNumber placeholder='最大触发次数' min={1} disabled={false} />
                             </Form.Item>
                             <Form.Item
                                 label="清零触发次数"
