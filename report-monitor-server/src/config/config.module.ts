@@ -31,11 +31,11 @@ import { RedisModule } from 'nestjs-redis'
         // }),
         MailerModule.forRoot({
             transport:{
-                host: "smtp.qq.com",
+                host: "smtp.exmail.qq.com",
                 port: "465",
                 auth: {
-                  user: "441403517@qq.com",
-                  pass: "bltoxppjfegpbigf"
+                  user: "monitor@nihaoshijie.com.cn",
+                  pass: "HyqeEKHg3kLecfhh"
                 }
             },
         }),

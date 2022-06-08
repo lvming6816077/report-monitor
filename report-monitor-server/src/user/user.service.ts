@@ -10,12 +10,14 @@ import * as bcrypt from 'bcrypt';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger  } from 'winston';
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { RedisInstanceService } from "src/config/redis-config/redis.service";
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectModel(User.name)
         private readonly userModel: PaginateModel<UserDocument>, 
+
 
         @Inject(forwardRef(() => PointService))
         private readonly pointService: PointService,
@@ -53,6 +55,9 @@ export class UserService {
     }
     async findUserByUserId(userid: string): Promise<User> {
         return await this.userModel.findOne({userid})
+    }
+    async findUserByUserEmail(email: string): Promise<User> {
+        return await this.userModel.findOne({email})
     }
     async findUserPointSet(userid: string): Promise<string> {
 

@@ -7,10 +7,7 @@ export class CreateWarningDto extends Warning {
   @IsNumber()
   readonly interval: number;
 
-  @IsNumber()
-  readonly triggerMax: number;
   
-
   @IsBoolean()
   readonly isOpen: boolean;
 

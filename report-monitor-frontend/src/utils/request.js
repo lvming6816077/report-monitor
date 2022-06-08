@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom'
 import { message } from 'antd';
 // axios 配置
 axios.defaults.timeout = 8000;
-// axios.defaults.baseURL = 'https://api.github.com';
 
 // http request 拦截器
 axios.interceptors.request.use(
@@ -29,7 +28,7 @@ axios.interceptors.response.use(
         if (error.response.data.code === 401) {
             window.location.href = '/login'
         }
-        if (error.response.data.code === 500) {
+        if (error.response.data.code !== 200) {
             message.error(error.response.data.message)
         }
         return Promise.reject(error);

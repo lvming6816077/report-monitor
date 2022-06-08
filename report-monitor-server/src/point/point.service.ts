@@ -33,6 +33,8 @@ export class PointService {
         @Inject(forwardRef(() => ReportService))
         private readonly reportService: ReportService,
 
+        private readonly warningService: WarningService,
+
 
         @Inject(REQUEST) private readonly req: CURUSER) { }
 
@@ -78,13 +80,33 @@ export class PointService {
         }
         const result = await this.pointModel.paginate(q, options)
 
-        return result
+        const l = []
+        for (var i = 0 ; i < result.docs.length ; i++) {
+            var k = result.docs[i]
+            const warning = await this.warningService.findByPoint(k._id)
+            var o = {
+                _id:k._id,
+                code: k.code,
+                create: k.create,
+                desc: k.desc,
+                isBlock: k.isBlock,
+                tag: k.tag,
+                update: k.update,
+                user: k.user,
+                warning
+            }
+            l.push(o)
+        }
 
+        return {
+            ...result,
+            docs:l
+        }
 
     }
     async findAllAdminByPage(pageStart: string = '1', pageSize: string = '10', query: Point): Promise<PaginateResult<PointDocument>> {
-        const res = await this.findAllByPage(pageStart,pageSize,query,true)
-        return res
+        return await this.findAllByPage(pageStart,pageSize,query,true)
+
     }
 
     
@@ -130,6 +152,9 @@ export class PointService {
     async deleteById(id: string): Promise<DeleteResult> {
         // 删除关联的report
         await this.reportService.deleteOneByPoint(id)
+
+        // 删除关联的waring
+        await this.warningService.deleteByPoint(id)
         
         return await this.pointModel.deleteOne({ _id: id }).exec();
 

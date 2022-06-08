@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { PlusSquareOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/lib/table';
+import { WarningType } from '@/pages/point/pointlist/WarningModal';
 
 type DataType  = {
     desc: string;
@@ -15,6 +16,7 @@ type DataType  = {
     create:string;
     _id:string;
     isBlock:boolean;
+    warning?:WarningType
 }
 export const PointAllList: React.FC = () => {
     const columns: ColumnsType<DataType> = [
@@ -40,6 +42,11 @@ export const PointAllList: React.FC = () => {
             dataIndex: 'isBlock',
             render: (v,item) => <Switch defaultChecked={item.isBlock} onChange={()=>onChange(item)} />
         },
+        // {
+        //     title: '是否开启告警',
+        //     dataIndex: ['warning', 'isOpen'],
+        //     render: (v,item) => <Switch defaultChecked={item?.warning?.isOpen} onChange={()=>onChangeWarning(item)} />
+        // },
         {
             title: '操作',
             dataIndex: 'action',
@@ -61,7 +68,17 @@ export const PointAllList: React.FC = () => {
         }
     }
 
+    const onChangeWarning = async (item:DataType)=>{
+        const result = await axios.post('/rapi/warning/updatePoint/',{
+            _id:item?.warning?._id
+        });
+        if (result.data.code == 0) {
+            message.success('操作成功')
 
+        }
+    }
+
+    
     const [dataSource, setDateSource] = useState<[]>([])
     const history = useHistory()
     const [modal, contextHolder] = Modal.useModal();
@@ -108,10 +125,14 @@ export const PointAllList: React.FC = () => {
 
     }
     const getList = async (params = {},isReset = false) => {
+        
+
         const p = isReset ? {
             pageSize: 10,
             pageStart: 1,
         } : page
+
+
         const result = await axios.get('/rapi/point/getPointsAllList?pageStart=' + p.pageStart + '&pageSize=' + p.pageSize, {
             params: {
                 ...params

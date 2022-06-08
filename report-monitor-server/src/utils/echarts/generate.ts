@@ -26,7 +26,12 @@ export const makeCharts = function(_data){
         xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: xAxis
+            data: xAxis,
+            axisLabel: {
+                formatter: (v:string)=>{
+                    return v.split(' ')[1]
+                },
+            }
         },
         yAxis: {
             type: 'value',

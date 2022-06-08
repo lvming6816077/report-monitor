@@ -23,6 +23,12 @@ const str = ''+
     '<p style="text-align: right;"><%date %></p>' +
 '</div>'
 
-export default str
+export default function(locals) {
+    var html = str.replace(/<%([^%>]+)?%>/g, function (s0, s1) {
+        return new Function('locals', 'return locals.' + s1)(locals);
+    });
+
+    return html
+}
 
 

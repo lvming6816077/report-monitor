@@ -61,14 +61,18 @@ export const CItem: React.FC<Props> = React.memo(({ data, code, desc,changeData 
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: xAxis
+                data: xAxis,
+                // axisLabel: {
+                //     formatter: (v:string)=>{
+                //         return v.split(' ')[1]
+                //     },
+                // }
             },
             yAxis: {
                 type: 'value',
                 boundaryGap: [0, '100%'],
                 axisLabel: {
                     formatter: (v:string)=>{
-                        console.log(v)
                         return tranNumber(v,2)
                     },
                 }

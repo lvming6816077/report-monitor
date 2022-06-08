@@ -32,6 +32,7 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
 
     const [curItem, setCurItem] = useState<DataType>()
     const [form] = Form.useForm();
+    const [disabled,setDisabled] = useState<boolean>(false)
 
 
 
@@ -45,13 +46,16 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
     const showModal = (item: DataType) => {
         form.resetFields()
         setIsModalVisible(true);
-
         setCurItem(item)
+
+        const isOpen = item?.warning?.isOpen || false
 
         form.setFieldsValue({
             ...item.warning,
-            isOpen: item?.warning?.isOpen || false
+            isOpen: isOpen
         })
+
+        setDisabled(!isOpen)
 
 
     };
@@ -129,7 +133,7 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
 
     return (
         <>
-            <Modal title="告警设置" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="告警设置" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={600}>
                 <Row justify="center" align="middle">
                     <Col span={24}>
                         <Form
@@ -141,7 +145,7 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
                             autoComplete="off"
                         >
                             <Form.Item label="是否开启" name="isOpen" valuePropName="checked" rules={[{ required: true, message: '请选择' }]}>
-                                <Switch />
+                                <Switch onChange={(v)=>setDisabled(!v)}/>
                             </Form.Item>
                             {/* <Form.Item
                                 label="最大触发次数"
@@ -164,21 +168,21 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
 
                                 rules={[{ required: true, message: '请输入监控间隔' }]}
                             >
-                                <InputNumber min={1} max={60} addonAfter="分钟" onChange={(v) => changeV(v, 'interval')} />
+                                <InputNumber min={1} max={60} addonAfter="分钟" onChange={(v) => changeV(v, 'interval')} placeholder={'请输入监控间隔'} disabled={disabled}/>
                             </Form.Item>
                             <Form.Item
                                 label="最大值"
                                 name="max"
                                 rules={[{ required: false }]}
                             >
-                                <InputNumber placeholder='最大值' min={1} onChange={(v) => changeV(v, 'max')} />
+                                <InputNumber placeholder='最大值' min={1} onChange={(v) => changeV(v, 'max')} disabled={disabled}/>
                             </Form.Item>
                             <Form.Item
                                 label="最小值"
                                 name="min"
                                 rules={[{ required: false }]}
                             >
-                                <InputNumber placeholder='最小值' min={1} onChange={(v) => changeV(v, 'min')} />
+                                <InputNumber placeholder='最小值' min={1} onChange={(v) => changeV(v, 'min')} disabled={disabled}/>
                             </Form.Item>
 
                             <Form.Item
@@ -186,7 +190,7 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
                                 label="告警文案"
                                 rules={[{ required: true, message: '请输入告警文案' }]}
                             >
-                                <Input.TextArea showCount maxLength={100} style={{ height: 100 }} disabled />
+                                <Input.TextArea  style={{ height: 100 }} disabled />
                             </Form.Item>
 
                         </Form>

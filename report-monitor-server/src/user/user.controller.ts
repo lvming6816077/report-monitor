@@ -1,4 +1,4 @@
-import { Body, Controller, Req, Get, Res, Post, Injectable, Query } from '@nestjs/common';
+import { Body, Controller, Req, Get, Res, Post, Request, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 const parser = require('cron-parser');
 import { JwtConfigService } from 'src/config/jwt-config/jwt-config.service';
@@ -9,11 +9,25 @@ import { QueryUserDto } from './dto/query-user.dto'
 
 import * as svgCaptcha from 'svg-captcha';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { MailerService } from '@nestjs-modules/mailer';
+import { RedisInstanceService } from 'src/config/redis-config/redis.service';
+import { JwtAuthGuard } from 'src/config/jwt-config/jwtAuth.guard';
+import * as moment from 'moment';
+import getStr from 'src/config/email-config/templates/code';
+import { UpdateUserEmailDto } from './dto/update-user-email.dto';
+
+
 
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService,
+    constructor(
+        private readonly userService: UserService,
+
+        private readonly mailerService: MailerService,
+
+        private readonly redisService: RedisInstanceService,
+        
         private readonly jwt: JwtConfigService,) { }
 
     @Get('getCaptcha')
@@ -58,6 +72,7 @@ export class UserController {
         return await this.userService.createUser(body.username,body.password,body.nickname)
 
     }
+    @UseGuards(JwtAuthGuard)
     @Post('update')
     async update(@Body() body: UpdateUserDto,@Req() req) {
         delete body.username
@@ -80,6 +95,7 @@ export class UserController {
         return 'error'
 
     }
+    @UseGuards(JwtAuthGuard)
     @Get('getUsersList')
     async getUsersList(@Query() query: QueryUserDto) {
         const result = await this.userService.findAllByPage(query.pageStart,query.pageSize,query)
@@ -108,13 +124,85 @@ export class UserController {
             level: u.level,
             email:u.email,
             phone: u.phone,
+            nickname:u.nickname,
             username: u.username
         }
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Get('sendEmailCode')
+    async sendEmailCode(@Query() query, @Request() req: any) {
+        if (!query.email) {
+            
+            throw new HttpException('email缺失', 200); 
+        }
 
+        const u = await this.userService.findUserByUserEmail(query.email)
+        if (u) {
+            throw new HttpException('email已绑定', 200); 
+        }
+        const {username} = await this.userService.findUserByUserId(req.user.userId)
+        const key = username+'email-code'
+        const redisCode = this.redisService.get(key)
+
+        if (redisCode) {
+            this.redisService.del(key)
+        }
+
+        //随机获取6位数字
+        var s2msCode = Math.random().toString().slice(-6)
+
+        this.redisService.set(key,{
+            code:s2msCode,
+            date:moment().format('YYYY-MM-DD HH:mm:ss')
+        })
+
+
+        const res = await this.mailerService
+        .sendMail({
+            to: query.email,
+            from: 'Report Monitor <monitor@nihaoshijie.com.cn>',
+            subject: '【Report Monitor】【邮箱验证码】',
+            html: getStr({s2msCode}),
+        })
+
+        return 'success'
+    }
     
+    @UseGuards(JwtAuthGuard)
+    @Post('updateEmail')
+    async updateEmail(@Body() body:UpdateUserEmailDto, @Request() req: any) {
+
+        const {username} = await this.userService.findUserByUserId(req.user.userId)
+        const key = username+'email-code'
+        const redisCode:any = await this.redisService.get(key)
+        
+        if (redisCode) {
+            const {date,code} = JSON.parse(redisCode)
+
+            console.log(code,body.code)
+
+            if (moment(date).add(5,'minute').isBefore(moment())) {
+                this.redisService.del(key)
+                throw new HttpException('验证码失效', 200); 
+            }
+
+            if (code != body.code) {
+                throw new HttpException('验证码错误', 200); 
+            }
+
+            const u = await this.userService.updateUser(req.user.userId,{email:body.email})
+            if (u.userid) {
+                this.redisService.del(key)
+                return 'success'
+            }
 
 
+        } else {
+            throw new HttpException('验证码无效', 200); 
+        }
+
+
+    }
 
 }

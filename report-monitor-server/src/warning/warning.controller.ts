@@ -29,12 +29,10 @@ export class WarningController {
         return await this.warningService.create(dto);
     }
 
-    
+    @Get('updateWarningOpen')
+    async updateWarningOpen(@Query() query) {
 
-    @Get('resetWarningCount')
-    async resetWarningCount(@Query() query) {
-
-        return await this.warningService.updateWarningTrigger(query.id,0)
+        return await this.warningService.updateWarningOpen(query.id,false)
 
     }
 }

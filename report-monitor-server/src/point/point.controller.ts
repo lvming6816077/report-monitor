@@ -66,29 +66,8 @@ export class PointController {
     @Get('getPointsList')
     async getPointsList(@Query() query: QueryPointDto) {
         let result = await this.pointService.findAllByPage(query.pageStart, query.pageSize, query);
-        const l = []
 
-        for (var i = 0 ; i < result.docs.length ; i++) {
-            var k = result.docs[i]
-            const warning = await this.warningService.findByPoint(k._id)
-            var o = {
-                _id:k._id,
-                code: k.code,
-                create: k.create,
-                desc: k.desc,
-                isBlock: k.isBlock,
-                tag: k.tag,
-                update: k.update,
-                user: k.user,
-                warning
-            }
-            l.push(o)
-        } 
-
-        return {
-            ...result,
-            docs:l,
-        }
+        return result
     }
     @Get('getTagsList')
     async getTagsList(@Query() query: QueryTagDto): Promise<PaginateResult<TagDocument>> {

@@ -55,14 +55,25 @@ export class WarningService {
         })
     }
 
+    async deleteByPoint(point: string): Promise<DeleteResult> {
+        return await this.warningModel.deleteOne({
+            point: point,
+        })
+    }
+
     async findById(id: string): Promise<Warning> {
         return await this.warningModel.findById(id).exec()
     }
 
     async findAllOpened(): Promise<WarningDocument[]> {
-        return await this.warningModel.find({
+        const res = await this.warningModel.find({
             isOpen: true,
-        }).populate('point').exec()
+        }).populate({
+            path: 'point',
+        }).exec()
+
+        // 过滤掉禁用的
+        return res.filter(o=>o.point.isBlock == false)
     }
 
     async updateWarningTrigger(id: string, num?: number): Promise<WarningDocument> {
@@ -75,13 +86,21 @@ export class WarningService {
 
     }
 
+    async updateWarningOpen(id: string,isOpen:boolean): Promise<WarningDocument> {
+
+        return await this.warningModel.findOneAndUpdate({ _id: id }, {
+            isOpen
+        })
+
+    }
+
 
     async dealByTask() {
         const list = await this.findAllOpened()
 
         list.forEach(item => {
 
-            if (item.max && item.interval && item.point.code) {
+            if (item.max && item.interval && item.point?.code) {
                 this.dealSingleTask(item)
             }
         })
@@ -105,7 +124,7 @@ export class WarningService {
             var o = result.list[i] as any
             const { lastTriggerDate } = await this.findById(item._id)
 
-            if (o.count >= max && (!lastTriggerDate || moment(lastTriggerDate).add(interval,'minute').isSameOrBefore(moment()))) { // 在时间间隔内只出发一次
+            if (o.count >= max && (!lastTriggerDate || moment(lastTriggerDate).add(interval,'minute').isBefore(moment()))) { // 在时间间隔内只出发一次
 
                 this.trigger(item)
                 // 更新最近触发时间
@@ -138,25 +157,20 @@ export class WarningService {
             chartSvg: svgstr
         };
 
-        var html = emailStr.replace(/<%([^%>]+)?%>/g, function (s0, s1) {
-            return new Function('locals', 'return locals.' + s1)(locals);
-        });
-        
+
         const u = await this.userModel.findOne({userid:(item.point.user) as unknown as string}).exec()
 
         if (u.email) {
             this.mailerService
             .sendMail({
                 to: u.email,
-                from: '441403517@qq.com',
+                from: 'Report Monitor <monitor@nihaoshijie.com.cn>',
                 subject: msg,
-                html: html,
+                html: emailStr(locals),
             })
             .catch((e) => { this.logger.error(e), console.log(e) });
         }
 
-
     }
-
 
 }
