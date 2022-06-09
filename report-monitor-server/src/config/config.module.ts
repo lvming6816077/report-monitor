@@ -33,6 +33,7 @@ import { RedisModule } from 'nestjs-redis'
             transport:{
                 host: "smtp.exmail.qq.com",
                 port: "465",
+                // 配置自己的smtp服务器
                 auth: {
                 }
             },
