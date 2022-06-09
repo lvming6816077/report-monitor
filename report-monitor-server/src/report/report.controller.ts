@@ -5,7 +5,7 @@ import { Report } from './schemas/report.schema';
 import * as moment from 'moment'
 
 
-const unit = 5// 分钟
+const unit = 1// 分钟
 @Controller('report')
 export class ReportController {
   constructor(private readonly reportService: ReportService) { }

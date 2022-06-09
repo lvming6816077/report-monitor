@@ -81,6 +81,7 @@ export const PointList: React.FC = () => {
     const deletePoint = async (item: DataType) => {
         modal.confirm({
             title: '确认删除?',
+            content:'删除该数据点会一并删除相关上报数据和告警设置',
             onOk: async () => {
                 const result = await axios.get('/rapi/point/deletePoint/' + item._id);
                 if (result.data.code == 0) {
