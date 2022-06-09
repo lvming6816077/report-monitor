@@ -8,7 +8,7 @@ export type ReportDocument = Report & Document;
 
 
 // @Schema({timestamps:{createdAt: 'create'}})
-@Schema()
+@Schema({versionKey: false})
 export class Report {
 
     @Prop({ type: _Schema.Types.ObjectId, ref: 'Point',required:true,index:true })

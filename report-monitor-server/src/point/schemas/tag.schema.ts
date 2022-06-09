@@ -6,7 +6,7 @@ import {Point} from "./point.schema"
 
 export type TagDocument = Tag & Document;
 
-@Schema({timestamps:{createdAt: 'create',updatedAt:'update'}})
+@Schema({timestamps:{createdAt: 'create',updatedAt:'update'},versionKey: false})
 export class Tag {
 
     @Prop()

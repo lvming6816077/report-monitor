@@ -10,7 +10,7 @@ export type PointDocument = Point & Document &{
 };
 
 
-@Schema({timestamps:{createdAt: 'create',updatedAt:'update'}})
+@Schema({timestamps:{createdAt: 'create',updatedAt:'update'},versionKey: false})
 export class Point {
 
     @Prop()
@@ -36,7 +36,7 @@ export class Point {
 
 }
 
-export const PointSchema = SchemaFactory.createForClass(Point);
+export const PointSchema = SchemaFactory.createForClass(Point,);
 
 PointSchema.plugin(mongoosePaginate)
 

@@ -8,7 +8,7 @@ export type WarningDocument = Warning & Document&{
     _id:string
 };
 
-@Schema({timestamps:{createdAt: 'create',updatedAt:'update'}})
+@Schema({timestamps:{createdAt: 'create',updatedAt:'update'},versionKey:false})
 export class Warning {
 
     @Prop()

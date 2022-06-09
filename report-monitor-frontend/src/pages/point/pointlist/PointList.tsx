@@ -49,6 +49,7 @@ export const PointList: React.FC = () => {
     const [dataSource, setDateSource] = useState<[]>([])
     const history = useHistory()
     const [modal, contextHolder] = Modal.useModal();
+    const [loading, setLoading] = useState(false);
 
     const [page, setPage] = useState<PageType>({
         pageStart: 1,
@@ -103,6 +104,7 @@ export const PointList: React.FC = () => {
 
     }
     const getList = async (params = {},isReset = false) => {
+        setLoading(true)
         const p = isReset ? {
             pageSize: 10,
             pageStart: 1,
@@ -112,6 +114,7 @@ export const PointList: React.FC = () => {
                 ...params
             }
         });
+        setLoading(false)
         if (isReset) {
             setPage({
                 ...p,
@@ -200,7 +203,7 @@ export const PointList: React.FC = () => {
                         </pre>
                     </div>
                     
-                    <Table dataSource={dataSource} columns={columns} pagination={paginationProps} rowKey={'code'} />;
+                    <Table dataSource={dataSource} columns={columns} pagination={paginationProps} rowKey={'code'} loading={loading} />;
                 </div>
                 <WarningModal onRef={childRef} updateCallback={updateCallback}></WarningModal>
                 {contextHolder}

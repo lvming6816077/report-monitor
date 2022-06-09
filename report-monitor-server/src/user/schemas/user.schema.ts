@@ -7,7 +7,7 @@ export type UserDocument = User & Document;
 
 
 
-@Schema({timestamps:{createdAt: 'create',updatedAt:'update'}})
+@Schema({timestamps:{createdAt: 'create',updatedAt:'update'},versionKey:false})
 export class User {
 
     @Prop({ required:true,unique:true})// 用户id
