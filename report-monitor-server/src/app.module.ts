@@ -8,6 +8,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { UserModule } from './user/user.module';
 import { WarningModule } from './warning/warning.module'
 import { AllExceptionsFilter } from './utils/response/filter/http-execption.filter';
+import { RateLimiterGuard, RateLimiterModule } from 'nestjs-rate-limiter'
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [MongooseModule.forRoot('mongodb://localhost/report'),ScheduleModule.forRoot(), ReportModule,PointModule,ConfigModule,TasksModule,UserModule,WarningModule],

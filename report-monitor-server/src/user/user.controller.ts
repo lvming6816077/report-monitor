@@ -17,6 +17,7 @@ import * as moment from 'moment';
 import getStr from 'src/config/email-config/templates/code';
 import { UpdateUserEmailDto } from './dto/update-user-email.dto';
 import axios from 'axios'
+import { RateLimit, RateLimiterGuard } from 'nestjs-rate-limiter'
 import { Response } from 'express';
 
 
@@ -204,7 +205,9 @@ export class UserController {
         }
     }
 
+    
     @UseGuards(JwtAuthGuard)
+    @RateLimit({  for: 'Express',type: 'Memory',points: 2, duration: 360,customResponseSchema: () => { return { message: '操作频繁' }}})
     @Get('sendEmailCode')
     async sendEmailCode(@Query() query, @Request() req: any) {
         if (!query.email) {

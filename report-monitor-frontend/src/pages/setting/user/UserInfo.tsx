@@ -63,11 +63,12 @@ export const UserInfo: React.FC = () => {
 
     const addEmail = () => {
         setIsModalVisible(true)
-        clearInterval(activeTimer)
+        clearInterval(activeTimer.current)
+        setTime(60)
         setIsShowCode(false)
         formEmail.resetFields()
     }
-    let activeTimer: any = null
+    let activeTimer: any = useRef()
     const sendEmail = async () => {
         const fileds = await formEmail.validateFields(['email'])
 
@@ -77,11 +78,11 @@ export const UserInfo: React.FC = () => {
 
         setIsShowCode(true)
 
-        activeTimer = setInterval(() => {
+        activeTimer.current = setInterval(() => {
             setTime((preSecond) => {
                 if (preSecond <= 1) {
                     setIsShowCode(false)
-                    clearInterval(activeTimer)
+                    clearInterval(activeTimer.current)
                     // 重置秒数
                     return 60
                 }
@@ -128,7 +129,8 @@ export const UserInfo: React.FC = () => {
 
     const handleCancel = () => {
         setIsModalVisible(false);
-        clearInterval(activeTimer)
+        clearInterval(activeTimer.current)
+
         setIsShowCode(false)
         formEmail.resetFields()
     };
