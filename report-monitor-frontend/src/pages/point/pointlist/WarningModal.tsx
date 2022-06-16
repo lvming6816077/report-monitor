@@ -163,26 +163,26 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
                                 <RedoOutlined style={{ fontSize: 18, cursor: 'pointer' }} onClick={resetCount} />
                             </Form.Item> */}
                             <Form.Item
-                                label="监控间隔"
+                                label="监控周期"
                                 name="interval"
 
-                                rules={[{ required: true, message: '请输入监控间隔' }]}
+                                rules={[{ required: true, message: '请输入监控周期' }]}
                             >
-                                <InputNumber min={1} max={60} addonAfter="分钟" onChange={(v) => changeV(v, 'interval')} placeholder={'请输入监控间隔'} disabled={disabled}/>
+                                <InputNumber min={1} max={60} addonAfter="分钟" onChange={(v) => changeV(v, 'interval')} placeholder={'请输入监控周期'} disabled={disabled}/>
                             </Form.Item>
                             <Form.Item
                                 label="最大值"
                                 name="max"
                                 rules={[{ required: false }]}
                             >
-                                <InputNumber placeholder='最大值' min={1} onChange={(v) => changeV(v, 'max')} disabled={disabled}/>
+                                <InputNumber placeholder='阈值' min={1} onChange={(v) => changeV(v, 'max')} disabled={disabled} addonAfter="次数"/>
                             </Form.Item>
                             <Form.Item
                                 label="最小值"
                                 name="min"
                                 rules={[{ required: false }]}
                             >
-                                <InputNumber placeholder='最小值' min={1} onChange={(v) => changeV(v, 'min')} disabled={disabled}/>
+                                <InputNumber placeholder='阈值' min={1} onChange={(v) => changeV(v, 'min')} disabled={disabled} addonAfter="次数"/>
                             </Form.Item>
 
                             <Form.Item

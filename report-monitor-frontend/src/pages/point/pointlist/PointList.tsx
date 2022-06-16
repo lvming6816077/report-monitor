@@ -40,7 +40,7 @@ export const PointList: React.FC = () => {
             title: '操作',
             dataIndex: 'action',
             render: (v, item) => {
-                return <Space><a onClick={() => deletePoint(item)}>删除</a> <a onClick={() => warningPoint(item)}>告警设置</a></Space>
+                return <Space><a onClick={() => deletePoint(item)}>删除</a> <a onClick={() => warningPoint(item)}>告警规则</a></Space>
             }
         },
     ]

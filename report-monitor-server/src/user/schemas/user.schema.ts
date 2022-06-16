@@ -25,7 +25,7 @@ export class User {
     @Prop({ required:true,default:[1] }) // 用户等级（0：管理员，1：普通用户）
     level: [];
 
-    @Prop({ required:true })// 用户邮箱
+    @Prop({ required:false })// 用户邮箱
     email: string;
 
     @Prop({  })// 用户phone

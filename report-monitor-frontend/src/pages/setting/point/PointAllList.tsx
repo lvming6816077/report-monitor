@@ -126,7 +126,6 @@ export const PointAllList: React.FC = () => {
     }
     const getList = async (params = {},isReset = false) => {
         
-
         const p = isReset ? {
             pageSize: 10,
             pageStart: 1,
