@@ -1,6 +1,6 @@
 import { Body, Controller, Req, Get, Res, Post, Request, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-const sha1 = require('sha1');
+// const sha1 = require('sha1');
 const parser = require('cron-parser');
 import { JwtConfigService } from 'src/config/jwt-config/jwt-config.service';
 import { User } from './schemas/user.schema';
@@ -17,7 +17,7 @@ import * as moment from 'moment';
 import getStr from 'src/config/email-config/templates/code';
 import { UpdateUserEmailDto } from './dto/update-user-email.dto';
 import axios from 'axios'
-import { RateLimit, RateLimiterGuard } from 'nestjs-rate-limiter'
+import { RateLimit } from 'nestjs-rate-limiter'
 import { Response } from 'express';
 
 
@@ -203,7 +203,7 @@ export class UserController {
 
     
     @UseGuards(JwtAuthGuard)
-    @RateLimit({  for: 'Express',type: 'Memory',points: 2, duration: 360,customResponseSchema: () => { return { message: '操作频繁' }}})
+    @RateLimit({ points: 3, duration: 360})
     @Get('sendEmailCode')
     async sendEmailCode(@Query() query, @Request() req: any) {
         if (!query.email) {
@@ -232,15 +232,19 @@ export class UserController {
         })
 
 
-        const res = await this.mailerService
+        setTimeout(()=>{
+            this.mailerService
             .sendMail({
                 to: query.email,
                 from: 'Report Monitor <monitor@nihaoshijie.com.cn>',
                 subject: '【Report Monitor】【邮箱验证码】',
                 html: getStr({ s2msCode }),
+            }).catch(e=>{
             })
+        },100)
 
         return 'success'
+
     }
 
     @UseGuards(JwtAuthGuard)

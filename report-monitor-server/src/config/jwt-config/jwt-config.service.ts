@@ -9,7 +9,8 @@ export class JwtConfigService {
 
   async login(user: User) {
 
-    const payload = { username: user.username, sub: user.userid };
+
+    const payload = { username: user.username, userId: user.userid };
 
     return {
       user:{

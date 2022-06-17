@@ -83,21 +83,13 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
         });
         if (result.data.code == 0) {
             updateCallback()
+        } else {
+            message.error(result.data.message)
         }
         setIsModalVisible(false);
     };
 
-    const resetCount = async () => {
-        const result = await axios.get('/rapi/warning/resetWarningCount', {
-            params: {
-                id: curItem?.warning?._id
-            }
-        });
 
-        if (result.data.code == 0) {
-            message.success('操作成功')
-        }
-    }
 
     const handleCancel = () => {
         setIsModalVisible(false);

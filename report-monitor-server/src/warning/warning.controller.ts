@@ -25,7 +25,11 @@ export class WarningController {
     
     @Post('addWarningSet')
     async addWarningSet(@Body() dto: CreateWarningDto, @Request() req: any) {
-
+        console.log(req.user)
+        const u = await this.userService.findUserByUserId(req.user.userId)
+        if (!u.email) {
+            throw new HttpException('暂未绑定Email，请先绑定！', 200);
+        }
         return await this.warningService.create(dto);
     }
 

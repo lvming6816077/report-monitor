@@ -1,6 +1,6 @@
 const str = ''+
 '<div>' +
-    '验证码：<%s2msCode%>，5分钟内有效，请务回复，祝您愉快！'+
+    '验证码：<%s2msCode%>，5分钟内有效，请勿回复，祝您愉快！'+
 '</div>'
 
 export default function(locals) {

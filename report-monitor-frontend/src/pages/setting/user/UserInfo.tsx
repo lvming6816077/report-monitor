@@ -76,20 +76,6 @@ export const UserInfo: React.FC = () => {
             return
         }
 
-        setIsShowCode(true)
-
-        activeTimer.current = setInterval(() => {
-            setTime((preSecond) => {
-                if (preSecond <= 1) {
-                    setIsShowCode(false)
-                    clearInterval(activeTimer.current)
-                    // 重置秒数
-                    return 60
-                }
-                return preSecond - 1
-            })
-        }, 1000)
-
         const result = await axios.get('/rapi/user/sendEmailCode', {
             params: {
                 email:fileds.email
@@ -99,10 +85,23 @@ export const UserInfo: React.FC = () => {
         if (result.data.code == 0) {
             
             message.success('发送成功')
-            getData()
+            setIsShowCode(true)
+
+            activeTimer.current = setInterval(() => {
+                setTime((preSecond) => {
+                    if (preSecond <= 1) {
+                        setIsShowCode(false)
+                        clearInterval(activeTimer.current)
+                        // 重置秒数
+                        return 60
+                    }
+                    return preSecond - 1
+                })
+            }, 1000)
         } else {
             message.error(result.data.message)
         }
+
 
     }
 
