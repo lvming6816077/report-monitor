@@ -177,12 +177,8 @@ export class UserController {
         const result = await this.userService.findAllByPage(query.pageStart, query.pageSize, query)
         const l = result.docs.map(i => {
             return {
-                username: i.username,
-                create: i.create,
-                nickname: i.nickname,
-                _id: i._id,
-                userid: i.userid,
-                level: i.level,
+                ...i.toJSON(),
+                password:null,
             }
         })
         return {

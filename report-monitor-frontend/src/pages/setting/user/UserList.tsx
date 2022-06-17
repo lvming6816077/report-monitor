@@ -38,7 +38,10 @@ export const UserList: React.FC = () => {
                 return v?.map(i => <Tag key={i}>{roleMap[i]}</Tag>)
             }
         },
-
+        {
+            title: '用户邮箱',
+            dataIndex: 'email'
+        },
         {
             title: '创建时间',
             dataIndex: 'create',
