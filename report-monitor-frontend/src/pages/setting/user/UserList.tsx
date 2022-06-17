@@ -90,16 +90,28 @@ export const UserList: React.FC = () => {
         childRef.current.showModal(item)
 
     }
-    const getList = async (params = {}) => {
-        const result = await axios.get('/rapi/user/getUsersList?pageStart=' + page.pageStart + '&pageSize=' + page.pageSize, {
+    const getList = async (params = {},isReset = false) => {
+        const p = isReset ? {
+            pageSize: 10,
+            pageStart: 1,
+        } : page
+        const result = await axios.get('/rapi/user/getUsersList?pageStart=' + p.pageStart + '&pageSize=' + p.pageSize, {
             params: {
                 ...params
             }
         });
-        setPage({
-            ...page,
-            total: result.data.data.total
-        })
+
+        if (isReset) {
+            setPage({
+                ...p,
+                total: result.data.data.totalDocs
+            })
+        } else {
+            setPage({
+                ...page,
+                total: result.data.data.totalDocs
+            })
+        }
         setDateSource(result.data.data.docs)
     }
 
@@ -112,12 +124,8 @@ export const UserList: React.FC = () => {
     }
 
     const resetList = () => {
-        setPage({
-            pageSize: 10,
-            pageStart: 1,
-            total: 0
-        })
-        onFinish({})
+
+        getList({},true)
         form.resetFields();
     }
 

@@ -54,7 +54,12 @@ export class UserService {
 
     }
     async findUserByUserId(userid: string): Promise<User> {
-        return await this.userModel.findOne({userid})
+        const u = await this.userModel.findOne({userid}).lean().exec()
+
+        return {
+            ...u,
+            password: null
+        } as unknown as User
     }
     async findUserByUserEmail(email: string): Promise<User> {
         return await this.userModel.findOne({email})

@@ -35,6 +35,8 @@ export class PointService {
 
         private readonly warningService: WarningService,
 
+        private readonly userService: UserService,
+
 
         @Inject(REQUEST) private readonly req: CURUSER) { }
 
@@ -82,18 +84,13 @@ export class PointService {
 
         const l = []
         for (var i = 0 ; i < result.docs.length ; i++) {
-            var k = result.docs[i]
+            var k = result.docs[i].toJSON()
             const warning = await this.warningService.findByPoint(k._id)
+            const user = await this.userService.findUserByUserId(k.user as unknown as string)
             var o = {
-                _id:k._id,
-                code: k.code,
-                create: k.create,
-                desc: k.desc,
-                isBlock: k.isBlock,
-                tag: k.tag,
-                update: k.update,
-                user: k.user,
-                warning
+                ...k,
+                warning,
+                user
             }
             l.push(o)
         }

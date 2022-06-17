@@ -25,7 +25,11 @@ const RequireAuth = ({ children, auth }: { children: JSX.Element, auth: number[]
     if (auth.every((o) => userInfo.level?.includes(o))) {
         return children
     } else {
-        // window.location.href = '/login'
+        if (window.location.pathname == '/') {
+            window.location.href = '/login'
+            return null
+        }
+        
         return <Alert
             message="无权限"
             description="对比起，您没有权限访问这个页面"

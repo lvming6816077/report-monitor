@@ -33,6 +33,10 @@ export const PointAllList: React.FC = () => {
             dataIndex: ['tag', 'desc'],
         },
         {
+            title: '创建者',
+            dataIndex: ['user', 'username'],
+        },
+        {
             title: '创建时间',
             dataIndex: 'create',
             render: (v,item) => moment(item.create).format('YYYY-MM-DD HH:mm:ss')
