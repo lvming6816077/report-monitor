@@ -48,7 +48,7 @@ export const Home: React.FC = () => {
         let m = cls.length, n = cls[0].length
         for (let i = 0; i < m; i++) {
             for (let j = 0; j < n; j++) {
-                if (cls[i][j].code == code) {
+                if (cls[i][j] && cls[i][j].code == code) {
                     cls[i][j].list = cur
                 }
             }
