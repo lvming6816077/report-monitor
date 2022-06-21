@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, ChangeEvent } from 'react'
 import { Button, Col, Row, Modal, Form, Input, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import { message } from 'antd';
@@ -9,17 +9,18 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { PlusSquareOutlined } from '@ant-design/icons';
 import { UserModal } from './UserModal';
+import { useDebounce, useScreen } from '@/utils/hooks';
 
 const roleMap = {
     '1': '普通用户',
     '0': '管理员'
 }
-export type DataType  = {
+export type DataType = {
     username: string;
     nickname: string;
     level: number[];
-    _id:string;
-    userid:string;
+    _id: string;
+    userid: string;
 }
 export const UserList: React.FC = () => {
     const columns: ColumnsType<DataType> = [
@@ -93,7 +94,7 @@ export const UserList: React.FC = () => {
         childRef.current.showModal(item)
 
     }
-    const getList = async (params = {},isReset = false) => {
+    const getList = async (params = {}, isReset = false) => {
         const p = isReset ? {
             pageSize: 10,
             pageStart: 1,
@@ -128,15 +129,32 @@ export const UserList: React.FC = () => {
 
     const resetList = () => {
 
-        getList({},true)
+        getList({}, true)
         form.resetFields();
     }
 
     const childRef = useRef<any>();
-    const updateCallback = ()=>{
+    const updateCallback = () => {
         message.success('修改成功')
         resetList()
     }
+
+    const [value, setValue] = useState<string>('')
+    const debouncedValue = useDebounce<string>(value, 500)
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.value)
+    }
+
+    useEffect(() => {
+
+    }, [debouncedValue])
+
+    const screen = useScreen()
+
+    useEffect(()=>{
+        console.log(screen?.width)
+    },[screen])
 
 
     return (
@@ -167,7 +185,7 @@ export const UserList: React.FC = () => {
                                     label="用户昵称"
                                     name="nickname"
                                 >
-                                    <Input placeholder={'请输入用户账号'} />
+                                    <Input placeholder={'请输入用户账号'} onChange={handleChange} />
                                 </Form.Item>
                             </Col>
 
