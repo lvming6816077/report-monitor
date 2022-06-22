@@ -4,20 +4,14 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import { MenuBar } from './components/menubar/MenuBar'
 import { NavBar } from './components/header/NavBar'
 import { useHistory, useLocation } from 'react-router-dom'
-import routes from './router'
+import {routes,flatRoute,IRoute} from './router'
 import { useSelector, useDispatch } from 'react-redux';
 
 import './App.less'
 import { RootState } from './store'
 import { userInfoType } from './reducers/user/types'
 import { Alert } from 'antd'
-// type Props = {
-//     path:string,
-//     name: string,
-//     component: JSX.Element,
-//     auth: boolean,
-//     routes?:Props[]
-// }
+
 
 const RequireAuth = ({ children, auth }: { children: JSX.Element, auth: number[] }) => {
     const userInfo = useSelector((state: RootState) => state.user.userInfo);
@@ -25,11 +19,12 @@ const RequireAuth = ({ children, auth }: { children: JSX.Element, auth: number[]
     if (auth.every((o) => userInfo.level?.includes(o))) {
         return children
     } else {
+
         if (window.location.pathname == '/') {
             window.location.href = '/login'
             return null
         }
-        
+
         return <Alert
             message="无权限"
             description="对比起，您没有权限访问这个页面"
@@ -38,11 +33,18 @@ const RequireAuth = ({ children, auth }: { children: JSX.Element, auth: number[]
         />
     }
 }
+
 const App: React.FC = () => {
 
     const location = useLocation()
 
     const isLogin = location.pathname == '/login'
+
+    const flatRoutes:IRoute[] = flatRoute(routes)
+
+    const noNeedAuthRoutes = flatRoutes.filter((i:IRoute)=>i.auth?.length==0)
+    const needAuthRoutes = flatRoutes.filter((i:IRoute)=>i.auth?.length!=0)
+
     return (
         <div className="container">
             {isLogin ? null : <div className='nav-bar'>
@@ -53,7 +55,8 @@ const App: React.FC = () => {
             </div>}
             <div className={isLogin ? 'main-content all' : 'main-content'}>
                 <Switch>
-                    {routes.map((route, i) => <Route path={route.path} exact key={i}><RequireAuth auth={route.auth}><route.component /></RequireAuth></Route>)}
+                    {noNeedAuthRoutes.map((route,i)=><Route path={route.key} exact key={i} component={route.component}></Route>)}
+                    {needAuthRoutes.map((route, i) => <Route path={route.key} exact key={i}><RequireAuth auth={route.auth||[]}><route.component /></RequireAuth></Route>)}
                 </Switch>
             </div>
 

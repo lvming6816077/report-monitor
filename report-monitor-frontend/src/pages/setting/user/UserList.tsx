@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { PlusSquareOutlined } from '@ant-design/icons';
 import { UserModal } from './UserModal';
-import { useDebounce, useScreen } from '@/utils/hooks';
+import { useDebounce, useScreen, useScroll, useThrottle } from '@/utils/hooks';
 
 const roleMap = {
     '1': '普通用户',
@@ -63,7 +63,7 @@ export const UserList: React.FC = () => {
 
     const [page, setPage] = useState<PageType>({
         pageStart: 1,
-        pageSize: 10,
+        pageSize: 20,
         total: 0
     })
 
@@ -96,7 +96,7 @@ export const UserList: React.FC = () => {
     }
     const getList = async (params = {}, isReset = false) => {
         const p = isReset ? {
-            pageSize: 10,
+            pageSize: 20,
             pageStart: 1,
         } : page
         const result = await axios.get('/rapi/user/getUsersList?pageStart=' + p.pageStart + '&pageSize=' + p.pageSize, {
@@ -152,9 +152,21 @@ export const UserList: React.FC = () => {
 
     const screen = useScreen()
 
+    // useEffect(()=>{
+    //     console.log(screen?.width)
+    // },[screen])
+
+    const scrollTop = useScroll()
+    
+    const throttleValue = useThrottle<number>(scrollTop, 500)
+
+    // useEffect(()=>{
+    //     console.log(throttleValue)
+    // },[throttleValue])
+
     useEffect(()=>{
-        console.log(screen?.width)
-    },[screen])
+        console.log(scrollTop)
+    },[scrollTop])
 
 
     return (
