@@ -160,7 +160,7 @@ export const TagList: React.FC = () => {
                 <div className='table-content'>
                     <div className='btn-content'>
                         <Button type="primary" icon={<PlusSquareOutlined />} onClick={() => {
-                            history.push('/createtag')
+                            history.push('/point/createtag')
                         }} style={{ marginLeft: 20 }}>创建类目</Button>
 
                     </div>

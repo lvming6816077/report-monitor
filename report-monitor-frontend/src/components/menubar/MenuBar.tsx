@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import type { MenuProps } from 'antd';
 import { Menu, Switch } from 'antd';
 import { HomeOutlined, PartitionOutlined, SettingOutlined } from '@ant-design/icons';
@@ -37,8 +37,12 @@ const iconMap: { [key: string]: JSX.Element } = {
 export const MenuBar: React.FC = () => {
     // const [theme, setTheme] = React.useState<'dark' | 'light'>('dark');
     // 根据路由生成菜单（过滤权限和非菜单路由）
+    const userInfo = useSelector((state: RootState) => state.user.userInfo);
     const getMenuFromRoutes = () => {
-        const userInfo = useSelector((state: RootState) => state.user.userInfo);
+
+        // loop会修改原routers对象，将router复制一下
+        const copyRoutes:IRoute[] = JSON.parse(JSON.stringify(routes))
+        
         const loop = (_routes: IRoute[]) => {
             let res: IRoute[] = []
             _routes.forEach(item => {
@@ -65,13 +69,12 @@ export const MenuBar: React.FC = () => {
             return res
         }
 
-        return loop(routes) as MenuItem[]
+        return loop(copyRoutes) as MenuItem[]
 
     }
 
-    const items: MenuItem[] = getMenuFromRoutes()
+    const items: MenuItem[] = useMemo(()=>getMenuFromRoutes(),[userInfo])
 
-    console.log(items)
 
     const history = useHistory()
     const location = useLocation()

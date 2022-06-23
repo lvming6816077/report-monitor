@@ -193,11 +193,11 @@ export const PointList: React.FC = () => {
                 <div className='table-content'>
                     <div className='btn-content'>
                         <Button type="primary" icon={<PlusSquareOutlined />} onClick={() => {
-                            history.push('/createpoint')
+                            history.push('/point/createpoint')
                         }}>创建数据点</Button>
 
                         <Button type="primary" icon={<PlusSquareOutlined />} onClick={() => {
-                            history.push('/createtag')
+                            history.push('/point/createtag')
                         }} style={{ marginLeft: 20 }}>创建类目</Button>
                         <pre className='tips'>
                             上报地址：https://{window.location.host+'/rapi/report/create?code=xxxx'}

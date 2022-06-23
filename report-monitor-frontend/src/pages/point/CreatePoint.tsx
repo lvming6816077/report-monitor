@@ -66,7 +66,7 @@ export const CreatePoint: React.FC = () => {
                         >
                             {tagList.length == 0 ?
                                 <div className='tips'>
-                                    还没有类目，先去<Link to={"/createtag"}>创建</Link>?
+                                    还没有类目，先去<Link to={"/point/createtag"}>创建</Link>?
                                 </div> : null}
                             <Form.Item
                                 label="类目名称"

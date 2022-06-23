@@ -40,12 +40,12 @@ export const NavBar: React.FC = () => {
             items={[
                 {
                     label: '创建数据点',
-                    key: '/createpoint',
+                    key: '/point/createpoint',
                     icon: <PlusSquareOutlined />,
                 },
                 {
                     label: '创建类目',
-                    key: '/createtag',
+                    key: '/point/createtag',
                     icon: <PlusSquareOutlined />,
                 },
                 {

@@ -129,7 +129,7 @@ export const Home: React.FC = () => {
                     </Col>
                 </Row> : <Empty style={{ marginTop: 10 }} description={
                     <span>
-                        还没数据点，快去<Link to={"/createpoint"}>创建</Link>吧
+                        还没数据点，快去<Link to={"/point/createpoint"}>创建</Link>吧
                     </span>
                 } />}
 

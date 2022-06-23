@@ -1,4 +1,4 @@
-import React, { Component, ElementType, ReactNode } from 'react'
+import React, { Component, ElementType, ReactNode, useMemo } from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 
 import { MenuBar } from './components/menubar/MenuBar'
@@ -40,10 +40,11 @@ const App: React.FC = () => {
 
     const isLogin = location.pathname == '/login'
 
-    const flatRoutes:IRoute[] = flatRoute(routes)
+    const flatRoutes:IRoute[] = useMemo(()=>flatRoute(routes),[routes])
 
     const noNeedAuthRoutes = flatRoutes.filter((i:IRoute)=>i.auth?.length==0)
     const needAuthRoutes = flatRoutes.filter((i:IRoute)=>i.auth?.length!=0)
+    // console.log(needAuthRoutes)
 
     return (
         <div className="container">
