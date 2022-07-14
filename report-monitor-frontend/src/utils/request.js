@@ -1,38 +1,38 @@
-import axios from 'axios';
+import axios from 'axios'
 import { useHistory } from 'react-router-dom'
-import { message } from 'antd';
+import { message } from 'antd'
 // axios 配置
-axios.defaults.timeout = 8000;
+axios.defaults.timeout = 8000
 
 // http request 拦截器
 axios.interceptors.request.use(
-    config => {
-        if (localStorage.token) { //判断token是否存在
-            config.headers['token'] = localStorage.token;  //将token设置成请求头
+    (config) => {
+        if (localStorage.token) {
+            //判断token是否存在
+            config.headers.token = localStorage.token //将token设置成请求头
         }
-        return config;
+        return config
     },
-    err => {
-        return Promise.reject(err);
+    (err) => {
+        return Promise.reject(err)
     }
-);
+)
 
 // http response 拦截器
 axios.interceptors.response.use(
-    response => {
+    (response) => {
         // console.log(response)
 
-
-        return response;
+        return response
     },
-    error => {
+    (error) => {
         if (error.response.data.code === 401) {
             window.location.href = '/login'
         }
         if (error.response.data.code !== 200) {
             message.error(error.response.data.message)
         }
-        return Promise.reject(error);
+        return Promise.reject(error)
     }
-);
-export default axios;
+)
+export default axios

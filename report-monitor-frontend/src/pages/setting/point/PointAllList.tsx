@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Row, Modal, Form, Input, Table, Switch } from 'antd';
-import { message } from 'antd';
+import { Button, Col, Row, Modal, Form, Input, Table, Switch } from 'antd'
+import { message } from 'antd'
 import axios from 'axios'
-import moment from 'moment';
+import moment from 'moment'
 import './PointAllList.less'
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { PlusSquareOutlined } from '@ant-design/icons';
-import { ColumnsType } from 'antd/lib/table';
-import { WarningType } from '@/pages/point/pointlist/WarningModal';
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { PlusSquareOutlined } from '@ant-design/icons'
+import { ColumnsType } from 'antd/lib/table'
+import { WarningType } from '@/pages/point/pointlist/WarningModal'
 
-type DataType  = {
-    desc: string;
-    code: string;
-    create:string;
-    _id:string;
-    isBlock:boolean;
-    warning?:WarningType
+type DataType = {
+    desc: string
+    code: string
+    create: string
+    _id: string
+    isBlock: boolean
+    warning?: WarningType
 }
 export const PointAllList: React.FC = () => {
     const columns: ColumnsType<DataType> = [
@@ -39,12 +39,18 @@ export const PointAllList: React.FC = () => {
         {
             title: '创建时间',
             dataIndex: 'create',
-            render: (v,item) => moment(item.create).format('YYYY-MM-DD HH:mm:ss')
+            render: (v, item) =>
+                moment(item.create).format('YYYY-MM-DD HH:mm:ss'),
         },
         {
             title: '是否禁用',
             dataIndex: 'isBlock',
-            render: (v,item) => <Switch defaultChecked={item.isBlock} onChange={()=>onChange(item)} />
+            render: (v, item) => (
+                <Switch
+                    defaultChecked={item.isBlock}
+                    onChange={() => onChange(item)}
+                />
+            ),
         },
         // {
         //     title: '是否开启告警',
@@ -56,41 +62,38 @@ export const PointAllList: React.FC = () => {
             dataIndex: 'action',
             render: (v, item) => {
                 return <a onClick={() => deletePoint(item)}>删除</a>
-            }
+            },
         },
     ]
 
-    const onChange = async (item:DataType)=>{
-        const result = await axios.post('/rapi/point/updatePoint/',{
-            _id:item._id,
-            isBlock:!item.isBlock
-        });
+    const onChange = async (item: DataType) => {
+        const result = await axios.post('/rapi/point/updatePoint/', {
+            _id: item._id,
+            isBlock: !item.isBlock,
+        })
         if (result.data.code == 0) {
             message.success('操作成功')
             // resetList()
-
         }
     }
 
-    const onChangeWarning = async (item:DataType)=>{
-        const result = await axios.post('/rapi/warning/updatePoint/',{
-            _id:item?.warning?._id
-        });
+    const onChangeWarning = async (item: DataType) => {
+        const result = await axios.post('/rapi/warning/updatePoint/', {
+            _id: item?.warning?._id,
+        })
         if (result.data.code == 0) {
             message.success('操作成功')
-
         }
     }
 
-    
     const [dataSource, setDateSource] = useState<[]>([])
     const history = useHistory()
-    const [modal, contextHolder] = Modal.useModal();
+    const [modal, contextHolder] = Modal.useModal()
 
     const [page, setPage] = useState<PageType>({
         pageStart: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
     })
 
     const paginationProps = {
@@ -106,11 +109,11 @@ export const PointAllList: React.FC = () => {
         }, //改变页码的函数
         hideOnSinglePage: false,
         showSizeChanger: false,
-    };
+    }
 
     useEffect(() => {
-        (async function fn() {
-            await getList();
+        ;(async function fn() {
+            await getList()
         })()
     }, [page.pageSize, page.pageStart])
 
@@ -118,64 +121,66 @@ export const PointAllList: React.FC = () => {
         modal.confirm({
             title: '确认删除?',
             onOk: async () => {
-                const result = await axios.get('/rapi/point/deletePoint/' + item._id);
+                const result = await axios.get(
+                    '/rapi/point/deletePoint/' + item._id
+                )
                 if (result.data.code == 0) {
                     message.success('删除成功')
                     resetList()
-
                 }
-            }
+            },
         })
-
     }
-    const getList = async (params = {},isReset = false) => {
-        
-        const p = isReset ? {
-            pageSize: 10,
-            pageStart: 1,
-        } : page
+    const getList = async (params = {}, isReset = false) => {
+        const p = isReset
+            ? {
+                  pageSize: 10,
+                  pageStart: 1,
+              }
+            : page
 
-
-        const result = await axios.get('/rapi/point/getPointsAllList?pageStart=' + p.pageStart + '&pageSize=' + p.pageSize, {
-            params: {
-                ...params
+        const result = await axios.get(
+            '/rapi/point/getPointsAllList?pageStart=' +
+                p.pageStart +
+                '&pageSize=' +
+                p.pageSize,
+            {
+                params: {
+                    ...params,
+                },
             }
-        });
+        )
         if (isReset) {
             setPage({
                 ...p,
-                total: result.data.data.totalDocs
+                total: result.data.data.totalDocs,
             })
         } else {
             setPage({
                 ...page,
-                total: result.data.data.totalDocs
+                total: result.data.data.totalDocs,
             })
         }
-        
+
         setDateSource(result.data.data.docs)
     }
 
-    const [form] = Form.useForm();
-
+    const [form] = Form.useForm()
 
     const onFinish = async (values: any) => {
-
         getList(values)
     }
 
     const resetList = () => {
-
-        getList({},true)
-        form.resetFields();
+        getList({}, true)
+        form.resetFields()
     }
-
 
     return (
         <>
-            <div className='page-title'>数据点管理</div>
-            <div className='pointalllist-content'>
-                <div className='query-content'>
+            <div className="page-title">数据点管理</div>
+            <div className="pointalllist-content">
+                <div className="query-content">
                     <Form
                         form={form}
                         name="basic"
@@ -187,18 +192,12 @@ export const PointAllList: React.FC = () => {
                     >
                         <Row justify="center" align="middle">
                             <Col span={8}>
-                                <Form.Item
-                                    label="数据点名称"
-                                    name="desc"
-                                >
+                                <Form.Item label="数据点名称" name="desc">
                                     <Input placeholder={'请输入数据点名称'} />
                                 </Form.Item>
                             </Col>
                             <Col span={8}>
-                                <Form.Item
-                                    label="数据code"
-                                    name="code"
-                                >
+                                <Form.Item label="数据code" name="code">
                                     <Input placeholder={'请输入数据code'} />
                                 </Form.Item>
                             </Col>
@@ -207,23 +206,27 @@ export const PointAllList: React.FC = () => {
                                     <Button type="primary" htmlType="submit">
                                         搜索
                                     </Button>
-                                    <Button onClick={resetList} style={{ marginLeft: 5 }}>
+                                    <Button
+                                        onClick={resetList}
+                                        style={{ marginLeft: 5 }}
+                                    >
                                         重置
                                     </Button>
                                 </Form.Item>
                             </Col>
-
-
                         </Row>
                     </Form>
                 </div>
-                <div className='table-content'>
-
-                    
-                    <Table dataSource={dataSource} columns={columns} pagination={paginationProps} rowKey={'code'} />;
+                <div className="table-content">
+                    <Table
+                        dataSource={dataSource}
+                        columns={columns}
+                        pagination={paginationProps}
+                        rowKey={'code'}
+                    />
+                    ;
                 </div>
                 {contextHolder}
-
             </div>
         </>
     )

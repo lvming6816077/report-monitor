@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Row, Modal, Form, Input, Table } from 'antd';
-import { message } from 'antd';
+import { Button, Col, Row, Modal, Form, Input, Table } from 'antd'
+import { message } from 'antd'
 import axios from 'axios'
-import moment from 'moment';
+import moment from 'moment'
 import './TagList.less'
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { PlusSquareOutlined } from '@ant-design/icons';
-import { ColumnsType } from 'antd/lib/table';
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { PlusSquareOutlined } from '@ant-design/icons'
+import { ColumnsType } from 'antd/lib/table'
 
-type DataType  = {
-    desc: string;
-    create:string;
-    _id:string;
+type DataType = {
+    desc: string
+    create: string
+    _id: string
 }
 export const TagList: React.FC = () => {
     const columns: ColumnsType<DataType> = [
@@ -24,26 +24,25 @@ export const TagList: React.FC = () => {
         {
             title: '创建时间',
             dataIndex: 'create',
-            render: (v) => moment(v).format('YYYY-MM-DD HH:mm:ss')
+            render: (v) => moment(v).format('YYYY-MM-DD HH:mm:ss'),
         },
         {
             title: '操作',
             dataIndex: 'action',
             render: (v, item) => {
                 return <a onClick={() => deleteTag(item)}>删除</a>
-            }
+            },
         },
     ]
 
-
     const [dataSource, setDateSource] = useState<[]>([])
     const history = useHistory()
-    const [modal, contextHolder] = Modal.useModal();
+    const [modal, contextHolder] = Modal.useModal()
 
     const [page, setPage] = useState<PageType>({
         pageStart: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
     })
 
     const paginationProps = {
@@ -59,11 +58,11 @@ export const TagList: React.FC = () => {
         }, //改变页码的函数
         hideOnSinglePage: false,
         showSizeChanger: false,
-    };
+    }
 
     useEffect(() => {
-        (async function fn() {
-            await getList();
+        ;(async function fn() {
+            await getList()
         })()
     }, [page.pageSize, page.pageStart])
 
@@ -71,60 +70,64 @@ export const TagList: React.FC = () => {
         modal.confirm({
             title: '确认删除?',
             onOk: async () => {
-                const result = await axios.get('/rapi/point/deleteTag/' + item._id);
+                const result = await axios.get(
+                    '/rapi/point/deleteTag/' + item._id
+                )
                 if (result.data.code == 0) {
                     message.success('删除成功')
                     resetList()
-
                 }
-            }
+            },
         })
-
     }
-    const getList = async (params = {},isReset = false) => {
-        const p = isReset ? {
-            pageSize: 10,
-            pageStart: 1,
-        } : page
-        const result = await axios.get('/rapi/point/getTagsList?pageStart=' + p.pageStart + '&pageSize=' + p.pageSize, {
-            params: {
-                ...params
+    const getList = async (params = {}, isReset = false) => {
+        const p = isReset
+            ? {
+                  pageSize: 10,
+                  pageStart: 1,
+              }
+            : page
+        const result = await axios.get(
+            '/rapi/point/getTagsList?pageStart=' +
+                p.pageStart +
+                '&pageSize=' +
+                p.pageSize,
+            {
+                params: {
+                    ...params,
+                },
             }
-        });
+        )
         if (isReset) {
             setPage({
                 ...p,
-                total: result.data.data.totalDocs
+                total: result.data.data.totalDocs,
             })
         } else {
             setPage({
                 ...page,
-                total: result.data.data.totalDocs
+                total: result.data.data.totalDocs,
             })
         }
         setDateSource(result.data.data.docs)
     }
 
-    const [form] = Form.useForm();
-
+    const [form] = Form.useForm()
 
     const onFinish = async (values: any) => {
-
         getList(values)
     }
 
     const resetList = () => {
-
-        getList({},true)
-        form.resetFields();
+        getList({}, true)
+        form.resetFields()
     }
-
 
     return (
         <>
-            <div className='page-title'>类目管理</div>
-            <div className='taglist-content'>
-                <div className='query-content'>
+            <div className="page-title">类目管理</div>
+            <div className="taglist-content">
+                <div className="query-content">
                     <Form
                         form={form}
                         name="basic"
@@ -136,10 +139,7 @@ export const TagList: React.FC = () => {
                     >
                         <Row justify="center" align="middle">
                             <Col span={8}>
-                                <Form.Item
-                                    label="类目名称"
-                                    name="desc"
-                                >
+                                <Form.Item label="类目名称" name="desc">
                                     <Input placeholder={'请输入类目名称'} />
                                 </Form.Item>
                             </Col>
@@ -149,7 +149,10 @@ export const TagList: React.FC = () => {
                                     <Button type="primary" htmlType="submit">
                                         搜索
                                     </Button>
-                                    <Button onClick={resetList} style={{ marginLeft: 5 }}>
+                                    <Button
+                                        onClick={resetList}
+                                        style={{ marginLeft: 5 }}
+                                    >
                                         重置
                                     </Button>
                                 </Form.Item>
@@ -157,17 +160,28 @@ export const TagList: React.FC = () => {
                         </Row>
                     </Form>
                 </div>
-                <div className='table-content'>
-                    <div className='btn-content'>
-                        <Button type="primary" icon={<PlusSquareOutlined />} onClick={() => {
-                            history.push('/point/createtag')
-                        }} style={{ marginLeft: 20 }}>创建类目</Button>
-
+                <div className="table-content">
+                    <div className="btn-content">
+                        <Button
+                            type="primary"
+                            icon={<PlusSquareOutlined />}
+                            onClick={() => {
+                                history.push('/point/createtag')
+                            }}
+                            style={{ marginLeft: 20 }}
+                        >
+                            创建类目
+                        </Button>
                     </div>
-                    <Table dataSource={dataSource} columns={columns} pagination={paginationProps} rowKey={'_id'} />;
+                    <Table
+                        dataSource={dataSource}
+                        columns={columns}
+                        pagination={paginationProps}
+                        rowKey={'_id'}
+                    />
+                    ;
                 </div>
                 {contextHolder}
-
             </div>
         </>
     )

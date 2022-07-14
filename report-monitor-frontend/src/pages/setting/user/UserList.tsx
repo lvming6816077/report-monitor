@@ -1,26 +1,26 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from 'react'
-import { Button, Col, Row, Modal, Form, Input, Table, Tag } from 'antd';
-import type { ColumnsType } from 'antd/lib/table';
-import { message } from 'antd';
+import { Button, Col, Row, Modal, Form, Input, Table, Tag } from 'antd'
+import type { ColumnsType } from 'antd/lib/table'
+import { message } from 'antd'
 import axios from 'axios'
-import moment from 'moment';
+import moment from 'moment'
 import './UserList.less'
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { PlusSquareOutlined } from '@ant-design/icons';
-import { UserModal } from './UserModal';
-import { useDebounce, useScreen, useScroll, useThrottle } from '@/utils/hooks';
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { PlusSquareOutlined } from '@ant-design/icons'
+import { UserModal } from './UserModal'
+import { useDebounce, useScreen, useScroll, useThrottle } from '@/utils/hooks'
 
 const roleMap = {
     '1': '普通用户',
-    '0': '管理员'
+    '0': '管理员',
 }
 export type DataType = {
-    username: string;
-    nickname: string;
-    level: number[];
-    _id: string;
-    userid: string;
+    username: string
+    nickname: string
+    level: number[]
+    _id: string
+    userid: string
 }
 export const UserList: React.FC = () => {
     const columns: ColumnsType<DataType> = [
@@ -36,27 +36,26 @@ export const UserList: React.FC = () => {
             title: '用户权限',
             dataIndex: 'level',
             render: (v: []) => {
-                return v?.map(i => <Tag key={i}>{roleMap[i]}</Tag>)
-            }
+                return v?.map((i) => <Tag key={i}>{roleMap[i]}</Tag>)
+            },
         },
         {
             title: '用户邮箱',
-            dataIndex: 'email'
+            dataIndex: 'email',
         },
         {
             title: '创建时间',
             dataIndex: 'create',
-            render: (v) => moment(v).format('YYYY-MM-DD HH:mm:ss')
+            render: (v) => moment(v).format('YYYY-MM-DD HH:mm:ss'),
         },
         {
             title: '操作',
             dataIndex: 'action',
             render: (v, item) => {
                 return <a onClick={() => updateUser(item)}>编辑</a>
-            }
+            },
         },
     ]
-
 
     const [dataSource, setDateSource] = useState<[]>([])
     const history = useHistory()
@@ -64,7 +63,7 @@ export const UserList: React.FC = () => {
     const [page, setPage] = useState<PageType>({
         pageStart: 1,
         pageSize: 20,
-        total: 0
+        total: 0,
     })
 
     const paginationProps = {
@@ -80,60 +79,62 @@ export const UserList: React.FC = () => {
         }, //改变页码的函数
         hideOnSinglePage: false,
         showSizeChanger: false,
-    };
+    }
 
     useEffect(() => {
-        (async function fn() {
-            await getList();
+        ;(async function fn() {
+            await getList()
         })()
     }, [page.pageSize, page.pageStart])
 
-
     const updateUser = async (item: DataType) => {
-
         childRef.current.showModal(item)
-
     }
     const getList = async (params = {}, isReset = false) => {
-        const p = isReset ? {
-            pageSize: 20,
-            pageStart: 1,
-        } : page
-        const result = await axios.get('/rapi/user/getUsersList?pageStart=' + p.pageStart + '&pageSize=' + p.pageSize, {
-            params: {
-                ...params
+        const p = isReset
+            ? {
+                  pageSize: 20,
+                  pageStart: 1,
+              }
+            : page
+        const result = await axios.get(
+            '/rapi/user/getUsersList?pageStart=' +
+                p.pageStart +
+                '&pageSize=' +
+                p.pageSize,
+            {
+                params: {
+                    ...params,
+                },
             }
-        });
+        )
 
         if (isReset) {
             setPage({
                 ...p,
-                total: result.data.data.totalDocs
+                total: result.data.data.totalDocs,
             })
         } else {
             setPage({
                 ...page,
-                total: result.data.data.totalDocs
+                total: result.data.data.totalDocs,
             })
         }
         setDateSource(result.data.data.docs)
     }
 
-    const [form] = Form.useForm();
-
+    const [form] = Form.useForm()
 
     const onFinish = async (values: any) => {
-
         getList(values)
     }
 
     const resetList = () => {
-
         getList({}, true)
-        form.resetFields();
+        form.resetFields()
     }
 
-    const childRef = useRef<any>();
+    const childRef = useRef<any>()
     const updateCallback = () => {
         message.success('修改成功')
         resetList()
@@ -146,9 +147,7 @@ export const UserList: React.FC = () => {
         setValue(event.target.value)
     }
 
-    useEffect(() => {
-
-    }, [debouncedValue])
+    useEffect(() => {}, [debouncedValue])
 
     const screen = useScreen()
 
@@ -157,23 +156,22 @@ export const UserList: React.FC = () => {
     // },[screen])
 
     const scrollTop = useScroll()
-    
+
     const throttleValue = useThrottle<number>(scrollTop, 500)
 
     // useEffect(()=>{
     //     console.log(throttleValue)
     // },[throttleValue])
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log(scrollTop)
-    },[scrollTop])
-
+    }, [scrollTop])
 
     return (
         <>
-            <div className='page-title'>用户管理</div>
-            <div className='userlist-content'>
-                <div className='query-content'>
+            <div className="page-title">用户管理</div>
+            <div className="userlist-content">
+                <div className="query-content">
                     <Form
                         form={form}
                         name="basic"
@@ -185,19 +183,16 @@ export const UserList: React.FC = () => {
                     >
                         <Row justify="center" align="middle">
                             <Col span={8}>
-                                <Form.Item
-                                    label="用户账号"
-                                    name="username"
-                                >
+                                <Form.Item label="用户账号" name="username">
                                     <Input placeholder={'请输入用户账号'} />
                                 </Form.Item>
                             </Col>
                             <Col span={8}>
-                                <Form.Item
-                                    label="用户昵称"
-                                    name="nickname"
-                                >
-                                    <Input placeholder={'请输入用户账号'} onChange={handleChange} />
+                                <Form.Item label="用户昵称" name="nickname">
+                                    <Input
+                                        placeholder={'请输入用户账号'}
+                                        onChange={handleChange}
+                                    />
                                 </Form.Item>
                             </Col>
 
@@ -206,21 +201,30 @@ export const UserList: React.FC = () => {
                                     <Button type="primary" htmlType="submit">
                                         搜索
                                     </Button>
-                                    <Button onClick={resetList} style={{ marginLeft: 5 }}>
+                                    <Button
+                                        onClick={resetList}
+                                        style={{ marginLeft: 5 }}
+                                    >
                                         重置
                                     </Button>
                                 </Form.Item>
                             </Col>
-
-
                         </Row>
                     </Form>
                 </div>
-                <div className='table-content'>
-                    <UserModal onRef={childRef} updateCallback={updateCallback}></UserModal>
-                    <Table dataSource={dataSource} columns={columns} pagination={paginationProps} rowKey={'_id'} />;
+                <div className="table-content">
+                    <UserModal
+                        onRef={childRef}
+                        updateCallback={updateCallback}
+                    ></UserModal>
+                    <Table
+                        dataSource={dataSource}
+                        columns={columns}
+                        pagination={paginationProps}
+                        rowKey={'_id'}
+                    />
+                    ;
                 </div>
-
             </div>
         </>
     )

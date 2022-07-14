@@ -1,6 +1,10 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "project": ["./tsconfig.json"]
+  },
   "plugins": ["@typescript-eslint"],
   "extends": ["airbnb-typescript", "plugin:prettier/recommended"],
 //   "extends": ["airbnb-typescript"],
@@ -17,15 +21,7 @@
     "@typescript-eslint/object-curly-spacing": "off",
     "react/jsx-filename-extension": [0],
     "import/extensions": "off",
-    "import/no-extraneous-dependencies": "off"
-  },
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "parserOptions": {
-        "ecmaVersion": 12,
-        "project": ["./tsconfig.json"]
-      }
-    }
-  ]
+    "import/no-extraneous-dependencies": "off",
+    "@typescript-eslint/no-unused-vars":"off"
+  }
 }

@@ -1,64 +1,69 @@
 import React, { useState, useEffect, useImperativeHandle } from 'react'
-import { Button, Col, Row, Modal, Form, Input, Table, Tag, Select, Switch, InputNumber } from 'antd';
-import type { ColumnsType } from 'antd/lib/table';
-import { message } from 'antd';
+import {
+    Button,
+    Col,
+    Row,
+    Modal,
+    Form,
+    Input,
+    Table,
+    Tag,
+    Select,
+    Switch,
+    InputNumber,
+} from 'antd'
+import type { ColumnsType } from 'antd/lib/table'
+import { message } from 'antd'
 import axios from 'axios'
-import moment from 'moment';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { PlusSquareOutlined, RedoOutlined } from '@ant-design/icons';
+import moment from 'moment'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { PlusSquareOutlined, RedoOutlined } from '@ant-design/icons'
 import { DataType } from './PointList'
 
 export type WarningType = {
-    max: number;
-    min: number;
-    isOpen: boolean;
-    message: string;
-    create: string;
-    interval: number;
-    _id: string;
+    max: number
+    min: number
+    isOpen: boolean
+    message: string
+    create: string
+    interval: number
+    _id: string
 }
 
 type Props = {
-    code?: string;
-    onRef?: any,
+    code?: string
+    onRef?: any
     updateCallback: () => void
 }
 
 export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
-
     const history = useHistory()
 
-
     const [curItem, setCurItem] = useState<DataType>()
-    const [form] = Form.useForm();
-    const [disabled,setDisabled] = useState<boolean>(false)
-
-
+    const [form] = Form.useForm()
+    const [disabled, setDisabled] = useState<boolean>(false)
 
     useImperativeHandle(onRef, () => ({
-        showModal
-    }));
+        showModal,
+    }))
 
-
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false)
 
     const showModal = (item: DataType) => {
         form.resetFields()
-        setIsModalVisible(true);
+        setIsModalVisible(true)
         setCurItem(item)
 
         const isOpen = item?.warning?.isOpen || false
 
         form.setFieldsValue({
             ...item.warning,
-            isOpen: isOpen
+            isOpen: isOpen,
         })
 
         setDisabled(!isOpen)
-
-
-    };
+    }
 
     // useEffect(() => {
     //     form.setFieldsValue({
@@ -79,28 +84,33 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
 
         const result = await axios.post('/rapi/warning/addWarningSet', {
             ...values,
-            pointId: curItem?._id
-        });
+            pointId: curItem?._id,
+        })
         if (result.data.code == 0) {
             updateCallback()
         } else {
             message.error(result.data.message)
         }
-        setIsModalVisible(false);
-    };
-
-
+        setIsModalVisible(false)
+    }
 
     const handleCancel = () => {
-        setIsModalVisible(false);
-    };
+        setIsModalVisible(false)
+    }
 
-    let intervalStr = '', maxStr = '', minStr = ''
+    let intervalStr = '',
+        maxStr = '',
+        minStr = ''
     const changeV = (v: any, type: any) => {
-
-
         if (type == 'interval' && v) {
-            intervalStr = '【' + curItem?.code + '】【' + curItem?.desc + '】在时间间隔' + v + '分钟内，触发了'
+            intervalStr =
+                '【' +
+                curItem?.code +
+                '】【' +
+                curItem?.desc +
+                '】在时间间隔' +
+                v +
+                '分钟内，触发了'
         }
         if (type == 'max' && v) {
             maxStr = '，最大值：' + v + '的监控告警'
@@ -119,13 +129,19 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
         }
 
         form.setFieldsValue({
-            message
+            message,
         })
     }
 
     return (
         <>
-            <Modal title="告警设置" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={600}>
+            <Modal
+                title="告警设置"
+                visible={isModalVisible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                width={600}
+            >
                 <Row justify="center" align="middle">
                     <Col span={24}>
                         <Form
@@ -136,8 +152,13 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
                             initialValues={{ remember: true }}
                             autoComplete="off"
                         >
-                            <Form.Item label="是否开启" name="isOpen" valuePropName="checked" rules={[{ required: true, message: '请选择' }]}>
-                                <Switch onChange={(v)=>setDisabled(!v)}/>
+                            <Form.Item
+                                label="是否开启"
+                                name="isOpen"
+                                valuePropName="checked"
+                                rules={[{ required: true, message: '请选择' }]}
+                            >
+                                <Switch onChange={(v) => setDisabled(!v)} />
                             </Form.Item>
                             {/* <Form.Item
                                 label="最大触发次数"
@@ -157,41 +178,68 @@ export const WarningModal: React.FC<Props> = ({ updateCallback, onRef }) => {
                             <Form.Item
                                 label="监控周期"
                                 name="interval"
-
-                                rules={[{ required: true, message: '请输入监控周期' }]}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: '请输入监控周期',
+                                    },
+                                ]}
                             >
-                                <InputNumber min={1} max={60} addonAfter="分钟" onChange={(v) => changeV(v, 'interval')} placeholder={'请输入监控周期'} disabled={disabled}/>
+                                <InputNumber
+                                    min={1}
+                                    max={60}
+                                    addonAfter="分钟"
+                                    onChange={(v) => changeV(v, 'interval')}
+                                    placeholder={'请输入监控周期'}
+                                    disabled={disabled}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="最大值"
                                 name="max"
                                 rules={[{ required: false }]}
                             >
-                                <InputNumber placeholder='阈值' min={1} onChange={(v) => changeV(v, 'max')} disabled={disabled} addonAfter="次数"/>
+                                <InputNumber
+                                    placeholder="阈值"
+                                    min={1}
+                                    onChange={(v) => changeV(v, 'max')}
+                                    disabled={disabled}
+                                    addonAfter="次数"
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="最小值"
                                 name="min"
                                 rules={[{ required: false }]}
                             >
-                                <InputNumber placeholder='阈值' min={1} onChange={(v) => changeV(v, 'min')} disabled={disabled} addonAfter="次数"/>
+                                <InputNumber
+                                    placeholder="阈值"
+                                    min={1}
+                                    onChange={(v) => changeV(v, 'min')}
+                                    disabled={disabled}
+                                    addonAfter="次数"
+                                />
                             </Form.Item>
 
                             <Form.Item
                                 name="message"
                                 label="告警文案"
-                                rules={[{ required: true, message: '请输入告警文案' }]}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: '请输入告警文案',
+                                    },
+                                ]}
                             >
-                                <Input.TextArea  style={{ height: 100 }} disabled />
+                                <Input.TextArea
+                                    style={{ height: 100 }}
+                                    disabled
+                                />
                             </Form.Item>
-
                         </Form>
                     </Col>
-
                 </Row>
             </Modal>
         </>
     )
 }
-
-
