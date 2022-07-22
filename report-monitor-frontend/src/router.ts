@@ -92,11 +92,11 @@ export const routes: IRoute[] = [
                 key: '/log/list',
                 name: 'loglist',
                 component: LogList,
-                auth: [1],
+                auth: [1,0],
             },
 
         ],
-        icon: 'PartitionOutlined',
+        icon: 'ProfileOutlined',
     },
     {
         label: '设置',

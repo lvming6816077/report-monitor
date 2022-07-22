@@ -4,6 +4,7 @@ import { Menu, Switch } from 'antd'
 import {
     HomeOutlined,
     PartitionOutlined,
+    ProfileOutlined,
     SettingOutlined,
 } from '@ant-design/icons'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -35,6 +36,7 @@ const iconMap: { [key: string]: JSX.Element } = {
     HomeOutlined: <HomeOutlined />,
     PartitionOutlined: <PartitionOutlined />,
     SettingOutlined: <SettingOutlined />,
+    ProfileOutlined:<ProfileOutlined />
 }
 
 export const MenuBar: React.FC = () => {
