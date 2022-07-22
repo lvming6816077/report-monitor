@@ -127,7 +127,9 @@ export class PointService {
     }
 
     async createTag(desc: string, userId: string): Promise<Tag> {
-        return await this.tagModel.create({ desc: desc, user: this.req.user.userId });
+        const nanoid = customAlphabet('123456789', 4)
+        const code = nanoid() // 随机且唯一code
+        return await this.tagModel.create({ desc: desc, user: this.req.user.userId,code });
     }
 
     async create(dto: CreateTagDto, userId: string): Promise<Point> {
@@ -144,6 +146,10 @@ export class PointService {
         let list = await this.tagModel.find({ user: this.req.user.userId }).exec();
 
         return list
+    }
+
+    async findOneTagByCode(code: string): Promise<Tag> {
+        return this.tagModel.findOne({ code: code }).exec();
     }
 
     async deleteById(id: string): Promise<DeleteResult> {

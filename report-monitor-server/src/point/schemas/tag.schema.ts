@@ -12,6 +12,9 @@ export class Tag {
     @Prop()
     desc: string;
 
+    @Prop()
+    code: string;
+
     @Prop({ type: Date, default: Date.now })
     create: string;
 
@@ -21,7 +24,10 @@ export class Tag {
     @Prop({ type: Date, default: Date.now })
     update: string;
 
+    _id:string
 }
+
+
 
 export const TagSchema = SchemaFactory.createForClass(Tag);
 TagSchema.plugin(mongoosePaginate)

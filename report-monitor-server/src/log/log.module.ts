@@ -7,9 +7,9 @@ import { LogService } from "./log.service";
 import { PointModule } from '../point/point.module';
 
 @Module({
-    imports: [MongooseModule.forFeature([{ name: Log.name, schema: LogSchema }])],
+    imports: [MongooseModule.forFeature([{ name: Log.name, schema: LogSchema }]),PointModule],
     controllers: [LogController],
     providers: [LogService],
     exports: [LogService],
 })
-export class ReportModule {}
+export class LogModule {}

@@ -25,8 +25,8 @@ export class LogService {
         }
 
 
-        async create(str: string): Promise<Log> {
-            return await this.logModel.create({ str: str });
+        async create(str: string,tid:string): Promise<Log> {
+            return await this.logModel.create({ str: str,tag:tid });
         }
 
 
