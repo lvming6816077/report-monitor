@@ -7,12 +7,9 @@ import { TagList } from './pages/point/TagList'
 import { PointSet } from './pages/setting/point/PointSet'
 import { PointAllList } from './pages/setting/point/PointAllList'
 import { Login } from './pages/login/Login'
+import { LogList } from './pages/log/LogList'
 import { UserInfo } from './pages/setting/user/UserInfo'
-import {
-    HomeOutlined,
-    PartitionOutlined,
-    SettingOutlined,
-} from '@ant-design/icons'
+
 
 export type IRoute = {
     label: string
@@ -83,6 +80,21 @@ export const routes: IRoute[] = [
                 component: CreatePoint,
                 auth: [1],
             },
+        ],
+        icon: 'PartitionOutlined',
+    },
+    {
+        label: '日志',
+        key: '/log',
+        children: [
+            {
+                label: '日志管理',
+                key: '/log/list',
+                name: 'loglist',
+                component: LogList,
+                auth: [1],
+            },
+
         ],
         icon: 'PartitionOutlined',
     },

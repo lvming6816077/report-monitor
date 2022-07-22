@@ -20,7 +20,10 @@ export const TagList: React.FC = () => {
             title: '类目名称',
             dataIndex: 'desc',
         },
-
+        {
+            title: '类目code',
+            dataIndex: 'code',
+        },
         {
             title: '创建时间',
             dataIndex: 'create',
