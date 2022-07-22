@@ -29,8 +29,12 @@ export class LogService {
             return await this.logModel.create({ str: str,tag:tid });
         }
 
+        async findAll(): Promise<Log[]> {
+            let list = await this.logModel.find({ }).exec();
+    
+            return list
+        }
 
-    /*async updateUser(userId: string, userUpdates: UpdateUserDto): Promise<User> {
-        return this.usersRepository.findOneAndUpdate({ userId }, userUpdates);
-    }*/
+
+
 }

@@ -34,6 +34,14 @@ export class LogController {
       return await this.logService.create(JSON.stringify(dto),tag._id);
   }
 
+  @Get('list')
+  async getLogList(@Request() req: _Request) {
+    const list = await this.logService.findAll();
+
+    
+    return list.filter(i=>i.str)
+  }
+
   //   @Delete(':id')
   //   async delete(@Param('id') id: string) {
   //     return this.catsService.delete(id);
