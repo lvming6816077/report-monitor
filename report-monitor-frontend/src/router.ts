@@ -92,7 +92,7 @@ export const routes: IRoute[] = [
                 key: '/log/list',
                 name: 'loglist',
                 component: LogList,
-                auth: [1,0],
+                auth: [1],
             },
 
         ],
