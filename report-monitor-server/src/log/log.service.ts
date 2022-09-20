@@ -35,9 +35,8 @@ export class LogService {
 
         async findAllByTagId(tid:string): Promise<Log[]> {
             let list = await this.logModel.find({ tag:tid }).exec();
-            
     
-            return list
+            return list||[]
         }
 
 

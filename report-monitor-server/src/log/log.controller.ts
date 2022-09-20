@@ -44,7 +44,10 @@ export class LogController {
 
         for (var i = 0; i < tagList.length; i++) {
             let l = await this.logService.findAllByTagId(tagList[i]._id)
-            list.push(l)
+
+            if (l.length) {
+                list.push(l)
+            }
         }
         // 拍平
         function flatter(arr) {
