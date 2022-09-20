@@ -5,9 +5,11 @@ import { User } from 'src/user/schemas/user.schema';
 import { Optional } from '@nestjs/common';
 export class UpdateUserPasswordDto  {
 
+    @IsNotEmpty()
     @IsString()
     newpassword:string
 
+    @IsNotEmpty()
     @IsString()
     oldpassword:string
 
