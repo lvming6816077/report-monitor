@@ -19,7 +19,8 @@ import { UpdateUserEmailDto } from './dto/update-user-email.dto';
 import axios from 'axios'
 import { RateLimit } from 'nestjs-rate-limiter'
 import { Response } from 'express';
-
+import * as bcrypt from 'bcrypt';
+import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 
 
 
@@ -126,7 +127,12 @@ export class UserController {
 
         const { checkcode } = body;
         if (checkcode?.toUpperCase() !== req.session.checkcode?.toUpperCase()) {
-            throw new HttpException('验证码错误', 200);
+            if (body.noCapt) {
+
+            } else {
+                throw new HttpException('验证码错误', 200);
+            }
+            
         }
 
         const u: User = await this.userService.findUser(body.username, body.password)
@@ -280,6 +286,24 @@ export class UserController {
             throw new HttpException('验证码无效', 200);
         }
 
+
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('updatePass')
+    async updatePass(@Body() body: UpdateUserPasswordDto, @Request() req: any) {
+
+        const { username } = await this.userService.findUserByUserId(req.user.userId)
+
+        const saltOrRounds = 10;
+        const hash = await bcrypt.hash(body.newpassword, saltOrRounds);
+        const u = await this.userService.updateUser(req.user.userId, { password: hash })
+
+        if (u.userid) {
+            return 'success'
+        }
+
+        return 'error'
 
     }
 

@@ -1,4 +1,4 @@
-import { IsInt, IsString,IsEmpty,IsNotEmpty, Allow, isString, IsOptional } from 'class-validator';
+import { IsInt, IsString,IsEmpty,IsNotEmpty, Allow, isString, IsOptional, IsBoolean } from 'class-validator';
 
 export class LoginDto {
 
@@ -12,4 +12,8 @@ export class LoginDto {
   @IsString()
   @IsOptional()
   readonly nickname?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  readonly noCapt?:boolean
 }

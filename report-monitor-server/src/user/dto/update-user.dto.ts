@@ -11,6 +11,10 @@ export class UpdateUserDto  {
     @IsEmpty()
     username?: string;
 
+    @IsString()
+    @IsOptional()
+    password?:string
+
     @IsArray()
     @IsOptional()
     level?: number[];
