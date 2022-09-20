@@ -9,7 +9,7 @@ import { PointAllList } from './pages/setting/point/PointAllList'
 import { Login } from './pages/login/Login'
 import { LogList } from './pages/log/LogList'
 import { UserInfo } from './pages/setting/user/UserInfo'
-
+import { UserChangePassword } from './pages/setting/user/UserChangePassword'
 
 export type IRoute = {
     label: string
@@ -107,6 +107,14 @@ export const routes: IRoute[] = [
                 key: '/setting/userinfo',
                 name: 'userinfo',
                 component: UserInfo,
+                auth: [1],
+            },
+            {
+                label: '修改密码',
+                key: '/setting/changepass',
+                name: 'changepass',
+                menu: false,
+                component: UserChangePassword,
                 auth: [1],
             },
             {

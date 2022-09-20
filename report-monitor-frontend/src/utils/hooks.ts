@@ -1,14 +1,19 @@
 import { useEffect, useState, useRef } from 'react'
-
+/**
+ * 
+ * @param value 原始响应式变量
+ * @param delay 延迟时间
+ * @returns 节流变量
+ */
 export function useDebounce<T>(value: T, delay?: number): T {
     const [debounceValue, setDebounceValue] = useState<T>(value)
 
     useEffect(() => {
         let timer = setTimeout(() => {
             setDebounceValue(value)
-        }, delay || 500)
+        }, delay || 500) // 默认500ms
 
-        return () => {
+        return () => { // 销毁时，清除setTimeout
             clearTimeout(timer)
         }
     }, [value, delay])

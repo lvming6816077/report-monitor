@@ -54,6 +54,11 @@ export const NavBar: React.FC = () => {
                     type: 'divider',
                 },
                 {
+                    label: '修改密码',
+                    key: '/setting/changepass',
+                    icon: <LogoutOutlined />,
+                },
+                {
                     label: '退出登陆',
                     key: 'logout',
                     icon: <LogoutOutlined />,
