@@ -24,6 +24,8 @@ export const CItem: React.FC<Props> = React.memo(
     ({ data, code, desc, changeData }) => {
         const [showDatePicker, setShowDatePicker] = useState<Boolean>(false)
         const [showLoading, setShowLoading] = useState<Boolean>(false)
+        const [total,setTotal] = useState<Number>(0)
+        // console.log(data)
 
         const initChart = (_data: ChartDataItem[]) => {
             const xAxis = _data.map((i: ChartDataItem) => {
@@ -101,6 +103,10 @@ export const CItem: React.FC<Props> = React.memo(
             if (data.length) {
                 initChart(data)
             }
+            let t = data.reduce((prev,cur)=>{
+                return prev+cur.total
+            },0)
+            setTotal(t)
         }, [data])
 
         useEffect(() => {
@@ -134,7 +140,7 @@ export const CItem: React.FC<Props> = React.memo(
         return (
             <div className="c-content">
                 <div className="title">{desc + '(' + code + ')'}</div>
-
+                <div className="total-count">总计：{total}</div>
                 <div
                     className="inner"
                     onMouseEnter={() => {
