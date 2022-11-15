@@ -31,8 +31,8 @@ export class LogController {
         if (!tag) {
             throw new HttpException('tid不存在', 200);
         }
-
-        return await this.logService.create(JSON.stringify(dto), tag._id);
+        // 先不存了
+        return {}//await this.logService.create(JSON.stringify(dto), tag._id);
     }
 
     @UseGuards(JwtAuthGuard)
