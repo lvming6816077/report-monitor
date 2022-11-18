@@ -26,6 +26,7 @@ export default (
                     level: action.data?.level,
                     nickname: action.data?.nickname,
                     userid: action.data?.userid,
+                    activePid: action.data?.activePid,
                 },
             }
             localStorage.setItem('cuser', JSON.stringify(u))

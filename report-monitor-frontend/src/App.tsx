@@ -1,4 +1,4 @@
-import React, { Component, ElementType, ReactNode, useMemo } from 'react'
+import React, { Component, ElementType, ReactNode, useEffect, useMemo } from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 
 import { MenuBar } from './components/menubar/MenuBar'
@@ -6,6 +6,7 @@ import { NavBar } from './components/header/NavBar'
 import { useHistory, useLocation } from 'react-router-dom'
 import { routes, flatRoute, IRoute } from './router'
 import { useSelector, useDispatch } from 'react-redux'
+import axios from 'axios'
 
 import './App.less'
 import { RootState } from './store'
@@ -42,8 +43,9 @@ const RequireAuth = ({
 
 const App: React.FC = () => {
     const location = useLocation()
+    const dispatch = useDispatch()
 
-    const isLogin = location.pathname == '/login'
+    const isLogin = location.pathname == '/login'||location.pathname =='/createproject'
 
     const flatRoutes: IRoute[] = useMemo(() => flatRoute(routes), [routes])
 
@@ -51,8 +53,23 @@ const App: React.FC = () => {
         (i: IRoute) => i.auth?.length == 0
     )
     const needAuthRoutes = flatRoutes.filter((i: IRoute) => i.auth?.length != 0)
+    const userInfo = useSelector((state: RootState) => state.user.userInfo)
     // console.log(needAuthRoutes)
-    var a = 1
+    useEffect(()=>{
+        const fn = async ()=>{
+            // 设置项目列表
+            const projectList = await axios.get('/rapi/user/getUserProjects?id='+userInfo.userid)
+            if (projectList.data.code == 0) {
+
+                dispatch({
+                    type: 'SET_PROJECT_LIST',
+                    data: projectList.data.data,
+                })
+            }
+        }
+        
+        fn()
+    })
 
     return (
         <div className="container">

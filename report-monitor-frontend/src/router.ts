@@ -7,6 +7,7 @@ import { TagList } from './pages/point/TagList'
 import { PointSet } from './pages/setting/point/PointSet'
 import { PointAllList } from './pages/setting/point/PointAllList'
 import { Login } from './pages/login/Login'
+import { CreateProject } from './pages/project/CreateProject'
 import { LogList } from './pages/log/LogList'
 import { UserInfo } from './pages/setting/user/UserInfo'
 import { UserChangePassword } from './pages/setting/user/UserChangePassword'
@@ -29,6 +30,13 @@ export const routes: IRoute[] = [
         key: '/login',
         name: 'login',
         component: Login,
+        menu: false,
+    },
+    {
+        label: '创建项目',
+        key: '/createproject',
+        name: 'createproject',
+        component: CreateProject,
         menu: false,
     },
 

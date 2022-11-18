@@ -3,7 +3,9 @@ import { Document,Schema as _Schema} from 'mongoose';
 // import { Tag } from "src/point/schemas/tag.schema";
 
 
-export type ProjectDocument = Project & Document;
+export type ProjectDocument = Project & Document & {
+    _id:string
+};;
 
 
 
@@ -11,10 +13,20 @@ export type ProjectDocument = Project & Document;
 export class Project {
 
     @Prop()
+    name: string;
+
+    @Prop()
+    projectCode: string;
+
+    @Prop()
     desc: string;
 
-    // @Prop({ type: _Schema.Types.ObjectId, ref: 'Tag',required:true })
-    // tag: Tag;
+    @Prop()
+    type: string;
+
+    @Prop({default: [] })
+    usersid:Array<string>
+
 
     @Prop({ type: Date, default: Date.now })
     create: string;

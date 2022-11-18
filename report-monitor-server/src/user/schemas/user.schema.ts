@@ -34,6 +34,12 @@ export class User {
     @Prop({default:''}) // 用户预设point
     pointset: string;
 
+    @Prop({default: [] })// 用户关联的项目
+    projectsid:Array<string>
+
+    @Prop()// 用户当前项目
+    activePid:string
+
     @Prop({ type: Date, default: Date.now })
     create: string;
 

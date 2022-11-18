@@ -1,5 +1,6 @@
-import { Body, Controller, Req, Get, Res, Post, Request, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Req, Get, Res, Post, Request, Query, UseGuards, forwardRef, Inject } from '@nestjs/common';
 import { UserService } from './user.service';
+import { ProjectService } from '../project/project.service'
 // const sha1 = require('sha1');
 const parser = require('cron-parser');
 import { JwtConfigService } from 'src/config/jwt-config/jwt-config.service';
@@ -24,6 +25,7 @@ import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 
 
 
+
 @Controller('user')
 export class UserController {
     constructor(
@@ -32,6 +34,9 @@ export class UserController {
         private readonly mailerService: MailerService,
 
         private readonly redisService: RedisInstanceService,
+
+        @Inject(forwardRef(() => ProjectService))
+        private readonly projectService: ProjectService,
 
         private readonly jwt: JwtConfigService,) { }
 
@@ -293,7 +298,7 @@ export class UserController {
     @Post('updatePass')
     async updatePass(@Body() body: UpdateUserPasswordDto, @Request() req: any) {
 
-        const { username } = await this.userService.findUserByUserId(req.user.userId)
+        // const { username } = await this.userService.findUserByUserId(req.user.userId)
 
         const saltOrRounds = 10;
         const hash = await bcrypt.hash(body.newpassword, saltOrRounds);
@@ -305,6 +310,28 @@ export class UserController {
 
         return 'error'
 
+    }
+
+    @Get('getUserProjects')
+    async getUserProjects(@Query() query) {
+        const u = await this.userService.findUserByUserId(query.id)
+
+        console.log(u)
+        let list = []
+        let projectsid = u.projectsid||[]
+        for (var i = 0 ; i < projectsid.length ; i++) {
+            const p = await this.projectService.findProjectById(projectsid[i])
+            let o:any = {}
+            if (u.activePid && u.activePid == p._id) {
+                o.active = true
+            }
+            list.push({
+                ...o,
+                ...p.toJSON()
+            })
+        }
+
+        return list
     }
 
 }

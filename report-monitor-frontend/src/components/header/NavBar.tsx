@@ -5,6 +5,7 @@ import {
     BarChartOutlined,
     AreaChartOutlined,
     UserOutlined,
+    DownOutlined,
     PlusSquareOutlined,
 } from '@ant-design/icons'
 import { useSelector, useDispatch } from 'react-redux'
@@ -16,6 +17,7 @@ import { useHistory } from 'react-router-dom'
 
 export const NavBar: React.FC = () => {
     const userInfo = useSelector((state: RootState) => state.user.userInfo)
+    const projectList = useSelector((state: RootState) => state.project.projectList)
     const dispatch = useDispatch()
     const history = useHistory()
 
@@ -67,11 +69,34 @@ export const NavBar: React.FC = () => {
         />
     )
 
+    const projectItems = projectList.map((d:any)=>{
+        return {
+            label:d.name,
+            key:d.id,
+            active:d.active
+        }
+    })
+
+    const menuProject = (
+        
+        <Menu
+            onClick={handleMenuClick}
+            items={projectItems}
+        />
+    )
+
     return (
         <div className="navbar">
             <div className="logo">
                 <AreaChartOutlined className="icon" />
                 Report Monitor
+            </div>
+            <div className='change-project'>
+                <Dropdown overlay={menuProject}>
+                    <div className="right-avatar">
+                        {projectItems.find((r=>r.active))?.label}  &nbsp;&nbsp;&nbsp;<DownOutlined className=''/>
+                    </div>
+                </Dropdown>
             </div>
             <div className="right-content">
                 <Dropdown overlay={menu}>

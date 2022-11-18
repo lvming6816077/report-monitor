@@ -19,6 +19,10 @@ export class UpdateUserDto  {
     @IsOptional()
     level?: number[];
     
+    @IsArray()
+    @IsOptional()
+    projectsid?: string[];
+
     @IsString()
     @IsOptional()
     pointset?:string;
@@ -33,6 +37,10 @@ export class UpdateUserDto  {
     @IsString()
     @IsOptional()
     phone?:string
+
+    @IsString()
+    @IsOptional()
+    activePid?:string
 
 
 }

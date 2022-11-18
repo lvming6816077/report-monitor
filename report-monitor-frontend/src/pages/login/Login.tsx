@@ -10,6 +10,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import queryString from 'query-string'
 import { useDispatch } from 'react-redux'
 import { actionTypes } from '@/reducers/user/index'
+import { projectActionTypes } from '@/reducers/project/index'
 import axios from 'axios'
 import randomName from '@/utils/nickname'
 import './Login.less'
@@ -73,6 +74,7 @@ export const Login: React.FC = () => {
             password: values.password,
             checkcode: values.checkcode,
         })
+        
         if (result.data.code == 0) {
             localStorage.setItem('token', result.data.data.access_token)
 
@@ -84,6 +86,17 @@ export const Login: React.FC = () => {
         } else {
             message.error(result.data.message)
         }
+
+        // 设置项目列表
+        const projectList = await axios.get('/rapi/user/getUserProjects?id='+result.data.data.user.userid)
+        if (projectList.data.code == 0) {
+
+            dispatch({
+                type: projectActionTypes.SET_PROJECT_LIST,
+                data: projectList.data.data,
+            })
+        }
+
     }
 
     const onFinish = async (values: any) => {

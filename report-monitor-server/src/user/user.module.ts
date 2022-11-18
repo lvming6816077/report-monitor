@@ -5,11 +5,12 @@ import { User, UserSchema } from "./schemas/user.schema";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { PointModule } from '../point/point.module';
+import { ProjectModule } from '../project/project.module';
 import { RateLimiterModule,RateLimiterInterceptor } from "nestjs-rate-limiter";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 // forwardRef 防止circular引用
 @Module({
-    imports: [RateLimiterModule.register({type: 'Memory'}),forwardRef(() => PointModule),MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
+    imports: [RateLimiterModule.register({type: 'Memory'}),forwardRef(() => PointModule),forwardRef(() => ProjectModule),MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
     controllers: [UserController],
     providers: [UserService,{
         provide: APP_INTERCEPTOR,

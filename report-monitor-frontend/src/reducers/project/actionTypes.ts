@@ -1,0 +1,1 @@
+export const SET_PROJECT_LIST = 'SET_PROJECT_LIST'
