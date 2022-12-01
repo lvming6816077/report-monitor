@@ -5,8 +5,14 @@ export class CreateTagDto {
 
   @IsString()
   readonly desc: string;
+
+  @IsString()
+  readonly projectId: string;
   
   @IsOptional()
   @IsString()
   readonly tagId: string;
+
+
+  
 }

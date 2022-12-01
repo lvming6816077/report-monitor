@@ -4,6 +4,7 @@ import mongoose,{ Document, Schema as _Schema} from 'mongoose';
 import { Tag } from "./tag.schema";
 import * as mongoosePaginate from 'mongoose-paginate-v2';
 import { User } from "src/user/schemas/user.schema";
+import { Project } from "src/project/schemas/project.schema";
 
 export type PointDocument = Point & Document &{
     warning?:Object
@@ -27,6 +28,9 @@ export class Point {
 
     @Prop({ default: false }) // 是否禁用
     isBlock: boolean;
+
+    @Prop({ type: String, ref: 'Project',required:true })
+    project: Project;
 
     @Prop({ type: Date, default: Date.now })
     create: string;

@@ -31,13 +31,13 @@ export class PointController {
 
     @Post('create')
     async createPoint(@Body() dto: CreatePointDto, @Request() req: any) {
-        console.log(dto)
-        return await this.pointService.create(dto, req.user.userId);
+
+        return await this.pointService.create(dto);
     }
     @Post('createtag')
     async createTag(@Body() dto: CreateTagDto, @Request() req: any) {
-        console.log(req.user)
-        return await this.pointService.createTag(dto.desc, req.user.userId);
+
+        return await this.pointService.createTag(dto.desc,dto.projectId);
     }
     @Post('savePointSet')
     async savePointSet(@Body() dto:{codes?:string[]}, @Request() req: any) {
@@ -50,14 +50,15 @@ export class PointController {
 
     @Get('getPoints')
     async getPoints(): Promise<Point[]> {
-        return this.pointService.findAll();
+        return this.pointService.findAll('');
     }
 
     @Get('getPointsAndPointset')
     async getPointsAndPointset(@Request() req: any): Promise<any> {
         let pointset = await this.userService.findUserPointSet(req.user.userId);
+        let projectId = req.query.projectId
 
-        let list = await this.pointService.findAll();
+        let list = await this.pointService.findAll(projectId);
         return {
             pointset:pointset,
             list
@@ -80,8 +81,8 @@ export class PointController {
 
 
     @Get('getTags')
-    async getTags(): Promise<Tag[]> {
-        return this.pointService.findAllTags();
+    async getTags(@Query() query): Promise<Tag[]> {
+        return this.pointService.findAllTags(query);
     }
 
     @Get(':id')

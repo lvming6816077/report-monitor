@@ -16,5 +16,8 @@ export class CreatePointDto extends Point {
   @IsString()
   readonly desc: string;
 
+  @IsString()
+  readonly projectId: string;
+
 
 }

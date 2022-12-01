@@ -321,12 +321,8 @@ export class UserController {
         let projectsid = u.projectsid||[]
         for (var i = 0 ; i < projectsid.length ; i++) {
             const p = await this.projectService.findProjectById(projectsid[i])
-            let o:any = {}
-            if (u.activePid && u.activePid == p._id) {
-                o.active = true
-            }
+
             list.push({
-                ...o,
                 ...p.toJSON()
             })
         }

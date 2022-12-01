@@ -15,6 +15,8 @@ import { QueryPointDto } from "./dto/query-point.dto";
 import { ReportService } from "src/report/report.service";
 import { WarningService } from "src/warning/warning.service";
 import { setDefaultResultOrder } from "dns";
+import { CreatePointDto } from "./dto/create-point.dto";
+import { QueryTagDto } from "./dto/query-tag.dto";
 
 export type CURUSER = {
     user: {
@@ -44,8 +46,8 @@ export class PointService {
         return this.pointModel.findOne({ _id: id }).exec();
     }
 
-    async findAll(): Promise<any[]> {
-        let list = await this.tagModel.find({ user: this.req.user.userId }).exec();
+    async findAll(projectId:string): Promise<any[]> {
+        let list = await this.tagModel.find({ project: projectId }).exec();
 
         let result = []
         for (var i = 0; i < list.length; i++) {
@@ -67,13 +69,13 @@ export class PointService {
         }
         return result
     }
-    async findAllByPage(pageStart: string = '1', pageSize: string = '10', query: Point,isAll=false): Promise<PaginateResult<PointDocument>> {
+    async findAllByPage(pageStart: string = '1', pageSize: string = '10', query: QueryPointDto,isAll=false): Promise<PaginateResult<PointDocument>> {
         const options = {
             populate: ['tag'],
             page: Number(pageStart),
             limit: Number(pageSize),
         };
-        const q: any = isAll ? {} : { user: this.req.user.userId }
+        const q: any = isAll ? {} : { project: query.projectId }
         if (query.desc) {
             q.desc = { $regex: query.desc, $options: 'i' }
         }
@@ -101,18 +103,18 @@ export class PointService {
         }
 
     }
-    async findAllAdminByPage(pageStart: string = '1', pageSize: string = '10', query: Point): Promise<PaginateResult<PointDocument>> {
+    async findAllAdminByPage(pageStart: string = '1', pageSize: string = '10', query: QueryPointDto): Promise<PaginateResult<PointDocument>> {
         return await this.findAllByPage(pageStart,pageSize,query,true)
 
     }
 
     
-    async findAllTagByPage(pageStart: string = '1', pageSize: string = '10', query: Tag): Promise<PaginateResult<TagDocument>> {
+    async findAllTagByPage(pageStart: string = '1', pageSize: string = '10', query: QueryTagDto): Promise<PaginateResult<TagDocument>> {
         const options = {
             page: Number(pageStart),
             limit: Number(pageSize),
         };
-        const q: any = { user: this.req.user.userId }
+        const q: any = { project: query.projectId }
         if (query.desc) {
             q.desc = { $regex: query.desc, $options: 'i' }
         }
@@ -126,24 +128,25 @@ export class PointService {
         return this.pointModel.findOne({ code: code }).exec();
     }
 
-    async createTag(desc: string, userId: string): Promise<Tag> {
+    async createTag(desc: string, projectId: string): Promise<Tag> {
         const nanoid = customAlphabet('123456789', 4)
         const code = nanoid() // 随机且唯一code
-        return await this.tagModel.create({ desc: desc, user: this.req.user.userId,code });
+        return await this.tagModel.create({ desc: desc, user: this.req.user.userId,code,project:projectId });
     }
 
-    async create(dto: CreateTagDto, userId: string): Promise<Point> {
+    async create(dto: CreatePointDto): Promise<Point> {
         const nanoid = customAlphabet('123456789', 6)
         const code = nanoid() // 随机且唯一code
         return await this.pointModel.create({
             code,
+            project:dto.projectId,
             user: this.req.user.userId,
             tag: dto.tagId,
             desc: dto.desc,
         })
     }
-    async findAllTags(): Promise<Tag[]> {
-        let list = await this.tagModel.find({ user: this.req.user.userId }).exec();
+    async findAllTags(query:QueryTagDto): Promise<Tag[]> {
+        let list = await this.tagModel.find({ project: query.projectId }).exec();
 
         return list
     }

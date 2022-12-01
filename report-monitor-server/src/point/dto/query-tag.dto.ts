@@ -3,7 +3,9 @@ import { Point, PointDocument } from '../schemas/point.schema';
 import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { User } from 'src/user/schemas/user.schema';
 import { Tag } from '../schemas/tag.schema';
+import { Project } from 'src/project/schemas/project.schema';
 export class QueryTagDto implements QueryPageDto,Tag {
+    project: Project;
     _id: string;
     readonly code: string;
     
@@ -15,6 +17,9 @@ export class QueryTagDto implements QueryPageDto,Tag {
     pageStart: string;
     @IsString()
     pageSize: string;
+
+    @IsString()
+    projectId: string;
 
 
 }

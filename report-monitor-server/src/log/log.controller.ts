@@ -38,29 +38,30 @@ export class LogController {
     @UseGuards(JwtAuthGuard)
     @Get('list')
     async getLogList(@Request() req: _Request) {
-        const tagList = await (await this.pointService.findAllTags()).filter(i => i.code)
+        return []
+        // const tagList = await (await this.pointService.findAllTags()).filter(i => i.code)
 
-        let list = []
+        // let list = []
 
-        for (var i = 0; i < tagList.length; i++) {
-            let l = await this.logService.findAllByTagId(tagList[i]._id)
+        // for (var i = 0; i < tagList.length; i++) {
+        //     let l = await this.logService.findAllByTagId(tagList[i]._id)
 
-            if (l.length) {
-                list.push(l)
-            }
-        }
-        // 拍平
-        function flatter(arr) {
-            if (!arr.length) return;
-            return arr.reduce(
-                (pre, cur) =>
-                    Array.isArray(cur) ? [...pre, ...flatter(cur)] : [...pre, cur],
-                []
-            );
-        }
+        //     if (l.length) {
+        //         list.push(l)
+        //     }
+        // }
+        // // 拍平
+        // function flatter(arr) {
+        //     if (!arr.length) return;
+        //     return arr.reduce(
+        //         (pre, cur) =>
+        //             Array.isArray(cur) ? [...pre, ...flatter(cur)] : [...pre, cur],
+        //         []
+        //     );
+        // }
 
 
-        return flatter(list)
+        // return flatter(list)
     }
 
     //   @Delete(':id')

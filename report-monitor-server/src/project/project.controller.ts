@@ -17,7 +17,7 @@ export class ProjectController {
     ) { }
 
     @Post('create')
-    async regis(@Body() body: CreateProjectDto, @Request() req: any) {
+    async create(@Body() body: CreateProjectDto, @Request() req: any) {
         const userid = req.user.userId
 
         return await this.projectService.createProject(body,userid)
