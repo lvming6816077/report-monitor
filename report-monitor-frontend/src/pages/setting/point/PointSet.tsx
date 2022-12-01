@@ -4,11 +4,13 @@ import { message } from 'antd'
 import axios from 'axios'
 import moment from 'moment'
 import './PointSet.less'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { PlusSquareOutlined } from '@ant-design/icons'
+import { RootState } from '@/store'
 
 export const PointSet: React.FC = () => {
+    const userInfo = useSelector((state: RootState) => state.user.userInfo)
     const [treeData, setTreeData] = useState<TreeItem[]>([])
     const [codes, setCodes] = useState<string[]>()
     const [noData, setNoData] = useState<boolean>(false)
@@ -26,7 +28,7 @@ export const PointSet: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await axios.get('/rapi/point/getPointsAndPointset')
+            const result = await axios.get('/rapi/point/getPointsAndPointset?projectId='+userInfo.activePid)
             const d = result.data.data
             if (d.list == 0) {
                 setNoData(true)

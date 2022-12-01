@@ -19,6 +19,7 @@ type DataType = {
     warning?: WarningType
 }
 export const PointAllList: React.FC = () => {
+    
     const columns: ColumnsType<DataType> = [
         {
             title: '数据点名称',
@@ -140,7 +141,7 @@ export const PointAllList: React.FC = () => {
             : page
 
         const result = await axios.get(
-            '/rapi/point/getPointsAllList?pageStart=' +
+            '/rapi/point/getPointsAllList?projectId=xx&pageStart=' +
                 p.pageStart +
                 '&pageSize=' +
                 p.pageSize,

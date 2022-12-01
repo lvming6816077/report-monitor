@@ -4,10 +4,11 @@ import { message } from 'antd'
 import axios from 'axios'
 import moment from 'moment'
 import './TagList.less'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { PlusSquareOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/lib/table'
+import { RootState } from '@/store'
 
 type DataType = {
     desc: string
@@ -15,6 +16,7 @@ type DataType = {
     _id: string
 }
 export const TagList: React.FC = () => {
+    const userInfo = useSelector((state: RootState) => state.user.userInfo)
     const columns: ColumnsType<DataType> = [
         {
             title: '类目名称',
@@ -91,7 +93,7 @@ export const TagList: React.FC = () => {
               }
             : page
         const result = await axios.get(
-            '/rapi/point/getTagsList?pageStart=' +
+            '/rapi/point/getTagsList?projectId='+userInfo.activePid+'&pageStart=' +
                 p.pageStart +
                 '&pageSize=' +
                 p.pageSize,

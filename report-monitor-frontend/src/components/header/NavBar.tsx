@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, Dropdown, Menu, MenuProps } from 'antd'
 import {
     LogoutOutlined,
@@ -14,12 +14,20 @@ import randomName from '@/utils/nickname'
 
 import './NavBar.less'
 import { useHistory } from 'react-router-dom'
+import { SET_USER } from '@/reducers/user/actionTypes'
+
+type ProjectItem = {
+    _id:string,
+    name:string
+}
 
 export const NavBar: React.FC = () => {
     const userInfo = useSelector((state: RootState) => state.user.userInfo)
-    const projectList = useSelector((state: RootState) => state.project.projectList)
+    const projectList:ProjectItem[] = useSelector((state: RootState) => state.project.projectList)
     const dispatch = useDispatch()
     const history = useHistory()
+
+    const [activeName,setActiveName] = useState<string>('')
 
     const logout = () => {
         dispatch({ type: 'REMOVE_USER' })
@@ -37,6 +45,36 @@ export const NavBar: React.FC = () => {
 
         history.push(e.key)
     }
+    const handleProjectClick: MenuProps['onClick'] = (e) => {
+        dispatch({
+            type: SET_USER,
+            data: {
+                ...userInfo,
+                activePid:e.key
+            },
+        })
+        setTimeout(()=>{
+            window.location.href = '/'
+        })
+        
+        console.log(e.key)
+        // history.push(e.key)
+    }
+    
+    useEffect(()=>{
+        let activePid = userInfo.activePid
+        let name = ''
+        if (activePid) {
+            let n = projectList.find(r=>r._id == activePid)
+            
+            name = n?n.name:''
+        } else {
+            name = projectList[0]?.name
+        }
+        // console.log(name,activePid)
+        setActiveName(name)
+    },[projectList,userInfo])
+
 
     const menu = (
         <Menu
@@ -72,15 +110,13 @@ export const NavBar: React.FC = () => {
     const projectItems = projectList.map((d:any)=>{
         return {
             label:d.name,
-            key:d.id,
-            active:d.active
+            key:d._id,
         }
     })
-
     const menuProject = (
         
         <Menu
-            onClick={handleMenuClick}
+            onClick={handleProjectClick}
             items={projectItems}
         />
     )
@@ -94,7 +130,7 @@ export const NavBar: React.FC = () => {
             <div className='change-project'>
                 <Dropdown overlay={menuProject}>
                     <div className="right-avatar">
-                        {projectItems.find((r=>r.active))?.label}  &nbsp;&nbsp;&nbsp;<DownOutlined className=''/>
+                        {activeName}  &nbsp;&nbsp;&nbsp;<DownOutlined className=''/>
                     </div>
                 </Dropdown>
             </div>

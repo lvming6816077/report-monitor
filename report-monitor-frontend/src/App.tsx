@@ -6,12 +6,14 @@ import { NavBar } from './components/header/NavBar'
 import { useHistory, useLocation } from 'react-router-dom'
 import { routes, flatRoute, IRoute } from './router'
 import { useSelector, useDispatch } from 'react-redux'
+import { actionTypes } from '@/reducers/user/index'
 import axios from 'axios'
 
 import './App.less'
 import { RootState } from './store'
 import { userInfoType } from './reducers/user/types'
 import { Alert } from 'antd'
+import { setProjectListAction } from './reducers/project'
 
 const RequireAuth = ({
     children,
@@ -54,22 +56,10 @@ const App: React.FC = () => {
     )
     const needAuthRoutes = flatRoutes.filter((i: IRoute) => i.auth?.length != 0)
     const userInfo = useSelector((state: RootState) => state.user.userInfo)
-    // console.log(needAuthRoutes)
-    useEffect(()=>{
-        const fn = async ()=>{
-            // 设置项目列表
-            const projectList = await axios.get('/rapi/user/getUserProjects?id='+userInfo.userid)
-            if (projectList.data.code == 0) {
 
-                dispatch({
-                    type: 'SET_PROJECT_LIST',
-                    data: projectList.data.data,
-                })
-            }
-        }
-        
-        fn()
-    })
+    useEffect(()=>{
+        dispatch(setProjectListAction(userInfo))
+    },[])
 
     return (
         <div className="container">

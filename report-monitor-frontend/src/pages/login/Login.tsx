@@ -87,14 +87,21 @@ export const Login: React.FC = () => {
             message.error(result.data.message)
         }
 
-        // 设置项目列表
+
+
+        // 查询项目列表
         const projectList = await axios.get('/rapi/user/getUserProjects?id='+result.data.data.user.userid)
         if (projectList.data.code == 0) {
-
-            dispatch({
-                type: projectActionTypes.SET_PROJECT_LIST,
-                data: projectList.data.data,
-            })
+            if(projectList.data.data && projectList.data.data.length) {
+                dispatch({
+                    type: projectActionTypes.SET_PROJECT_LIST,
+                    data: projectList.data.data,
+                })
+            } else {
+                // 跳转去绑定项目
+                history.push('/createproject')
+            }
+            
         }
 
     }

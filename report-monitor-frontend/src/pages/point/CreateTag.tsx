@@ -3,6 +3,8 @@ import { Button, Col, Row, Select, Form, Input } from 'antd'
 import { message } from 'antd'
 import axios from 'axios'
 import './CreateTag.less'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store'
 
 export const CreateTag: React.FC = () => {
     type Item = {
@@ -10,6 +12,8 @@ export const CreateTag: React.FC = () => {
         _id: string
         desc: string
     }
+
+    const userInfo = useSelector((state: RootState) => state.user.userInfo)
 
     const [children, setChildren] = useState<Item[]>([])
     const [codes, setCodes] = useState<string[]>()
@@ -19,6 +23,7 @@ export const CreateTag: React.FC = () => {
 
     const onFinish = async (values: any) => {
         const result = await axios.post('/rapi/point/createtag', {
+            projectId:userInfo.activePid,
             desc: values.desc,
         })
         if (result.data.code == 0) {
@@ -28,13 +33,13 @@ export const CreateTag: React.FC = () => {
     }
     const onFinishFailed = () => {}
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const result = await axios.get('/rapi/point/getPoints')
-            setChildren(result.data.data)
-        }
-        fetchData()
-    }, [])
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const result = await axios.get('/rapi/point/getPoints')
+    //         setChildren(result.data.data)
+    //     }
+    //     fetchData()
+    // }, [])
 
     return (
         <>

@@ -13,6 +13,8 @@ import { message } from 'antd'
 import axios from 'axios'
 import './CreatePoint.less'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store'
 
 export const CreatePoint: React.FC = () => {
     type Item = {
@@ -20,7 +22,8 @@ export const CreatePoint: React.FC = () => {
         _id: string
         desc: string
     }
-
+    const userInfo = useSelector((state: RootState) => state.user.userInfo)
+    
     const [tagList, setTagList] = useState<Item[]>([])
     const [curPoint, setPoint] = useState<Item>()
 
@@ -28,6 +31,7 @@ export const CreatePoint: React.FC = () => {
 
     const onFinish = async (values: any) => {
         const result = await axios.post('/rapi/point/create', {
+            projectId:userInfo.activePid,
             desc: values.desc,
             tagId: values.tagId,
         })
@@ -44,7 +48,7 @@ export const CreatePoint: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await axios.get('/rapi/point/getTags')
+            const result = await axios.get('/rapi/point/getTags?projectId='+userInfo.activePid)
             setTagList(result.data.data)
         }
         fetchData()

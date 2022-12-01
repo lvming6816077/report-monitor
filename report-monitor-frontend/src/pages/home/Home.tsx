@@ -7,6 +7,8 @@ import { CItem } from './citem/CItem'
 import { Loading3QuartersOutlined } from '@ant-design/icons'
 import { ChartDataItem } from './citem/CItem'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store'
 
 const antIcon = <Loading3QuartersOutlined style={{ fontSize: 24 }} spin />
 
@@ -16,6 +18,7 @@ export type ChartListItemType = {
     list: ChartDataItem[]
 }
 export const Home: React.FC = () => {
+    const userInfo = useSelector((state: RootState) => state.user.userInfo)
     const [treeData, setTreeData] = useState<TreeItem[]>([])
     const [codes, setCodes] = useState<string[]>([])
     const [chartList, setChartList] = useState<ChartListItemType[][]>([])
@@ -82,7 +85,7 @@ export const Home: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await axios.get('/rapi/point/getPointsAndPointset')
+            const result = await axios.get('/rapi/point/getPointsAndPointset?projectId='+userInfo.activePid)
             const d = result.data.data
             if (d.list.length == 0) {
                 setNoData(true)

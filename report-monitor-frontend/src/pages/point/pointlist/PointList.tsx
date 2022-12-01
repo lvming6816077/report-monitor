@@ -4,11 +4,12 @@ import { message } from 'antd'
 import axios from 'axios'
 import moment from 'moment'
 import './PointList.less'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { PlusSquareOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/lib/table'
 import { WarningModal, WarningType } from './WarningModal'
+import { RootState } from '@/store'
 
 export type DataType = {
     desc: string
@@ -18,6 +19,7 @@ export type DataType = {
     _id: string
 }
 export const PointList: React.FC = () => {
+    const userInfo = useSelector((state: RootState) => state.user.userInfo)
     const columns: ColumnsType<DataType> = [
         {
             title: '数据点名称',
@@ -117,7 +119,7 @@ export const PointList: React.FC = () => {
               }
             : page
         const result = await axios.get(
-            '/rapi/point/getPointsList?pageStart=' +
+            '/rapi/point/getPointsList?projectId='+userInfo.activePid+'&pageStart=' +
                 p.pageStart +
                 '&pageSize=' +
                 p.pageSize,
