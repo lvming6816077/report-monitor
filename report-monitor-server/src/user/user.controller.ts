@@ -22,6 +22,7 @@ import { RateLimit } from 'nestjs-rate-limiter'
 import { Response } from 'express';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
+import { UpdateUserProjectDto } from './dto/update-user-project.dto';
 
 
 
@@ -312,11 +313,12 @@ export class UserController {
 
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('getUserProjects')
     async getUserProjects(@Query() query) {
         const u = await this.userService.findUserByUserId(query.id)
 
-        console.log(u)
+        // console.log(u)
         let list = []
         let projectsid = u.projectsid||[]
         for (var i = 0 ; i < projectsid.length ; i++) {
@@ -328,6 +330,18 @@ export class UserController {
         }
 
         return list
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('setUserActiveProject')
+    async setUserActiveProject(@Body() body: UpdateUserProjectDto, @Request() req: any) {
+        const u = await this.userService.updateUser(req.user.userId, { activePid: body.activePid })
+
+        if (u.userid) {
+            return 'success'
+        }
+
+        return 'error'
     }
 
 }

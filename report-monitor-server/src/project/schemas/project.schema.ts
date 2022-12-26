@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document,Schema as _Schema} from 'mongoose';
 // import { Tag } from "src/point/schemas/tag.schema";
+import * as mongoosePaginate from 'mongoose-paginate-v2';
 
 
 export type ProjectDocument = Project & Document & {
@@ -36,3 +37,4 @@ export class Project {
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
+ProjectSchema.plugin(mongoosePaginate)

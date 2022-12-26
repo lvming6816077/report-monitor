@@ -1,7 +1,8 @@
 import { Injectable,Inject, Scope } from "@nestjs/common";
 import { InjectModel } from '@nestjs/mongoose';
 import { Project, ProjectDocument } from './schemas/project.schema';
-import { Model } from 'mongoose';
+
+import mongoose, { Model, PaginateModel, PaginateResult } from 'mongoose';
 import { UserService } from '../user/user.service';
 import { HttpException } from '@nestjs/common';
 import { DeleteResult } from "mongodb";
@@ -17,7 +18,7 @@ import { CreateProjectDto } from "./dto/create-projec.dto";
 
 export class ProjectService {
     constructor(
-        @InjectModel(Project.name) private readonly projectModel: Model<ProjectDocument>, 
+        @InjectModel(Project.name) private readonly projectModel: PaginateModel<ProjectDocument>, 
         private readonly userService: UserService,
         @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
 
@@ -60,6 +61,18 @@ export class ProjectService {
         async findProjectById(pid:string): Promise<ProjectDocument> {
 
             return await this.projectModel.findById(pid);
+        }
+
+        async findAllByPage(pageStart:string='1', pageSize: string='10'): Promise<PaginateResult<ProjectDocument>> {
+            const options = {
+                page: Number(pageStart),
+                limit: Number(pageSize),
+            };
+            const q:any = {}
+
+            const result = await this.projectModel.paginate(q,options)
+    
+            return result
         }
 
 
