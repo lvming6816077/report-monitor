@@ -19,7 +19,7 @@ export const Login: React.FC = () => {
     const history = useHistory()
     const location = useLocation()
     const dispatch = useDispatch()
-    const { type } = queryString.parse(location.search)
+    const { type,projectCode } = queryString.parse(location.search)
     const isRegis = type == 'regis'
 
     const [form] = Form.useForm()
@@ -62,7 +62,7 @@ export const Login: React.FC = () => {
         })
         if (result.data.code == 0) {
             message.success('注册成功，请登陆')
-            history.push('/login')
+            history.push('/login?projectCode='+(projectCode||''))
         } else {
             message.error(result.data.message)
         }
@@ -82,27 +82,26 @@ export const Login: React.FC = () => {
                 type: actionTypes.SET_USER,
                 data: result.data.data.user,
             })
-            history.push('/')
+            // 查询项目列表
+            const projectList = await axios.get('/rapi/user/getUserProjects?id='+result.data.data.user.userid)
+            if (projectList.data.code == 0) {
+                if(projectList.data.data && projectList.data.data.length) {
+                    dispatch({
+                        type: projectActionTypes.SET_PROJECT_LIST,
+                        data: projectList.data.data,
+                    })
+                    history.push('/')
+                } else {
+                    // 跳转去绑定项目
+                    history.push('/createproject?projectCode='+(projectCode||''))
+                }
+                
+            }
+            
         } else {
             message.error(result.data.message)
         }
 
-
-
-        // 查询项目列表
-        const projectList = await axios.get('/rapi/user/getUserProjects?id='+result.data.data.user.userid)
-        if (projectList.data.code == 0) {
-            if(projectList.data.data && projectList.data.data.length) {
-                dispatch({
-                    type: projectActionTypes.SET_PROJECT_LIST,
-                    data: projectList.data.data,
-                })
-            } else {
-                // 跳转去绑定项目
-                history.push('/createproject')
-            }
-            
-        }
 
     }
 

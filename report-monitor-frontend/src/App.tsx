@@ -8,6 +8,7 @@ import { routes, flatRoute, IRoute } from './router'
 import { useSelector, useDispatch } from 'react-redux'
 import { actionTypes } from '@/reducers/user/index'
 import axios from 'axios'
+import queryString from 'query-string'
 
 import './App.less'
 import { RootState } from './store'
@@ -23,6 +24,15 @@ const RequireAuth = ({
     auth: number[]
 }) => {
     const userInfo = useSelector((state: RootState) => state.user.userInfo)
+    const projectList: [] = useSelector((state: RootState) => state.project.projectList)
+    const location = useLocation()
+    const { projectCode } = queryString.parse(location.search)
+
+    // // 没有绑定项目 重定向取创建项目或者绑定
+    // if (projectList.length == 0 && window.location.pathname != '/createproject' && userInfo.nickname) {
+    //     window.location.href = '/createproject?projectCode='+projectCode
+    //     return null
+    // }
 
     if (auth.every((o) => userInfo.level?.includes(o))) {
         return children

@@ -13,7 +13,8 @@ import {
 import { message } from 'antd'
 import axios from 'axios'
 import './CreateProject.less'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
+import queryString from 'query-string'
 
 export const CreateProject: React.FC = () => {
     type TypeItem = {
@@ -21,11 +22,19 @@ export const CreateProject: React.FC = () => {
         value: string
     }
     const history = useHistory()
+    const location = useLocation()
+    const { projectCode } = queryString.parse(location.search)
 
     const [typeList, setTypeList] = useState<TypeItem[]>([{ text: 'PC网页', value: 'PC' }, { text: '移动端', value: 'MOBILE' }])
-    // const [curPoint, setPoint] = useState<Item>()
+
 
     const [form] = Form.useForm()
+
+    useEffect(()=>{
+        form.setFieldsValue({
+            code:projectCode
+        })
+    },[])
 
     const onFinish = async (values: any) => {
         const result = await axios.post('/rapi/project/create', {
@@ -44,7 +53,7 @@ export const CreateProject: React.FC = () => {
 
 
     const createjsx: JSX.Element = (<div>
-        <h2 style={{ textAlign: 'center', marginBottom: '30px' }}></h2>
+
         <Row justify="center" align="middle" gutter={[16, 24]}>
             <Col span={20}>
                 <Form
@@ -114,15 +123,53 @@ export const CreateProject: React.FC = () => {
         </Row>
     </div>)
 
+    const bindjsx:JSX.Element = (<div>
+
+        <Row justify="center" align="middle" gutter={[16, 24]}>
+            <Col span={20}>
+                <Form
+                    form={form}
+                    name="basic"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                >
+                    <Form.Item
+                        label="项目CODE"
+                        name="code"
+                        rules={[
+                            {
+                                required: true,
+                                message: '请输入项目CODE',
+                            },
+                        ]}
+                    >
+                        <Input placeholder="请输入项目CODE" />
+                    </Form.Item>
+
+
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Button type="primary" htmlType="submit">
+                            保存
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Col>
+        </Row>
+    </div>)
+
     return (
         <>
             <div className="create-project-content">
+                <h2 style={{ textAlign: 'center', marginBottom: '30px' ,marginTop:'-60px'}}>项目初始化</h2>
                 <Tabs>
                     <Tabs.TabPane tab="创建新项目" key="111">
                         {createjsx}
                     </Tabs.TabPane>
                     <Tabs.TabPane tab="绑定已有项目" key="222">
-                        
+                        {bindjsx}
                     </Tabs.TabPane>
                 </Tabs>
             </div>

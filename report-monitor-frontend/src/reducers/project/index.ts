@@ -10,6 +10,14 @@ export { projectActionTypes }
 export const setProjectListAction = (userInfo:userInfoType)=>{
     return async (dispatch:Dispatch)=>{
 
+        if (!userInfo.userid) {
+            dispatch({
+                type: projectActionTypes.SET_PROJECT_LIST,
+                data: [],
+            })
+            return
+        }
+
         const projectList = await axios.get('/rapi/user/getUserProjects?id='+userInfo.userid)
         if (projectList.data.code == 0) {
 

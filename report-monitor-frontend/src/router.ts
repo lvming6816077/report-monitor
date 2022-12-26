@@ -11,6 +11,7 @@ import { CreateProject } from './pages/project/CreateProject'
 import { LogList } from './pages/log/LogList'
 import { UserInfo } from './pages/setting/user/UserInfo'
 import { UserChangePassword } from './pages/setting/user/UserChangePassword'
+import { ProjectList } from './pages/project/ProjectList'
 
 export type IRoute = {
     label: string
@@ -144,6 +145,13 @@ export const routes: IRoute[] = [
                 key: '/setting/userlist',
                 name: 'userlist',
                 component: UserList,
+                auth: [1, 0],
+            },
+            {
+                label: '项目管理(admin)',
+                key: '/setting/projectlist',
+                name: 'projectlist',
+                component: ProjectList,
                 auth: [1, 0],
             },
         ],
