@@ -22,10 +22,21 @@ export class ProjectController {
         const userid = req.user.userId
 
         return await this.projectService.createProject(body,userid)
-
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Post('bind')
+    async bind(@Body() body: any, @Request() req: any) {
+        const userid = req.user.userId
+
+        const p = await this.projectService.findProjectByCode(body.code)
+
+        if (!p._id) {
+            throw new HttpException('项目不存在', 200);
+        }
+
+        return await this.projectService.bindProject(userid,p._id)
+    }
+
     @Get('getProjectsList')
     async getProjectsList(@Query() query: QueryProjectDto) {
         const result = await this.projectService.findAllByPage(query.pageStart, query.pageSize)
@@ -41,5 +52,18 @@ export class ProjectController {
 
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Post('update')
+    async update(@Body() body: CreateProjectDto, @Req() req) {
+
+
+        const u = await this.projectService.updateProject(body.projectid, body)
+        if (u.projectCode) {
+            return 'success'
+        }
+
+        return 'error'
+
+    }
 
 }

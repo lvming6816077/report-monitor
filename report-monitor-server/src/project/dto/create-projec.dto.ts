@@ -4,6 +4,8 @@ import { IsInt, IsString,IsEmpty,IsNotEmpty,  isString, IsOptional, IsArray, IsP
 import { Optional } from '@nestjs/common';
 export class CreateProjectDto  {
 
+    projectid:string
+
     @IsNotEmpty()
     name:string
 

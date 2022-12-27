@@ -51,7 +51,7 @@ export class PointService {
 
         let result = []
         for (var i = 0; i < list.length; i++) {
-            let children = this.pointModel.find({ tag: list[i]._id, user: this.req.user.userId }).exec()
+            let children = this.pointModel.find({ tag: list[i]._id}).exec()
             const o = {
                 title: list[i].desc,
                 key: list[i]._id,

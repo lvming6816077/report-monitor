@@ -62,6 +62,10 @@ export class ProjectService {
 
             return await this.projectModel.findById(pid);
         }
+        async findProjectByCode(code:string): Promise<ProjectDocument> {
+
+            return await this.projectModel.findOne({projectCode:code});
+        }
 
         async findAllByPage(pageStart:string='1', pageSize: string='10'): Promise<PaginateResult<ProjectDocument>> {
             const options = {
@@ -73,6 +77,10 @@ export class ProjectService {
             const result = await this.projectModel.paginate(q,options)
     
             return result
+        }
+
+        async updateProject(projectid:string,projectDto:CreateProjectDto):Promise<Project> {
+            return await this.projectModel.findOneAndUpdate({ _id:projectid }, projectDto).exec();
         }
 
 

@@ -313,12 +313,11 @@ export class UserController {
 
     }
 
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @Get('getUserProjects')
     async getUserProjects(@Query() query) {
         const u = await this.userService.findUserByUserId(query.id)
 
-        // console.log(u)
         let list = []
         let projectsid = u.projectsid||[]
         for (var i = 0 ; i < projectsid.length ; i++) {
