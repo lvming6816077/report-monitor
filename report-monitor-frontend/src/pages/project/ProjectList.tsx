@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Button, Col, Row, Modal, Form, Input, Table, Switch } from 'antd'
 import { message } from 'antd'
 import axios from 'axios'
@@ -9,14 +9,14 @@ import { useHistory } from 'react-router-dom'
 import { PlusSquareOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/lib/table'
 import { WarningType } from '@/pages/point/pointlist/WarningModal'
+import { ProjectModal } from './ProjectModal'
 
-type DataType = {
+export type DataType = {
     desc: string
-    code: string
+    projectCode: string
     create: string
     _id: string
-    isBlock: boolean
-    warning?: WarningType
+    name: string
 }
 export const ProjectList: React.FC = () => {
     
@@ -34,6 +34,10 @@ export const ProjectList: React.FC = () => {
             dataIndex: 'desc',
         },
         {
+            title: '项目类型',
+            dataIndex: 'type',
+        },
+        {
             title: '创建时间',
             dataIndex: 'create',
             render: (v, item) =>
@@ -43,7 +47,7 @@ export const ProjectList: React.FC = () => {
             title: '操作',
             dataIndex: 'action',
             render: (v, item) => {
-                return <a onClick={() => deletePoint(item)}>删除</a>
+                return <a onClick={() => edit(item)}>编辑</a>
             },
         },
     ]
@@ -82,19 +86,9 @@ export const ProjectList: React.FC = () => {
         })()
     }, [page.pageSize, page.pageStart])
 
-    const deletePoint = async (item: any) => {
-        modal.confirm({
-            title: '确认删除?',
-            onOk: async () => {
-                const result = await axios.get(
-                    '/rapi/point/deletePoint/' + item._id
-                )
-                if (result.data.code == 0) {
-                    message.success('删除成功')
-                    resetList()
-                }
-            },
-        })
+    const edit = async (item: DataType) => {
+
+        childRef.current.showModal(item)
     }
     const getList = async (params = {}, isReset = false) => {
         const p = isReset
@@ -132,10 +126,12 @@ export const ProjectList: React.FC = () => {
 
     const [form] = Form.useForm()
 
-    const onFinish = async (values: any) => {
-        getList(values)
-    }
 
+    const childRef = useRef<any>()
+    const updateCallback = () => {
+        message.success('修改成功')
+        resetList()
+    }
     const resetList = () => {
         getList({}, true)
         form.resetFields()
@@ -145,43 +141,7 @@ export const ProjectList: React.FC = () => {
         <>
             <div className="page-title">项目管理</div>
             <div className="pointalllist-content">
-                <div className="query-content">
-                    <Form
-                        form={form}
-                        name="basic"
-                        labelCol={{ span: 8 }}
-                        wrapperCol={{ span: 16 }}
-                        initialValues={{ remember: true }}
-                        onFinish={onFinish}
-                        autoComplete="off"
-                    >
-                        <Row justify="center" align="middle">
-                            <Col span={8}>
-                                <Form.Item label="数据点名称" name="desc">
-                                    <Input placeholder={'请输入数据点名称'} />
-                                </Form.Item>
-                            </Col>
-                            <Col span={8}>
-                                <Form.Item label="数据code" name="code">
-                                    <Input placeholder={'请输入数据code'} />
-                                </Form.Item>
-                            </Col>
-                            <Col span={8}>
-                                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                                    <Button type="primary" htmlType="submit">
-                                        搜索
-                                    </Button>
-                                    <Button
-                                        onClick={resetList}
-                                        style={{ marginLeft: 5 }}
-                                    >
-                                        重置
-                                    </Button>
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                    </Form>
-                </div>
+
                 <div className="table-content">
                     <Table
                         dataSource={dataSource}
@@ -193,6 +153,10 @@ export const ProjectList: React.FC = () => {
                 </div>
                 {contextHolder}
             </div>
+            <ProjectModal
+                onRef={childRef}
+                updateCallback={updateCallback}
+            ></ProjectModal>
         </>
     )
 }

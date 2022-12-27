@@ -15,12 +15,12 @@ import axios from 'axios'
 import './CreateProject.less'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import queryString from 'query-string'
-
+export type TypeItem = {
+    text: string
+    value: string
+}
 export const CreateProject: React.FC = () => {
-    type TypeItem = {
-        text: string
-        value: string
-    }
+
     const history = useHistory()
     const location = useLocation()
     const { projectCode } = queryString.parse(location.search)
@@ -29,9 +29,10 @@ export const CreateProject: React.FC = () => {
 
 
     const [form] = Form.useForm()
+    const [projectForm] = Form.useForm()
 
     useEffect(()=>{
-        form.setFieldsValue({
+        projectForm.setFieldsValue({
             code:projectCode
         })
     },[])
@@ -49,6 +50,19 @@ export const CreateProject: React.FC = () => {
             message.error('保存失败')
         }
     }
+    const onFinishProject = async (values: any) => {
+
+        const result = await axios.post('/rapi/project/bind', {
+            code:values.code
+        })
+        if (result.data.code == 0) {
+            message.success('绑定成功')
+            window.location.href = '/'
+        } else {
+            message.error('绑定失败')
+        }
+    }
+    
     const onFinishFailed = () => { }
 
 
@@ -128,11 +142,11 @@ export const CreateProject: React.FC = () => {
         <Row justify="center" align="middle" gutter={[16, 24]}>
             <Col span={20}>
                 <Form
-                    form={form}
+                    form={projectForm}
                     name="basic"
                     labelCol={{ span: 8 }}
                     wrapperCol={{ span: 16 }}
-                    onFinish={onFinish}
+                    onFinish={onFinishProject}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
@@ -165,10 +179,10 @@ export const CreateProject: React.FC = () => {
             <div className="create-project-content">
                 <h2 style={{ textAlign: 'center', marginBottom: '30px' ,marginTop:'-60px'}}>项目初始化</h2>
                 <Tabs>
-                    <Tabs.TabPane tab="创建新项目" key="111">
+                    <Tabs.TabPane tab="创建新项目" key="111" forceRender>
                         {createjsx}
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="绑定已有项目" key="222">
+                    <Tabs.TabPane tab="绑定已有项目" key="222" forceRender>
                         {bindjsx}
                     </Tabs.TabPane>
                 </Tabs>
