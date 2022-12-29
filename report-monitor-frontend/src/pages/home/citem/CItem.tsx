@@ -140,7 +140,7 @@ export const CItem: React.FC<Props> = React.memo(
         return (
             <div className="c-content">
                 <div className="title">{desc + '(' + code + ')'}</div>
-                <div className="total-count">总计：{total}</div>
+                <div className="total-count"><>总计：{total}</></div>
                 <div
                     className="inner"
                     onMouseEnter={() => {
