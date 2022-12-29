@@ -1,4 +1,4 @@
-import { Body, Controller, Query, Get, Param, Post, Request, HttpException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Query, Get, Param, Post, Request, HttpException, UseGuards,Headers } from '@nestjs/common';
 import { LogService, resultVo } from './log.service';
 import { formatData } from 'src/utils/report/formatReportData'
 
@@ -6,6 +6,9 @@ import * as moment from 'moment'
 import { Request as _Request } from 'express';
 import { PointService } from 'src/point/point.service';
 import { JwtAuthGuard } from 'src/config/jwt-config/jwtAuth.guard';
+import { ProjectService } from 'src/project/project.service';
+import { QueryLogDto } from './schemas/query-log.dto';
+import { IpAddress } from 'src/utils/decorator/ip.decorator';
 
 
 
@@ -15,30 +18,35 @@ export class LogController {
         private readonly logService: LogService,
 
         private readonly pointService: PointService,
+
+        private readonly projectService: ProjectService,
     ) { }
 
-    @Post('create/:tc')
-    async createLog(@Body() dto: any, @Request() req: _Request, @Param('tc') tc: string) {
+    @Post('create/:pcode')
+    async createLog(@Body() dto: any, @Headers() headers, @IpAddress() clinetIp: string,@Param('pcode') pcode: string) {
 
-        //   const tc = req.query?.tc
-
-        if (!tc) {
-            throw new HttpException('tid缺失', 200);
+        if (!pcode) {
+            throw new HttpException('pcode缺失', 200);
         }
 
-        const tag = await this.pointService.findOneTagByCode(tc as string)
+        const p = await this.projectService.findProjectByCode(pcode)
 
-        if (!tag) {
-            throw new HttpException('tid不存在', 200);
-        }
-        // 先不存了
-        return {}//await this.logService.create(JSON.stringify(dto), tag._id);
+        if (!p) return ''
+
+
+        const ua = headers['user-agent']||''
+
+        const ip = clinetIp
+
+        return await this.logService.create(JSON.stringify(dto),ua,ip, p._id);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('list')
-    async getLogList(@Request() req: _Request) {
-        return []
+    async getLogList(@Query() query:QueryLogDto,@Request() req: _Request) {
+
+        return this.logService.findAllByPage(query.pageStart, query.pageSize, query);
+
         // const tagList = await (await this.pointService.findAllTags()).filter(i => i.code)
 
         // let list = []

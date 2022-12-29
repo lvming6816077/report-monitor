@@ -20,6 +20,7 @@ async function bootstrap() {
         disableErrorMessages: false, // 不显示错误信息
         whitelist: false, // 开启过滤 多传字段不报错
     }))
+
     app.use(cookieParser());
     // app.use(bodyParser.json());
     app.use(session({

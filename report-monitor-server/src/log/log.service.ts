@@ -1,11 +1,12 @@
 import { Injectable,Inject, Scope } from "@nestjs/common";
 import { InjectModel } from '@nestjs/mongoose';
 import { Log, LogDocument } from './schemas/log.schema';
-import { Model } from 'mongoose';
+
 import { PointService } from '../point/point.service';
 import { HttpException } from '@nestjs/common';
 import { DeleteResult } from "mongodb";
 import { RedisInstanceService } from "src/config/redis-config/redis.service";
+import mongoose, { Model, PaginateModel, PaginateResult } from 'mongoose';
 
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger  } from 'winston';
@@ -19,7 +20,7 @@ export type resultVo = {
 
 export class LogService {
     constructor(
-        @InjectModel(Log.name) private readonly logModel: Model<LogDocument>, 
+        @InjectModel(Log.name) private readonly logModel: PaginateModel<LogDocument>, 
         // private readonly pointService: PointService,
         @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
 
@@ -29,16 +30,39 @@ export class LogService {
         }
 
 
-        async create(str: string,tid:string): Promise<Log> {
-            return await this.logModel.create({ str: str,tag:tid });
+        async create(str: string,ua:string,ip:string,pid:string): Promise<Log> {
+            return await this.logModel.create({ str: str,project:pid,ua:ua,ip:ip });
         }
 
-        async findAllByTagId(tid:string): Promise<Log[]> {
-            let list = await this.logModel.find({ tag:tid }).exec();
+        async findAllByTagId(pid:string): Promise<Log[]> {
+            let list = await this.logModel.find({ project:pid }).exec();
     
             return list||[]
         }
 
+        async findAllByPage(pageStart:string='1', pageSize: string='10', query): Promise<PaginateResult<LogDocument>> {
+            const options = {
+                page: Number(pageStart),
+                limit: Number(pageSize),
+                sort: {
+                    create: -1
+                },
+                
+            };
+
+            const q: any = { project: query.projectId }
+            
+            if (query.keyword) {
+                q.str = { $regex: query.keyword, $options: 'i' }
+            }
+            if (query.timeStart) {
+                q.$and = [{ create: { $gt: new Date(query.timeStart) } }, { create: { $lt: new Date(query.timeEnd) } }]
+            }
+
+            const result = await this.logModel.paginate(q,options)
+    
+            return result
+        }
 
 
 }
