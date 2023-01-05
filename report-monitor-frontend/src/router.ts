@@ -1,17 +1,15 @@
+import React, { Suspense, lazy } from 'react';
 import { Home } from './pages/home/Home'
 import { CreateTag } from './pages/point/CreateTag'
 import { CreatePoint } from './pages/point/CreatePoint'
 import { PointList } from './pages/point/pointlist/PointList'
-import { UserList } from './pages/setting/user/UserList'
 import { TagList } from './pages/point/TagList'
-import { PointSet } from './pages/setting/point/PointSet'
-import { PointAllList } from './pages/setting/point/PointAllList'
+import CreateProject from './pages/project/CreateProject'
 import { Login } from './pages/login/Login'
-import { CreateProject } from './pages/project/CreateProject'
-import { LogList } from './pages/log/LogList'
-import { UserInfo } from './pages/setting/user/UserInfo'
-import { UserChangePassword } from './pages/setting/user/UserChangePassword'
-import { ProjectList } from './pages/project/ProjectList'
+
+
+
+import Loadable from 'react-loadable'
 
 export type IRoute = {
     label: string
@@ -37,7 +35,7 @@ export const routes: IRoute[] = [
         label: '创建项目',
         key: '/createproject',
         name: 'createproject',
-        component: CreateProject,
+        component:  CreateProject,
         menu: false,
     },
 
@@ -100,7 +98,10 @@ export const routes: IRoute[] = [
                 label: '日志管理',
                 key: '/log/list',
                 name: 'loglist',
-                component: LogList,
+                component:  Loadable({
+                    loader: () => import('./pages/log/LogList'),
+                    loading: () => null
+                }),
                 auth: [1],
             },
 
@@ -115,7 +116,10 @@ export const routes: IRoute[] = [
                 label: '个人中心',
                 key: '/setting/userinfo',
                 name: 'userinfo',
-                component: UserInfo,
+                component:  Loadable({
+                    loader: () => import('./pages/setting/user/UserInfo'),
+                    loading: () => null
+                }),
                 auth: [1],
             },
             {
@@ -123,35 +127,51 @@ export const routes: IRoute[] = [
                 key: '/setting/changepass',
                 name: 'changepass',
                 menu: false,
-                component: UserChangePassword,
+                component:  Loadable({
+                    loader: () => import('./pages/setting/user/UserChangePassword'),
+                    loading: () => null
+                }),
                 auth: [1],
             },
             {
                 label: '数据点预设',
                 key: '/setting/pointset',
                 name: 'pointset',
-                component: PointSet,
+                component:  Loadable({
+                    loader: () => import('./pages/setting/point/PointSet'),
+                    loading: () => null
+                }),
                 auth: [1],
             },
             {
                 label: '数据点管理(admin)',
                 key: '/setting/pointalllist',
                 name: 'pointalllist',
-                component: PointAllList,
+                component:  Loadable({
+                    loader: () => import('./pages/setting/point/PointAllList'),
+                    loading: () => null
+                }),
                 auth: [1, 0],
             },
             {
                 label: '用户管理(admin)',
                 key: '/setting/userlist',
                 name: 'userlist',
-                component: UserList,
+                component:  Loadable({
+                    loader: () => import('./pages/setting/user/UserList'),
+                    loading: () => null
+                }),
                 auth: [1, 0],
             },
             {
                 label: '项目管理(admin)',
                 key: '/setting/projectlist',
                 name: 'projectlist',
-                component: ProjectList,
+                component:  Loadable({
+                    loader: () => import('./pages/project/ProjectList'),
+                    loading: () => null
+                }),
+                
                 auth: [1, 0],
             },
         ],

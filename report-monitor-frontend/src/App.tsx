@@ -16,6 +16,18 @@ import { userInfoType } from './reducers/user/types'
 import { Alert } from 'antd'
 import { setProjectListAction } from './reducers/project'
 
+
+type IUser ={
+    name: string
+    age: number
+    department: string
+}
+
+type optional = Partial<IUser>
+
+
+type PickUser = Pick<IUser, "age" | "name">;
+
 const RequireAuth = ({
     children,
     auth,

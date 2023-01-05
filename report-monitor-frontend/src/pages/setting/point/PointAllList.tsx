@@ -18,7 +18,7 @@ type DataType = {
     isBlock: boolean
     warning?: WarningType
 }
-export const PointAllList: React.FC = () => {
+const PointAllList: React.FC = () => {
     
     const columns: ColumnsType<DataType> = [
         {
@@ -232,3 +232,4 @@ export const PointAllList: React.FC = () => {
         </>
     )
 }
+export default PointAllList

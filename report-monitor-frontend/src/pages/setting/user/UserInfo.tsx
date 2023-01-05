@@ -273,3 +273,5 @@ export const UserInfo: React.FC = () => {
         </>
     )
 }
+
+export default UserInfo

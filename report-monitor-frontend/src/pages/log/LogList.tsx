@@ -20,7 +20,7 @@ type DataType = {
     ua:string,
     ip:string
 }
-export const LogList: React.FC = () => {
+const LogList: React.FC = () => {
 
 
     const [dataSource, setDateSource] = useState<DataType[]>([])
@@ -101,8 +101,11 @@ export const LogList: React.FC = () => {
     const [form] = Form.useForm()
 
     const onFinish = async (values: any) => {
-        values.timeStart = values.time[0].format(dateFormat)
-        values.timeEnd = values.time[1].format(dateFormat)
+        if (values.time) {
+            values.timeStart = values.time[0].format(dateFormat)
+            values.timeEnd = values.time[1].format(dateFormat)
+        }
+
         // console.log(values)
         setParams(values)
         await getList(values,true)
@@ -208,3 +211,5 @@ export const LogList: React.FC = () => {
         </>
     )
 }
+
+export default LogList

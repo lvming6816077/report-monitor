@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom'
 import { PlusSquareOutlined } from '@ant-design/icons'
 import { RootState } from '@/store'
 
-export const PointSet: React.FC = () => {
+const PointSet: React.FC = () => {
     const userInfo = useSelector((state: RootState) => state.user.userInfo)
     const [treeData, setTreeData] = useState<TreeItem[]>([])
     const [codes, setCodes] = useState<string[]>()
@@ -90,3 +90,4 @@ export const PointSet: React.FC = () => {
         </>
     )
 }
+export default PointSet

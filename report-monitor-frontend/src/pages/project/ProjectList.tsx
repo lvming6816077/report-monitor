@@ -18,7 +18,7 @@ export type DataType = {
     _id: string
     name: string
 }
-export const ProjectList: React.FC = () => {
+const ProjectList: React.FC = () => {
     
     const columns: ColumnsType<DataType> = [
         {
@@ -160,3 +160,5 @@ export const ProjectList: React.FC = () => {
         </>
     )
 }
+
+export default ProjectList

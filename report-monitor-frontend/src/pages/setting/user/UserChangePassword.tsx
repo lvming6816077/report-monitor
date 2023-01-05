@@ -20,7 +20,7 @@ import { useHistory } from 'react-router-dom'
 import { RootState } from '@/store'
 import { useDispatch, useSelector } from 'react-redux'
 
-export const UserChangePassword: React.FC = () => {
+const UserChangePassword: React.FC = () => {
     const userInfo = useSelector((state: RootState) => state.user.userInfo)
 
 
@@ -97,3 +97,4 @@ export const UserChangePassword: React.FC = () => {
         </>
     )
 }
+export default UserChangePassword

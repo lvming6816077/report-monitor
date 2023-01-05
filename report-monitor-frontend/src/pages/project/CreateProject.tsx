@@ -19,7 +19,7 @@ export type TypeItem = {
     text: string
     value: string
 }
-export const CreateProject: React.FC = () => {
+const CreateProject: React.FC = () => {
 
     const history = useHistory()
     const location = useLocation()
@@ -190,3 +190,4 @@ export const CreateProject: React.FC = () => {
         </>
     )
 }
+export default CreateProject

@@ -22,7 +22,7 @@ export type DataType = {
     _id: string
     userid: string
 }
-export const UserList: React.FC = () => {
+const UserList: React.FC = () => {
     const columns: ColumnsType<DataType> = [
         {
             title: '用户账号',
@@ -229,3 +229,4 @@ export const UserList: React.FC = () => {
         </>
     )
 }
+export default UserList
