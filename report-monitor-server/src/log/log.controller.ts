@@ -72,6 +72,8 @@ export class LogController {
         // return flatter(list)
     }
 
+
+
     //   @Delete(':id')
     //   async delete(@Param('id') id: string) {
     //     return this.catsService.delete(id);

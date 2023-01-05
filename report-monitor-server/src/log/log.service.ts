@@ -11,6 +11,7 @@ import mongoose, { Model, PaginateModel, PaginateResult } from 'mongoose';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger  } from 'winston';
 import { Point,PointDocument } from "src/point/schemas/point.schema";
+import * as moment from 'moment'
 
 export type resultVo = {
     list?:Log[],
@@ -64,5 +65,13 @@ export class LogService {
             return result
         }
 
+        
+        async deleteLogTask() {
+            var end = moment().valueOf()
+            var start = moment().subtract(7, 'days').valueOf()
+
+            await this.logModel.deleteMany({$and :[{ create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]})
+    
+        }
 
 }

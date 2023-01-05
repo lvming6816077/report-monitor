@@ -8,12 +8,14 @@ import { WarningDocument } from 'src/warning/schemas/warning.schema';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { MailerService } from '@nestjs-modules/mailer';
+import { LogService } from 'src/log/log.service';
 
 @Injectable()
 export class TasksService {
     constructor(
         private readonly reportService: ReportService,
         private readonly warningService: WarningService,
+        private readonly logService: LogService,
         private readonly mailerService: MailerService,
 
 
@@ -23,12 +25,13 @@ export class TasksService {
 
     }
 
-    //   @Cron('10 * * * * *') 
-    //   async handleCron() {
-    //     const client:Redis = await this.redisService.getClient()
-    //     // console.log(client.rpop('report_monitor_ls'))
-    //     console.log(111)
-    //   }
+     // 定时删除日志任务(每7天23点执行)
+      @Cron('0 0 23 1/7 * ?') 
+      async handleCron() {
+
+        console.log(111)
+        this.logService.deleteLogTask()
+      }
 
 
     // 上报定时任务
