@@ -29,7 +29,7 @@ export class TasksService {
       @Cron('0 0 23 1/7 * ?') 
       async handleCron() {
 
-        console.log(111)
+        // console.log(111)
         this.logService.deleteLogTask()
       }
 
