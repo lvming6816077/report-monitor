@@ -34,7 +34,7 @@ export class LogController {
 
         if (!p) return ''
 
-        console.log(headers)
+        // console.log(headers)
 
         const meta:any = {}
 
