@@ -14,7 +14,7 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
 
     });
-    app.enableCors()
+    app.enableCors({origin:true,credentials:true})
     app.setGlobalPrefix('rapi');
     app.useGlobalPipes(new ValidationPipe({
         disableErrorMessages: false, // 不显示错误信息

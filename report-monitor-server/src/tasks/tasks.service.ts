@@ -26,7 +26,7 @@ export class TasksService {
     }
 
      // 定时删除日志任务(每7天23点执行)
-      @Cron('0 0 23 1/7 * ?') 
+      @Cron('0 0 23 1/7 * *') 
       async handleCron() {
 
         // console.log(111)

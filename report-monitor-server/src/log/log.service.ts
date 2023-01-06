@@ -31,8 +31,8 @@ export class LogService {
         }
 
 
-        async create(str: string,ua:string,ip:string,pid:string): Promise<Log> {
-            return await this.logModel.create({ str: str,project:pid,ua:ua,ip:ip });
+        async create(str: string,ua:string,ip:string,meta:any,pid:string): Promise<Log> {
+            return await this.logModel.create({ str: str,project:pid,ua,ip ,meta});
         }
 
         async findAllByTagId(pid:string): Promise<Log[]> {

@@ -9,6 +9,7 @@ import { JwtAuthGuard } from 'src/config/jwt-config/jwtAuth.guard';
 import { ProjectService } from 'src/project/project.service';
 import { QueryLogDto } from './schemas/query-log.dto';
 import { IpAddress } from 'src/utils/decorator/ip.decorator';
+import axios from 'axios';
 
 
 
@@ -33,12 +34,22 @@ export class LogController {
 
         if (!p) return ''
 
+        console.log(headers)
+
+        const meta:any = {}
+
+        if (headers['referer']) {
+            meta.referer = headers['referer']
+        }
+        if (headers['cookies']) {
+            meta.cookies = headers['cookies']
+        }
 
         const ua = headers['user-agent']||''
 
         const ip = clinetIp
 
-        return await this.logService.create(JSON.stringify(dto),ua,ip, p._id);
+        return await this.logService.create(JSON.stringify(dto),ua,ip,meta, p._id);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -70,6 +81,17 @@ export class LogController {
 
 
         // return flatter(list)
+    }
+    @UseGuards(JwtAuthGuard)
+    @Get('getIpDesc')
+    async getIpDesc(@Query() query:any,@Request() req: _Request) {
+
+        const result = await axios.get('https://restapi.amap.com/v3/ip?key=b0982e55ca518f770a7978a585dd83b8&ip='+query.ip)
+        // console.log(result.data?.province)
+        let res = result.data?.province+'-'+result.data?.city
+
+        return res
+
     }
 
 

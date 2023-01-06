@@ -24,6 +24,9 @@ export class Log {
     @Prop()
     ip: string;
 
+    @Prop({ type:_Schema.Types.Mixed,default:{}})
+    meta:any
+
     @Prop({ type: Date, default: Date.now })
     create: string;
 

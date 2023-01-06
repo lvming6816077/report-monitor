@@ -6,6 +6,7 @@ import { User } from 'src/user/schemas/user.schema';
 import { Project } from 'src/project/schemas/project.schema';
 import { Log } from './log.schema';
 export class QueryLogDto implements QueryPageDto,Log {
+    meta: any;
     ip: string;
     ua: string;
     create: string;
