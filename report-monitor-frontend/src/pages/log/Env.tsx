@@ -5,17 +5,31 @@ import React, { useState, useEffect } from 'react'
 import { ChromeOutlined, createFromIconfontCN, IeOutlined, PlusSquareOutlined } from '@ant-design/icons'
 
 import parser from 'ua-parser-js'
+import { Tooltip } from 'antd'
+import axios from 'axios'
 
 type Props = {
     ua: string,
-    ip:string
+    ip:string,
+    meta:any
 }
 const IconFont = createFromIconfontCN({
     scriptUrl: [
-      '//at.alicdn.com/t/c/font_3843073_pwmdv7ls74s.js', // icon-javascript, icon-java, icon-shoppingcart (overrided)
+      '//at.alicdn.com/t/c/font_3843073_tk57j3uvhsb.js', // icon-javascript, icon-java, icon-shoppingcart (overrided)
     ],
 });
-export const Env: React.FC<Props> = ({ ua,ip}) => {
+export const Env: React.FC<Props> = ({ ua,ip,meta}) => {
+
+    const onOpenChange = async (open:boolean,ip:string)=>{
+
+        if (open) {
+            const result = await axios.get('/rapi/log/getIpDesc?ip='+ip)
+            // console.log(result.data)
+            setIpDesc(result.data.data||'-')
+        }
+    }
+    const [ipDesc,setIpDesc] = useState<string>(' ')
+
     const renderEnv = (s:string)=>{
         // console.log(ua)
         if (s) {
@@ -29,7 +43,7 @@ export const Env: React.FC<Props> = ({ ua,ip}) => {
             } else if (o.browser.name == 'WeChat') {
                 arr.push(<span key={1}><IconFont type="icon-wechat-fill" />WeChat</span>)
             } else if (o.browser.name == 'Edge') {
-                arr.push(<span key={1}><IconFont type="icon-edge" />Edge</span>)
+                arr.push(<span key={1}><IconFont type="icon-edge" />Edge </span>)
             }
 
             arr.push(<span key={2}>&nbsp;&nbsp;</span>)
@@ -44,7 +58,11 @@ export const Env: React.FC<Props> = ({ ua,ip}) => {
 
             arr.push(<span key={4}>&nbsp;&nbsp;</span>)
 
-            arr.push(<span  key={5}><IconFont type="icon-network" />{ip}</span>)
+            arr.push(<span  key={5}><Tooltip onVisibleChange={(open)=>onOpenChange(open,ip)} title={ipDesc}><IconFont type="icon-network" />{ip}</Tooltip></span>)
+
+            arr.push(<span key={7}>&nbsp;&nbsp;</span>)
+
+            arr.push(<span  key={6}><Tooltip  title={JSON.stringify(meta)}><IconFont type="icon-cc-database" /></Tooltip></span>)
 
             // console.log(o)
             

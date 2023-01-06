@@ -18,7 +18,8 @@ type DataType = {
     str: string,
     create:string,
     ua:string,
-    ip:string
+    ip:string,
+    meta:any
 }
 const LogList: React.FC = () => {
 
@@ -201,7 +202,7 @@ const LogList: React.FC = () => {
                         <List.Item>
                             <List.Item.Meta title={item.create} ></List.Item.Meta>
                             <div><ReactJson src={JSON.parse(item.str)} collapsed={true} iconStyle={'square'} displayDataTypes={false} displayObjectSize={false}/></div>
-                            <div className='env'><Env ua={item.ua} ip={item.ip}></Env></div>
+                            <div className='env'><Env ua={item.ua} ip={item.ip} meta={item.meta}></Env></div>
                         </List.Item>
                     )}
                 />
