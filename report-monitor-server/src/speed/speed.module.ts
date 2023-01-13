@@ -10,7 +10,7 @@ import { ReportModule } from "src/report/report.module";
 import { WarningModule } from "src/warning/warning.module";
 
 @Module({
-    imports: [forwardRef(() => ReportModule),WarningModule,UserModule,MongooseModule.forFeature([{ name: Speed.name, schema: SpeedSchema },{ name: SpeedTag.name, schema: SpeedTagSchema }])],
+    imports: [forwardRef(() => ReportModule),WarningModule,forwardRef(() => UserModule),MongooseModule.forFeature([{ name: Speed.name, schema: SpeedSchema },{ name: SpeedTag.name, schema: SpeedTagSchema }])],
     controllers: [SpeedController],
     providers: [SpeedService],
 

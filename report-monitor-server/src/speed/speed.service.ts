@@ -39,6 +39,7 @@ export class SpeedService {
 
         private readonly warningService: WarningService,
 
+        @Inject(forwardRef(() => UserService))
         private readonly userService: UserService,
 
 

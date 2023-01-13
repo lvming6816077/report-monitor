@@ -58,11 +58,11 @@ export class SpeedController {
     }
 
 
-    @Post('savePointSet')
-    async savePointSet(@Body() dto:{codes?:string[]}, @Request() req: any) {
+    @Post('saveSpeedSet')
+    async saveSpeedSet(@Body() dto:{codes?:string[]}, @Request() req: any) {
 
         let u = await this.userService.updateUser(req.user.userId,{
-            pointset:dto.codes.join(',')
+            speedset:dto.codes.join(',')
         });
         return u.pointset
     }

@@ -28,6 +28,10 @@ export class UpdateUserDto  {
     pointset?:string;
 
     @IsString()
+    @IsOptional()
+    speedset?:string;
+
+    @IsString()
     userid?:string
 
     @IsEmail()

@@ -9,7 +9,7 @@ import { WarningController } from "./warning.controller";
 import { User, UserSchema } from "src/user/schemas/user.schema";
 
 @Module({
-    imports: [forwardRef(() => ReportModule),UserModule,MongooseModule.forFeature([{ name: Warning.name, schema: WarningSchema }]),MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
+    imports: [forwardRef(() => ReportModule),forwardRef(() => UserModule),MongooseModule.forFeature([{ name: Warning.name, schema: WarningSchema }]),MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
     controllers: [WarningController],
     providers: [WarningService],
 

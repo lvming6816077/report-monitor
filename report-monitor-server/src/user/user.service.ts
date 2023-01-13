@@ -23,8 +23,8 @@ export class UserService {
         @Inject(forwardRef(() => PointService))
         private readonly pointService: PointService,
 
-        // @Inject(forwardRef(() => SpeedService))
-        // private readonly speedService: SpeedService,
+        @Inject(forwardRef(() => SpeedService))
+        private readonly speedService: SpeedService,
 
         @Inject(WINSTON_MODULE_PROVIDER)
         private readonly logger: Logger) { 
@@ -91,12 +91,12 @@ export class UserService {
         let arr = speedset?.split(',')||[]
         let res = []
 
-        // for (let i = 0 ; i < arr.length ; i++) {
-        //     const p = await this.speedService.findOneByCode(arr[i])
-        //     if (p) {
-        //         res.push(p.code)
-        //     }
-        // }
+        for (let i = 0 ; i < arr.length ; i++) {
+            const p = await this.speedService.findOneByCode(arr[i])
+            if (p) {
+                res.push(p.code)
+            }
+        }
 
         return res.join(',')
     }
