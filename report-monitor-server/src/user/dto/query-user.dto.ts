@@ -3,6 +3,7 @@ import { IsInt, IsString,IsEmpty,IsNotEmpty, Allow, isString, IsOptional } from 
 import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { User } from 'src/user/schemas/user.schema';
 export class QueryUserDto implements QueryPageDto,User {
+    speedset: string;
     activePid: string;
     projectsid: string[];
     email: string;

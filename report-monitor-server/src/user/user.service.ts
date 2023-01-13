@@ -11,6 +11,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger  } from 'winston';
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { RedisInstanceService } from "src/config/redis-config/redis.service";
+import { SpeedService } from "src/speed/speed.service";
 
 @Injectable()
 export class UserService {
@@ -21,6 +22,9 @@ export class UserService {
 
         @Inject(forwardRef(() => PointService))
         private readonly pointService: PointService,
+
+        // @Inject(forwardRef(() => SpeedService))
+        // private readonly speedService: SpeedService,
 
         @Inject(WINSTON_MODULE_PROVIDER)
         private readonly logger: Logger) { 
@@ -80,6 +84,24 @@ export class UserService {
 
         return res.join(',')
     }
+    async findUserSpeedSet(userid: string): Promise<string> {
+
+        const { speedset } = await this.userModel.findOne({userid});
+
+        let arr = speedset?.split(',')||[]
+        let res = []
+
+        // for (let i = 0 ; i < arr.length ; i++) {
+        //     const p = await this.speedService.findOneByCode(arr[i])
+        //     if (p) {
+        //         res.push(p.code)
+        //     }
+        // }
+
+        return res.join(',')
+    }
+
+    
 
     async updateUser(userid:string,userDto:UpdateUserDto):Promise<User> {
         return await this.userModel.findOneAndUpdate({ userid }, userDto).exec();

@@ -34,6 +34,9 @@ export class User {
     @Prop({default:''}) // 用户预设point
     pointset: string;
 
+    @Prop({default:''}) // 用户预设speed
+    speedset: string;
+
     @Prop({default: [] })// 用户关联的项目
     projectsid:Array<string>
 

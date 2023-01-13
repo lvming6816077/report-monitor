@@ -12,9 +12,10 @@ import { LogModule } from './log/log.module'
 import { AllExceptionsFilter } from './utils/response/filter/http-execption.filter';
 // import { RateLimiterGuard, RateLimiterModule } from 'nestjs-rate-limiter'
 import { APP_GUARD } from '@nestjs/core';
+import { SpeedModule } from './speed/speed.module';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost/report'),ScheduleModule.forRoot(), ProjectModule,LogModule,ReportModule,PointModule,ConfigModule,TasksModule,UserModule,WarningModule],
+  imports: [MongooseModule.forRoot('mongodb://localhost/report'),ScheduleModule.forRoot(), ProjectModule,LogModule,ReportModule,PointModule,ConfigModule,TasksModule,UserModule,WarningModule,SpeedModule],
   controllers: [],
   providers: [AllExceptionsFilter],
   exports:[AllExceptionsFilter]

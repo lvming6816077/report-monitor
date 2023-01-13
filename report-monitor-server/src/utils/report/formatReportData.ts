@@ -73,3 +73,45 @@ export const formatData = (data: any[], currentDate: string, endDate: string, un
     // }
     return list
 }
+export const formatSpeedData = (data: any[], currentDate: string, endDate: string, unit: number) => {
+    if (data.length == 0) return []
+
+    let map = {}
+    data.forEach(item => {
+        let key = item._id.year + '-' +
+            (item._id.month < 10 ? '0' + item._id.month : item._id.month) + '-' +
+            (item._id.day < 10 ? '0' + item._id.day : item._id.day) + ' ' +
+            (item._id.hour < 10 ? '0' + item._id.hour : item._id.hour) + ':' +
+            (item._id.minute < 10 ? '0' + item._id.minute : item._id.minute)
+        map[key] = parseInt(item.avg_value)
+    })
+
+
+    const options = {
+        currentDate: moment(new Date(currentDate)).toDate(),
+        endDate: moment(new Date(endDate)).add(unit, 'minute').toDate(),
+        //   iterator: true,
+    };
+
+    var cur = options.currentDate
+    var list = []
+    while (cur < options.endDate) {
+        const endStr = moment(cur).format('YYYY-MM-DD HH:mm')
+        cur = moment(cur).add(unit, 'minute').toDate()
+
+        if (map[endStr]) {
+            list.push({
+                time: endStr,
+                total: map[endStr]
+            })
+        } else { // 没有数据补0
+            list.push({
+                time: endStr,
+                total: 0
+            })
+        }
+
+    }
+
+    return list
+}
