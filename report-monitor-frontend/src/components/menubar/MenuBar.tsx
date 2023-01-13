@@ -6,6 +6,7 @@ import {
     PartitionOutlined,
     ProfileOutlined,
     SettingOutlined,
+    ThunderboltOutlined
 } from '@ant-design/icons'
 import { useHistory, useLocation } from 'react-router-dom'
 import { IRoute, routes } from '@/router'
@@ -36,7 +37,8 @@ const iconMap: { [key: string]: JSX.Element } = {
     HomeOutlined: <HomeOutlined />,
     PartitionOutlined: <PartitionOutlined />,
     SettingOutlined: <SettingOutlined />,
-    ProfileOutlined:<ProfileOutlined />
+    ProfileOutlined:<ProfileOutlined />,
+    ThunderboltOutlined:<ThunderboltOutlined />
 }
 
 export const MenuBar: React.FC = () => {

@@ -10,6 +10,11 @@ import { Login } from './pages/login/Login'
 
 
 import Loadable from 'react-loadable'
+import { SpeedList } from './pages/speed/speedlist/SpeedList';
+import { CreateSpeedTag } from './pages/speed/CreateSpeedTag';
+import { CreateSpeed } from './pages/speed/CreateSpeed';
+import { SpeedTagList } from './pages/speed/SpeedTagList';
+import { Speed } from './pages/home/Speed';
 
 export type IRoute = {
     label: string
@@ -44,11 +49,18 @@ export const routes: IRoute[] = [
         key: '/dashboard',
         children: [
             {
-                label: '数据展示',
+                label: '数据点展示',
                 key: '/',
                 name: 'home',
                 auth: [1],
                 component: Home,
+            },
+            {
+                label: '测速点展示',
+                key: '/speedhome',
+                name: 'speedhome',
+                auth: [1],
+                component: Speed,
             },
         ],
         icon: 'HomeOutlined',
@@ -89,6 +101,43 @@ export const routes: IRoute[] = [
             },
         ],
         icon: 'PartitionOutlined',
+    },
+    {
+        label: '测速点',
+        key: '/speed',
+        children: [
+            {
+                label: '创建类目',
+                key: '/speed/createspeedtag',
+                name: 'createspeedtag',
+                component: CreateSpeedTag,
+                menu: false,
+                auth: [1],
+            },
+            {
+                label: '测速点管理',
+                key: '/speed/speedlist',
+                name: 'speedlist',
+                component: SpeedList,
+                auth: [1],
+            },
+            {
+                label: '类目管理',
+                key: '/speed/speedtaglist',
+                name: 'speedtaglist',
+                component: SpeedTagList,
+                auth: [1],
+            },
+            {
+                label: '创建测速点',
+                key: '/speed/createspeed',
+                name: 'createspeed',
+                menu: false,
+                component: CreateSpeed,
+                auth: [1],
+            },
+        ],
+        icon: 'ThunderboltOutlined',
     },
     {
         label: '日志',
@@ -139,6 +188,16 @@ export const routes: IRoute[] = [
                 name: 'pointset',
                 component:  Loadable({
                     loader: () => import('./pages/setting/point/PointSet'),
+                    loading: () => null
+                }),
+                auth: [1],
+            },
+            {
+                label: '测速点预设',
+                key: '/setting/speedset',
+                name: 'speedset',
+                component:  Loadable({
+                    loader: () => import('./pages/setting/speed/SpeedSet'),
                     loading: () => null
                 }),
                 auth: [1],
