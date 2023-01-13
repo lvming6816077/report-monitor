@@ -1,27 +1,24 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document,Schema as _Schema} from 'mongoose';
-import { Speed } from "src/speed/schemas/speed.schema";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Schema as _Schema } from 'mongoose';
+import { Speed } from 'src/speed/schemas/speed.schema';
 
-import { Point, PointSchema } from "../../point/schemas/point.schema";
+import { Point, PointSchema } from '../../point/schemas/point.schema';
 
 export type ReportDocument = Report & Document;
 
-
-
 // @Schema({timestamps:{createdAt: 'create'}})
-@Schema({versionKey: false})
+@Schema({ versionKey: false })
 export class Report {
-
-    @Prop({ type: _Schema.Types.ObjectId, ref: 'Point',index:true })
+    @Prop({ type: _Schema.Types.ObjectId, ref: 'Point', index: true })
     point: Point;
 
-    @Prop({ type: _Schema.Types.ObjectId, ref: 'Speed',index:true })
+    @Prop({ type: _Schema.Types.ObjectId, ref: 'Speed', index: true })
     speed: Speed;
 
     @Prop()
-    d:number; // 时间长度 单位ms
+    d: number; // 时间长度 单位ms
 
-    @Prop({ type: Date, required:true })
+    @Prop({ type: Date, required: true })
     create: string;
 }
 

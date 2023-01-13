@@ -1,21 +1,20 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document,Schema as _Schema} from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Schema as _Schema } from 'mongoose';
 
-import { Project } from "src/project/schemas/project.schema";
+import { Project } from 'src/project/schemas/project.schema';
 import * as mongoosePaginate from 'mongoose-paginate-v2';
-
 
 export type LogDocument = Log & Document;
 
-
-
-@Schema({timestamps:{createdAt: 'create',updatedAt:'update'},versionKey: false})
+@Schema({
+    timestamps: { createdAt: 'create', updatedAt: 'update' },
+    versionKey: false,
+})
 export class Log {
-
     @Prop()
     str: string;
 
-    @Prop({ type: _Schema.Types.ObjectId, ref: 'Project',required:true })
+    @Prop({ type: _Schema.Types.ObjectId, ref: 'Project', required: true })
     project: Project;
 
     @Prop()
@@ -24,8 +23,8 @@ export class Log {
     @Prop()
     ip: string;
 
-    @Prop({ type:_Schema.Types.Mixed,default:{}})
-    meta:any
+    @Prop({ type: _Schema.Types.Mixed, default: {} })
+    meta: any;
 
     @Prop({ type: Date, default: Date.now })
     create: string;
@@ -35,4 +34,4 @@ export class Log {
 }
 
 export const LogSchema = SchemaFactory.createForClass(Log);
-LogSchema.plugin(mongoosePaginate)
+LogSchema.plugin(mongoosePaginate);

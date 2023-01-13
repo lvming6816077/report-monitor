@@ -1,20 +1,26 @@
-import { IsInt, IsString,IsEmpty,IsNotEmpty,  isString, IsOptional, IsArray, IsPhoneNumber, IsEmail } from 'class-validator';
-
+import {
+    IsInt,
+    IsString,
+    IsEmpty,
+    IsNotEmpty,
+    isString,
+    IsOptional,
+    IsArray,
+    IsPhoneNumber,
+    IsEmail,
+} from 'class-validator';
 
 import { Optional } from '@nestjs/common';
-export class CreateProjectDto  {
-
-    projectid:string
-
-    @IsNotEmpty()
-    name:string
+export class CreateProjectDto {
+    projectid: string;
 
     @IsNotEmpty()
-    type:string
+    name: string;
+
+    @IsNotEmpty()
+    type: string;
 
     @IsString()
     @IsOptional()
-    desc:string
-
-
+    desc: string;
 }

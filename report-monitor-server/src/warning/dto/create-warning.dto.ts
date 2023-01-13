@@ -1,28 +1,34 @@
-import { IsInt, IsString,IsEmpty,IsNotEmpty, Allow, isString, IsOptional, IsBoolean, IsNumber } from 'class-validator';
+import {
+    IsInt,
+    IsString,
+    IsEmpty,
+    IsNotEmpty,
+    Allow,
+    isString,
+    IsOptional,
+    IsBoolean,
+    IsNumber,
+} from 'class-validator';
 import { Warning } from '../schemas/warning.schema';
 
 export class CreateWarningDto extends Warning {
+    @IsNumber()
+    readonly interval: number;
 
+    @IsBoolean()
+    readonly isOpen: boolean;
 
-  @IsNumber()
-  readonly interval: number;
+    @IsString()
+    readonly pointId: string;
 
-  
-  @IsBoolean()
-  readonly isOpen: boolean;
+    @IsString()
+    readonly message: string;
 
-  @IsString()
-  readonly pointId: string;
+    @IsOptional()
+    @IsNumber()
+    readonly max: number;
 
-
-  @IsString()
-  readonly message: string;
-
-  @IsOptional()
-  @IsNumber()
-  readonly max: number;
-
-  @IsOptional()
-  @IsNumber()
-  readonly min: number;
+    @IsOptional()
+    @IsNumber()
+    readonly min: number;
 }

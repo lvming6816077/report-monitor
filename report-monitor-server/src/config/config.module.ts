@@ -12,7 +12,7 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { join } from 'path';
 // import { TypeOrmConfigService } from 'src/config/typeorm-config/typeorm-config.service';
 // import { TypeOrmModule } from '@nestjs/typeorm';
-import { RedisModule } from 'nestjs-redis'
+import { RedisModule } from 'nestjs-redis';
 @Global()
 @Module({
     imports: [
@@ -30,12 +30,12 @@ import { RedisModule } from 'nestjs-redis'
         //   ],
         // }),
         MailerModule.forRoot({
-            transport:{
-                host: "smtp.exmail.qq.com",
-                port: "465",
+            transport: {
+                host: 'smtp.exmail.qq.com',
+                port: '465',
                 // 配置自己的smtp服务器
                 auth: {
-                }
+                },
             },
         }),
         PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -43,7 +43,7 @@ import { RedisModule } from 'nestjs-redis'
             port: 6379,
             host: '127.0.0.1',
             password: '',
-            db: 0
+            db: 0,
         }),
         WinstonModule.forRootAsync({
             useClass: WinstonConfigService,
@@ -53,7 +53,12 @@ import { RedisModule } from 'nestjs-redis'
             signOptions: { expiresIn: '10h' },
         }),
     ],
-    providers: [JwtStrategy, JwtConfigService, WinstonConfigService, RedisInstanceService],
+    providers: [
+        JwtStrategy,
+        JwtConfigService,
+        WinstonConfigService,
+        RedisInstanceService,
+    ],
     exports: [JwtConfigService, WinstonConfigService, RedisInstanceService],
 })
-export class ConfigModule { }
+export class ConfigModule {}

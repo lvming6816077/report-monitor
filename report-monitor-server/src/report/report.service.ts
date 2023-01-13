@@ -1,31 +1,33 @@
-import { Injectable,Inject } from "@nestjs/common";
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Report, ReportDocument } from './schemas/report.schema';
 import { Model } from 'mongoose';
 import { PointService } from '../point/point.service';
 import { HttpException } from '@nestjs/common';
-import { DeleteResult } from "mongodb";
-import { RedisInstanceService } from "src/config/redis-config/redis.service";
+import { DeleteResult } from 'mongodb';
+import { RedisInstanceService } from 'src/config/redis-config/redis.service';
 
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger  } from 'winston';
-import { Point,PointDocument } from "src/point/schemas/point.schema";
-import { Speed, SpeedDocument } from "src/speed/schemas/speed.schema";
+import { Logger } from 'winston';
+import { Point, PointDocument } from 'src/point/schemas/point.schema';
+import { Speed, SpeedDocument } from 'src/speed/schemas/speed.schema';
 export type resultVo = {
-    list?:Report[],
-    desc?:string
+    list?: Report[];
+    desc?: string;
 };
 @Injectable()
 export class ReportService {
     constructor(
-        @InjectModel(Report.name) private readonly reportModel: Model<ReportDocument>, 
-        @InjectModel(Point.name) private readonly pointModel: Model<PointDocument>,
-        @InjectModel(Speed.name) private readonly speedModel: Model<SpeedDocument>,
+        @InjectModel(Report.name)
+        private readonly reportModel: Model<ReportDocument>,
+        @InjectModel(Point.name)
+        private readonly pointModel: Model<PointDocument>,
+        @InjectModel(Speed.name)
+        private readonly speedModel: Model<SpeedDocument>,
         // private readonly pointService: PointService,
         @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
-        private redisService: RedisInstanceService) { 
-
-        }
+        private redisService: RedisInstanceService,
+    ) {}
 
     async findOne(id: string): Promise<Report> {
         return this.reportModel.findOne({ _id: id }).exec();
@@ -35,193 +37,244 @@ export class ReportService {
         return this.reportModel.find({}).exec();
     }
 
-    async deleteOneByPoint(pointid:string):Promise<DeleteResult> {
+    async deleteOneByPoint(pointid: string): Promise<DeleteResult> {
         return this.reportModel.deleteMany({ point: pointid }).exec();
     }
 
     // mongoose聚合：https://wohugb.gitbooks.io/mongoose/content/aggregation_group.html
-    async findAllByCode(code: string, start: string, end: string,unit:number): Promise<resultVo> {
-        const data: Point = await this.pointModel.findOne({code:code});
+    async findAllByCode(
+        code: string,
+        start: string,
+        end: string,
+        unit: number,
+    ): Promise<resultVo> {
+        const data: Point = await this.pointModel.findOne({ code: code });
 
         // let r = await this.reportModel.find({$and: [{ point: (data as any)._id }, { create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]}).exec()
 
         if (data) {
-            const result = await this.reportModel.aggregate([
-                {
-                    $match: {
-                        $and: [{ point: (data as any)._id }, { create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]
-                    }
-                },
-                {
-                    "$project":
+            const result = await this.reportModel
+                .aggregate([
                     {
-                        "dateStr": {
-                            "year": { "$year": "$create" },
-                            "month": { "$month": "$create" },
-                            "day": { "$dayOfMonth": {"date":"$create","timezone": "+08:00" } },
-                            "hour": { "$hour": {"date":"$create","timezone": "+08:00" }},
-                            "minute": {
-                                "$subtract": [
-                                    { "$minute": "$create" },
-                                    { "$mod": [{ "$minute": "$create" }, unit] }
-                                ]
-                            }
-                        }
-                    }
-                },
-                { "$group": { "_id": "$dateStr", "count": { "$sum": 1 } } },
-                { $sort: { "_id": 1 } }
-            ]).exec()
+                        $match: {
+                            $and: [
+                                { point: (data as any)._id },
+                                { create: { $gt: new Date(start) } },
+                                { create: { $lt: new Date(end) } },
+                            ],
+                        },
+                    },
+                    {
+                        $project: {
+                            dateStr: {
+                                year: { $year: '$create' },
+                                month: { $month: '$create' },
+                                day: {
+                                    $dayOfMonth: {
+                                        date: '$create',
+                                        timezone: '+08:00',
+                                    },
+                                },
+                                hour: {
+                                    $hour: {
+                                        date: '$create',
+                                        timezone: '+08:00',
+                                    },
+                                },
+                                minute: {
+                                    $subtract: [
+                                        { $minute: '$create' },
+                                        {
+                                            $mod: [
+                                                { $minute: '$create' },
+                                                unit,
+                                            ],
+                                        },
+                                    ],
+                                },
+                            },
+                        },
+                    },
+                    { $group: { _id: '$dateStr', count: { $sum: 1 } } },
+                    { $sort: { _id: 1 } },
+                ])
+                .exec();
             return {
                 list: result,
-                desc:data.desc
-            }
+                desc: data.desc,
+            };
         }
         return {
             list: [],
-            desc:null
-        }
+            desc: null,
+        };
     }
 
-    async findAllSpeedByCode(code: string, start: string, end: string,unit:number): Promise<resultVo> {
-        const data: Speed = await this.speedModel.findOne({code:code});
+    async findAllSpeedByCode(
+        code: string,
+        start: string,
+        end: string,
+        unit: number,
+    ): Promise<resultVo> {
+        const data: Speed = await this.speedModel.findOne({ code: code });
 
         // let r = await this.reportModel.find({$and: [{ point: (data as any)._id }, { create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]}).exec()
 
         if (data) {
-            const result = await this.reportModel.aggregate([
-                {
-                    $match: {
-                        $and: [{ speed: (data as any)._id }, { create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]
-                    }
-                },
-                {
-                    "$project": //根据project表达式指定输入的字段或者计算的字段，语法如下：
+            const result = await this.reportModel
+                .aggregate([
                     {
-                        "dateStr": {
-                            "year": { "$year": "$create" },
-                            "month": { "$month": "$create" },
-                            "day": { "$dayOfMonth": {"date":"$create","timezone": "+08:00" } },
-                            "hour": { "$hour": {"date":"$create","timezone": "+08:00" }},
-                            "minute": {
-                                "$subtract": [
-                                    { "$minute": "$create" },
-                                    { "$mod": [{ "$minute": "$create" }, unit] }
-                                ]
-                            }
+                        $match: {
+                            $and: [
+                                { speed: (data as any)._id },
+                                { create: { $gt: new Date(start) } },
+                                { create: { $lt: new Date(end) } },
+                            ],
                         },
-                        "d":1
-                    }
-                },
-                { "$group": { "_id": "$dateStr", "avg_value": { "$avg": "$d" } } },
-                { $sort: { "_id": 1 } }
-            ]).exec()
-            console.log(result)
+                    },
+                    {
+                        //根据project表达式指定输入的字段或者计算的字段，语法如下：
+                        $project: {
+                            dateStr: {
+                                year: { $year: '$create' },
+                                month: { $month: '$create' },
+                                day: {
+                                    $dayOfMonth: {
+                                        date: '$create',
+                                        timezone: '+08:00',
+                                    },
+                                },
+                                hour: {
+                                    $hour: {
+                                        date: '$create',
+                                        timezone: '+08:00',
+                                    },
+                                },
+                                minute: {
+                                    $subtract: [
+                                        { $minute: '$create' },
+                                        {
+                                            $mod: [
+                                                { $minute: '$create' },
+                                                unit,
+                                            ],
+                                        },
+                                    ],
+                                },
+                            },
+                            d: 1,
+                        },
+                    },
+                    { $group: { _id: '$dateStr', avg_value: { $avg: '$d' } } },
+                    { $sort: { _id: 1 } },
+                ])
+                .exec();
+            console.log(result);
             return {
                 list: result,
-                desc:data.desc
-            }
+                desc: data.desc,
+            };
         }
         return {
             list: [],
-            desc:null
-        }
+            desc: null,
+        };
     }
 
     async create(code: string): Promise<Report> {
-
-        await this.redisService.lpush('report_monitor_ls', JSON.stringify({
-            code:code,
-            create:new Date()
-        }));
-        return 'success' as any
-
+        await this.redisService.lpush(
+            'report_monitor_ls',
+            JSON.stringify({
+                code: code,
+                create: new Date(),
+            }),
+        );
+        return 'success' as any;
     }
-    async createSpeed(code: string, d:number): Promise<Report> {
-
-        await this.redisService.lpush('speed_monitor_ls', JSON.stringify({
-            code:code,
-            d:d,
-            create:new Date()
-        }));
-        return 'success' as any
-
+    async createSpeed(code: string, d: number): Promise<Report> {
+        await this.redisService.lpush(
+            'speed_monitor_ls',
+            JSON.stringify({
+                code: code,
+                d: d,
+                create: new Date(),
+            }),
+        );
+        return 'success' as any;
     }
     async createByTask(): Promise<any> {
-
         // 数据点统计数据
         try {
-            let n = 10000// 每次定时任务最大次数
-            while(n > 0){
-                let res = await this.redisService.rpop('report_monitor_ls')
+            let n = 10000; // 每次定时任务最大次数
+            while (n > 0) {
+                let res = await this.redisService.rpop('report_monitor_ls');
 
-                if (res == null) break
-                res = JSON.parse(res)
-                this.createItem(res.code,res.create)
-                n--
+                if (res == null) break;
+                res = JSON.parse(res);
+                this.createItem(res.code, res.create);
+                n--;
             }
-        }catch(e){
-            this.logger.error(e,{
+        } catch (e) {
+            this.logger.error(e, {
                 context: ReportService.name,
-            })
+            });
         }
         // 测速数据
         try {
-            let n = 10000// 每次定时任务最大次数
-            while(n > 0){
-                let res = await this.redisService.rpop('speed_monitor_ls')
+            let n = 10000; // 每次定时任务最大次数
+            while (n > 0) {
+                let res = await this.redisService.rpop('speed_monitor_ls');
 
-                if (res == null) break
-                res = JSON.parse(res)
-                this.createSpeedItem(res.code,res.d,res.create)
-                n--
+                if (res == null) break;
+                res = JSON.parse(res);
+                this.createSpeedItem(res.code, res.d, res.create);
+                n--;
             }
-        }catch(e){
-            this.logger.error(e,{
+        } catch (e) {
+            this.logger.error(e, {
                 context: ReportService.name,
-            })
+            });
         }
     }
 
-    private async createItem(code: string,date:Date): Promise<Report> {
+    private async createItem(code: string, date: Date): Promise<Report> {
+        const data: Point = await this.pointModel.findOne({ code: code });
 
-        const data: Point = await this.pointModel.findOne({code:code});
-        
         if (data) {
-            if (data.isBlock) return 
+            if (data.isBlock) return;
             const item = await this.reportModel.create({
                 point: (data as any)._id,
-                create:date
-            })
+                create: date,
+            });
 
-            return item
+            return item;
         }
-        this.logger.error('point.code不存在:'+code,{
+        this.logger.error('point.code不存在:' + code, {
             context: ReportService.name,
-        })
-
+        });
     }
 
-    private async createSpeedItem(code: string,d:number,date:Date): Promise<Report> {
+    private async createSpeedItem(
+        code: string,
+        d: number,
+        date: Date,
+    ): Promise<Report> {
+        const data: Speed = await this.speedModel.findOne({ code: code });
 
-        const data: Speed = await this.speedModel.findOne({code:code});
-        
         if (data) {
-            if (data.isBlock) return 
+            if (data.isBlock) return;
             const item = await this.reportModel.create({
                 speed: (data as any)._id,
                 d: d,
-                create:date
-            })
+                create: date,
+            });
 
-            return item
+            return item;
         }
-        this.logger.error('speed.code不存在:'+code,{
+        this.logger.error('speed.code不存在:' + code, {
             context: ReportService.name,
-        })
-
+        });
     }
-
 
     /*async updateUser(userId: string, userUpdates: UpdateUserDto): Promise<User> {
         return this.usersRepository.findOneAndUpdate({ userId }, userUpdates);

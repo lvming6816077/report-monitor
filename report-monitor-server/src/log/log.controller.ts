@@ -1,8 +1,19 @@
-import { Body, Controller, Query, Get, Param, Post, Request, HttpException, UseGuards,Headers } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Query,
+    Get,
+    Param,
+    Post,
+    Request,
+    HttpException,
+    UseGuards,
+    Headers,
+} from '@nestjs/common';
 import { LogService, resultVo } from './log.service';
-import { formatData } from 'src/utils/report/formatReportData'
+import { formatData } from 'src/utils/report/formatReportData';
 
-import * as moment from 'moment'
+import * as moment from 'moment';
 import { Request as _Request } from 'express';
 import { PointService } from 'src/point/point.service';
 import { JwtAuthGuard } from 'src/config/jwt-config/jwtAuth.guard';
@@ -10,8 +21,6 @@ import { ProjectService } from 'src/project/project.service';
 import { QueryLogDto } from './schemas/query-log.dto';
 import { IpAddress } from 'src/utils/decorator/ip.decorator';
 import axios from 'axios';
-
-
 
 @Controller('log')
 export class LogController {
@@ -21,42 +30,55 @@ export class LogController {
         private readonly pointService: PointService,
 
         private readonly projectService: ProjectService,
-    ) { }
+    ) {}
 
     @Post('create/:pcode')
-    async createLog(@Body() dto: any, @Headers() headers, @IpAddress() clinetIp: string,@Param('pcode') pcode: string) {
-
+    async createLog(
+        @Body() dto: any,
+        @Headers() headers,
+        @IpAddress() clinetIp: string,
+        @Param('pcode') pcode: string,
+    ) {
         if (!pcode) {
             throw new HttpException('pcode缺失', 200);
         }
 
-        const p = await this.projectService.findProjectByCode(pcode)
+        const p = await this.projectService.findProjectByCode(pcode);
 
-        if (!p) return ''
+        if (!p) return '';
 
         // console.log(headers)
 
-        const meta:any = {}
+        const meta: any = {};
 
         if (headers['referer']) {
-            meta.referer = headers['referer']
+            meta.referer = headers['referer'];
         }
         if (headers['cookies']) {
-            meta.cookies = headers['cookies']
+            meta.cookies = headers['cookies'];
         }
 
-        const ua = headers['user-agent']||''
+        const ua = headers['user-agent'] || '';
 
-        const ip = clinetIp
+        const ip = clinetIp;
 
-        return await this.logService.create(JSON.stringify(dto),ua,ip,meta, p._id);
+        return await this.logService.create(
+            JSON.stringify(dto),
+            ua,
+            ip,
+            meta,
+            p._id,
+        );
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('list')
-    async getLogList(@Query() query:QueryLogDto,@Request() req: _Request) {
-
-        return this.logService.findAllByPage(query.pageStart, query.pageSize, query);
+    async getLogList(@Query() query: QueryLogDto, @Request() req: _Request) {
+        return this.logService.findAllByPage(
+            query.pageStart,
+            query.pageSize,
+            query,
+        );
 
         // const tagList = await (await this.pointService.findAllTags()).filter(i => i.code)
 
@@ -79,22 +101,20 @@ export class LogController {
         //     );
         // }
 
-
         // return flatter(list)
     }
     @UseGuards(JwtAuthGuard)
     @Get('getIpDesc')
-    async getIpDesc(@Query() query:any,@Request() req: _Request) {
-
-        const result = await axios.get('https://restapi.amap.com/v3/ip?key=b0982e55ca518f770a7978a585dd83b8&ip='+query.ip)
+    async getIpDesc(@Query() query: any, @Request() req: _Request) {
+        const result = await axios.get(
+            'https://restapi.amap.com/v3/ip?key=b0982e55ca518f770a7978a585dd83b8&ip=' +
+                query.ip,
+        );
         // console.log(result.data?.province)
-        let res = result.data?.province+'-'+result.data?.city
+        const res = result.data?.province + '-' + result.data?.city;
 
-        return res
-
+        return res;
     }
-
-
 
     //   @Delete(':id')
     //   async delete(@Param('id') id: string) {

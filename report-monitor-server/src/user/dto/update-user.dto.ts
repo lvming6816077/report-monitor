@@ -1,9 +1,19 @@
-import { IsInt, IsString,IsEmpty,IsNotEmpty,  isString, IsOptional, IsArray, IsPhoneNumber, IsEmail } from 'class-validator';
+import {
+    IsInt,
+    IsString,
+    IsEmpty,
+    IsNotEmpty,
+    isString,
+    IsOptional,
+    IsArray,
+    IsPhoneNumber,
+    IsEmail,
+} from 'class-validator';
 
 import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { User } from 'src/user/schemas/user.schema';
 import { Optional } from '@nestjs/common';
-export class UpdateUserDto  {
+export class UpdateUserDto {
     @IsString()
     @IsOptional()
     nickname?: string;
@@ -13,38 +23,36 @@ export class UpdateUserDto  {
 
     @IsString()
     @IsOptional()
-    password?:string
+    password?: string;
 
     @IsArray()
     @IsOptional()
     level?: number[];
-    
+
     @IsArray()
     @IsOptional()
     projectsid?: string[];
 
     @IsString()
     @IsOptional()
-    pointset?:string;
+    pointset?: string;
 
     @IsString()
     @IsOptional()
-    speedset?:string;
+    speedset?: string;
 
     @IsString()
-    userid?:string
+    userid?: string;
 
     @IsEmail()
     @IsOptional()
-    email?:string
+    email?: string;
 
     @IsString()
     @IsOptional()
-    phone?:string
+    phone?: string;
 
     @IsString()
     @IsOptional()
-    activePid?:string
-
-
+    activePid?: string;
 }

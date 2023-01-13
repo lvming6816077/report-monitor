@@ -4,8 +4,8 @@ import { Redis } from 'ioredis';
 
 @Injectable()
 export class RedisInstanceService {
-    private client: Redis;  //使用ioredis给clinet注解，这样才能获取多个方法的提示
-    constructor(private redisService: RedisService) { }
+    private client: Redis; //使用ioredis给clinet注解，这样才能获取多个方法的提示
+    constructor(private redisService: RedisService) {}
 
     //nest的生命周期函数，使用该service时，构建一个redis的clinet
     onModuleInit(): void {
@@ -13,7 +13,7 @@ export class RedisInstanceService {
     }
 
     private getClient() {
-        this.client = this.redisService.getClient();  //连接clinet
+        this.client = this.redisService.getClient(); //连接clinet
     }
 
     /**
@@ -64,10 +64,10 @@ export class RedisInstanceService {
     public async rpop(key: string): Promise<any> {
         return await this.client.rpop(key);
     }
-    public async lpush(key: string, value:string): Promise<any> {
-        return await this.client.lpush(key,value);
+    public async lpush(key: string, value: string): Promise<any> {
+        return await this.client.lpush(key, value);
     }
-    public async llen(key: string, value?:string): Promise<number> {
+    public async llen(key: string, value?: string): Promise<number> {
         return await this.client.llen(key);
     }
 }

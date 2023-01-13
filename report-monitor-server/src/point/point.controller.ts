@@ -1,16 +1,27 @@
-import { Body, Controller, Query, Get, Param, Post, Inject, UseGuards, Request, HttpException } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Query,
+    Get,
+    Param,
+    Post,
+    Inject,
+    UseGuards,
+    Request,
+    HttpException,
+} from '@nestjs/common';
 import { PointService } from './point.service';
 import { Point, PointDocument } from './schemas/point.schema';
 import { Tag, TagDocument } from './schemas/tag.schema';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { JwtAuthGuard } from 'src/config/jwt-config/jwtAuth.guard';
-import { CreatePointDto } from './dto/create-point.dto'
-import { CreateTagDto } from './dto/create-tag.dto'
-import { QueryPointDto } from './dto/query-point.dto'
-import { QueryTagDto } from './dto/query-tag.dto'
+import { CreatePointDto } from './dto/create-point.dto';
+import { CreateTagDto } from './dto/create-tag.dto';
+import { QueryPointDto } from './dto/query-point.dto';
+import { QueryTagDto } from './dto/query-tag.dto';
 import { PaginateResult } from 'mongoose';
-import { DeleteResult } from 'mongodb'
+import { DeleteResult } from 'mongodb';
 import { UserService } from 'src/user/user.service';
 import { UpdatePointDto } from './dto/update-point.dto';
 import { WarningService } from 'src/warning/warning.service';
@@ -22,30 +33,25 @@ export class PointController {
         private readonly pointService: PointService,
         @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
 
-        
         private readonly warningService: WarningService,
 
         private readonly userService: UserService,
-    ) { }
-
+    ) {}
 
     @Post('create')
     async createPoint(@Body() dto: CreatePointDto, @Request() req: any) {
-
         return await this.pointService.create(dto);
     }
     @Post('createtag')
     async createTag(@Body() dto: CreateTagDto, @Request() req: any) {
-
-        return await this.pointService.createTag(dto.desc,dto.projectId);
+        return await this.pointService.createTag(dto.desc, dto.projectId);
     }
     @Post('savePointSet')
-    async savePointSet(@Body() dto:{codes?:string[]}, @Request() req: any) {
-
-        let u = await this.userService.updateUser(req.user.userId,{
-            pointset:dto.codes.join(',')
+    async savePointSet(@Body() dto: { codes?: string[] }, @Request() req: any) {
+        const u = await this.userService.updateUser(req.user.userId, {
+            pointset: dto.codes.join(','),
         });
-        return u.pointset
+        return u.pointset;
     }
 
     @Get('getPoints')
@@ -55,30 +61,47 @@ export class PointController {
 
     @Get('getPointsAndPointset')
     async getPointsAndPointset(@Request() req: any): Promise<any> {
-        let pointset = await this.userService.findUserPointSet(req.user.userId);
-        let projectId = req.query.projectId
+        const pointset = await this.userService.findUserPointSet(
+            req.user.userId,
+        );
+        const projectId = req.query.projectId;
 
-        let list = await this.pointService.findAll(projectId);
+        const list = await this.pointService.findAll(projectId);
         return {
-            pointset:pointset,
-            list
-        }
+            pointset: pointset,
+            list,
+        };
     }
     @Get('getPointsList')
     async getPointsList(@Query() query: QueryPointDto) {
-        let result = await this.pointService.findAllByPage(query.pageStart, query.pageSize, query);
+        const result = await this.pointService.findAllByPage(
+            query.pageStart,
+            query.pageSize,
+            query,
+        );
 
-        return result
+        return result;
     }
     @Get('getTagsList')
-    async getTagsList(@Query() query: QueryTagDto): Promise<PaginateResult<TagDocument>> {
-        return this.pointService.findAllTagByPage(query.pageStart, query.pageSize, query);
+    async getTagsList(
+        @Query() query: QueryTagDto,
+    ): Promise<PaginateResult<TagDocument>> {
+        return this.pointService.findAllTagByPage(
+            query.pageStart,
+            query.pageSize,
+            query,
+        );
     }
     @Get('getPointsAllList')
-    async getPointsAllList(@Query() query: QueryPointDto): Promise<PaginateResult<PointDocument>> {
-        return this.pointService.findAllAdminByPage(query.pageStart, query.pageSize, query);
+    async getPointsAllList(
+        @Query() query: QueryPointDto,
+    ): Promise<PaginateResult<PointDocument>> {
+        return this.pointService.findAllAdminByPage(
+            query.pageStart,
+            query.pageSize,
+            query,
+        );
     }
-
 
     @Get('getTags')
     async getTags(@Query() query): Promise<Tag[]> {
@@ -92,23 +115,20 @@ export class PointController {
 
     @Get('deletePoint/:id')
     async deletePoint(@Param('id') id: string): Promise<DeleteResult> {
-
         return this.pointService.deleteById(id);
     }
 
     @Get('deleteTag/:id')
     async deleteTag(@Param('id') id: string): Promise<DeleteResult> {
-
         return this.pointService.deleteTagById(id);
     }
 
     @Post('updatePoint')
-    async updatePoint(@Body() dto:UpdatePointDto, @Request() req: any) {
-
+    async updatePoint(@Body() dto: UpdatePointDto, @Request() req: any) {
         if (!dto._id) {
-            throw new HttpException('id缺失', 200); 
+            throw new HttpException('id缺失', 200);
         }
-        return await this.pointService.updatePoint(dto._id,dto);
+        return await this.pointService.updatePoint(dto._id, dto);
     }
 
     //   @Delete(':id')
@@ -116,5 +136,3 @@ export class PointController {
     //     return this.catsService.delete(id);
     //   }
 }
-
-

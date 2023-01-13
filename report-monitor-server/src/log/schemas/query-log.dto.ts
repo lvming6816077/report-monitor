@@ -1,11 +1,19 @@
-import { IsInt, IsString,IsEmpty,IsNotEmpty, Allow, isString, IsOptional } from 'class-validator';
+import {
+    IsInt,
+    IsString,
+    IsEmpty,
+    IsNotEmpty,
+    Allow,
+    isString,
+    IsOptional,
+} from 'class-validator';
 
 import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { User } from 'src/user/schemas/user.schema';
 
 import { Project } from 'src/project/schemas/project.schema';
 import { Log } from './log.schema';
-export class QueryLogDto implements QueryPageDto,Log {
+export class QueryLogDto implements QueryPageDto, Log {
     meta: any;
     ip: string;
     ua: string;
@@ -20,8 +28,6 @@ export class QueryLogDto implements QueryPageDto,Log {
     @IsString()
     pageSize: string;
 
-    timeStart:string;
-    timeEnd:string;
-    
-
+    timeStart: string;
+    timeEnd: string;
 }

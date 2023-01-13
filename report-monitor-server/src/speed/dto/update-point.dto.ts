@@ -6,11 +6,10 @@
 //   @IsOptional()
 //   @IsString()
 //   readonly name: string;
-  
+
 //   @IsOptional()
 //   @IsBoolean()
 //   readonly isBlock:boolean
-
 
 //   @IsString()
 //   _id:string
