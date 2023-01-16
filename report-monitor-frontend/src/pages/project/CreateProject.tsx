@@ -45,7 +45,7 @@ const CreateProject: React.FC = () => {
         })
         if (result.data.code == 0) {
             message.success('保存成功')
-            history.push('/')
+            window.location.href = '/'
         } else {
             message.error('保存失败')
         }

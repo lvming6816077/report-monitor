@@ -229,7 +229,6 @@ export const SpeedList: React.FC = () => {
                         rowKey={'code'}
                         loading={loading}
                     />
-                    ;
                 </div>
                 {contextHolder}
             </div>

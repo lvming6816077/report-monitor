@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Avatar, Dropdown, Menu, MenuProps } from 'antd'
+import { Avatar, Dropdown, Menu, MenuProps, Switch } from 'antd'
 import {
     LogoutOutlined,
     BarChartOutlined,
@@ -82,6 +82,16 @@ export const NavBar: React.FC = () => {
     const goProject = ()=>{
         history.push('/createproject?projectCode=')
     }
+    const changeDark = (flag:boolean)=>{
+        console.log(flag)
+        dispatch({
+            type: SET_USER,
+            data: {
+                ...userInfo,
+                theme: flag ? 'antd-dark':'antd-default'
+            },
+        })
+    }
 
 
     const menu = (
@@ -153,7 +163,14 @@ export const NavBar: React.FC = () => {
                         <span className="username">{nickname}</span>
                     </div>
                 </Dropdown>
+                <Switch
+                    checkedChildren={'🌜'}
+                    unCheckedChildren={'🌞'}
+                    defaultChecked={userInfo.theme == 'antd-dark'}
+                    onChange={changeDark}
+                />
             </div>
+            
         </div>
     )
 }

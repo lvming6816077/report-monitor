@@ -231,7 +231,6 @@ export const PointList: React.FC = () => {
                         rowKey={'code'}
                         loading={loading}
                     />
-                    ;
                 </div>
                 <WarningModal
                     onRef={childRef}

@@ -4,7 +4,8 @@ export type userInfoType = {
     level: number[] | undefined
     nickname: string | undefined
     userid: string | undefined,
-    activePid:string| undefined
+    activePid:string| undefined,
+    theme:string| undefined,
 }
 interface SetUserAction {
     type: typeof SET_USER | typeof REMOVE_USER

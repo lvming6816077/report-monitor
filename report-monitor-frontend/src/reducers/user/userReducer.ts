@@ -27,6 +27,7 @@ export default (
                     nickname: action.data?.nickname,
                     userid: action.data?.userid,
                     activePid: action.data?.activePid,
+                    theme: action.data?.theme,
                 },
             }
             localStorage.setItem('cuser', JSON.stringify(u))

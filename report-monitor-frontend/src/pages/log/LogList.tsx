@@ -28,6 +28,7 @@ const LogList: React.FC = () => {
     const history = useHistory()
     const [modal, contextHolder] = Modal.useModal()
     const userInfo = useSelector((state: RootState) => state.user.userInfo)
+    const theme = userInfo.theme
     const [params,setParams] = useState({})
     const dateFormat = 'YYYY-MM-DD HH:mm:ss'
 
@@ -190,22 +191,23 @@ const LogList: React.FC = () => {
                         </Row>
                     </Form>
                 </div>
-                
-                <List
-                    header={<div>日志列表：</div>}
-                    loading={initLoading}
-                    loadMore={loadMore}
-                    itemLayout={'vertical'}
-                    bordered
-                    dataSource={dataSource}
-                    renderItem={(item:DataType) => (
-                        <List.Item>
-                            <List.Item.Meta title={item.create} ></List.Item.Meta>
-                            <div><ReactJson src={JSON.parse(item.str)} collapsed={true} iconStyle={'square'} displayDataTypes={false} displayObjectSize={false}/></div>
-                            <div className='env'><Env ua={item.ua} ip={item.ip} meta={item.meta}></Env></div>
-                        </List.Item>
-                    )}
-                />
+                <div className='log-inner-content'>
+                    <List
+                        header={<div>日志列表：</div>}
+                        loading={initLoading}
+                        loadMore={loadMore}
+                        itemLayout={'vertical'}
+                        bordered
+                        dataSource={dataSource}
+                        renderItem={(item:DataType) => (
+                            <List.Item>
+                                <List.Item.Meta title={item.create} ></List.Item.Meta>
+                                <div><ReactJson src={JSON.parse(item.str)} collapsed={true} iconStyle={'square'} displayDataTypes={false} displayObjectSize={false} theme={theme == 'antd-dark' ? 'eighties':'rjv-default'}/></div>
+                                <div className='env'><Env ua={item.ua} ip={item.ip} meta={item.meta}></Env></div>
+                            </List.Item>
+                        )}
+                    />
+                </div>
 
                 {contextHolder}
             </div>

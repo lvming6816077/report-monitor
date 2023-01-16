@@ -25,15 +25,22 @@ export const setProjectListAction = (userInfo:userInfoType)=>{
                 type: projectActionTypes.SET_PROJECT_LIST,
                 data: projectList.data.data,
             })
-            // let activePid = projectList.data.data.filter((r:any)=>r.active == true)[0]?._id
-            // // 设置当前id
-            // dispatch({
-            //     type: SET_USER,
-            //     data: {
-            //         ...userInfo,
-            //         activePid:activePid
-            //     },
-            // })
+            if (projectList.data.data.length) {
+                let activePid = projectList.data.data[0]._id
+                if (!userInfo.activePid) {
+                    // 设置当前id
+                    dispatch({
+                        type: SET_USER,
+                        data: {
+                            ...userInfo,
+                            activePid:activePid
+                        },
+                    })
+                }
+                
+            }
+            
+            
         }
     }
 }

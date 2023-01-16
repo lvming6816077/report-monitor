@@ -7,6 +7,8 @@ import { ChromeOutlined, createFromIconfontCN, IeOutlined, PlusSquareOutlined } 
 import parser from 'ua-parser-js'
 import { Tooltip } from 'antd'
 import axios from 'axios'
+import { RootState } from '@/store'
+import { useSelector } from 'react-redux'
 
 type Props = {
     ua: string,
@@ -15,10 +17,11 @@ type Props = {
 }
 const IconFont = createFromIconfontCN({
     scriptUrl: [
-      '//at.alicdn.com/t/c/font_3843073_tk57j3uvhsb.js', // icon-javascript, icon-java, icon-shoppingcart (overrided)
+      '//at.alicdn.com/t/c/font_3843073_c1vv07lftsd.js', // icon-javascript, icon-java, icon-shoppingcart (overrided)
     ],
 });
 export const Env: React.FC<Props> = ({ ua,ip,meta}) => {
+
 
     const onOpenChange = async (open:boolean,ip:string)=>{
 
@@ -58,7 +61,7 @@ export const Env: React.FC<Props> = ({ ua,ip,meta}) => {
 
             arr.push(<span key={4}>&nbsp;&nbsp;</span>)
 
-            arr.push(<span  key={5}><Tooltip onVisibleChange={(open)=>onOpenChange(open,ip)} title={ipDesc}><IconFont type="icon-network" />{ip}</Tooltip></span>)
+            arr.push(<span  key={5}><Tooltip onVisibleChange={(open)=>onOpenChange(open,ip)} title={ipDesc}><IconFont type="icon-network1" /></Tooltip>{ip}</span>)
 
             arr.push(<span key={7}>&nbsp;&nbsp;</span>)
 

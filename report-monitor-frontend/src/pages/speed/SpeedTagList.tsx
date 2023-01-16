@@ -184,7 +184,6 @@ export const SpeedTagList: React.FC = () => {
                         pagination={paginationProps}
                         rowKey={'_id'}
                     />
-                    ;
                 </div>
                 {contextHolder}
             </div>
