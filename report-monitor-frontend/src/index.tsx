@@ -11,6 +11,7 @@ import './utils/request.js'
 // import 'antd/dist/antd.less'
 import "./theme/antd-default.css";
 import "./theme/antd-dark.css";
+import './theme/var.less'
 
 message.config({
     duration: 2, // 持续时间
@@ -26,13 +27,12 @@ const Main = ()=>{
     let cuser = localStorage.getItem('cuser')
     let prefixCls = 'antd-default'
     if (cuser) {
-        prefixCls = JSON.parse(cuser).userInfo.theme||'antd-default'
+        prefixCls = JSON.parse(cuser).userInfo.theme
         window.document.documentElement.setAttribute( "data-theme", prefixCls );
     }
     const [prefixClsInner,setPrefixClsInner] = useState<string>(prefixCls)
     const userInfo = useSelector((state: RootState) => state.user.userInfo)
     useEffect(()=>{
-        
         window.document.documentElement.setAttribute( "data-theme", userInfo.theme as string );
         setPrefixClsInner(userInfo.theme as string)
     },[userInfo.theme])

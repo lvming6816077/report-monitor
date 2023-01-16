@@ -11,7 +11,6 @@ import axios from 'axios'
 import queryString from 'query-string'
 
 import './App.less'
-import './theme/var.less'
 import { RootState } from './store'
 import { userInfoType } from './reducers/user/types'
 import { Alert } from 'antd'

@@ -80,7 +80,7 @@ export const Login: React.FC = () => {
 
             dispatch({
                 type: actionTypes.SET_USER,
-                data: result.data.data.user,
+                data: {...result.data.data.user,theme:'antd-default'},
             })
             // 查询项目列表
             const projectList = await axios.get('/rapi/user/getUserProjects?id='+result.data.data.user.userid)

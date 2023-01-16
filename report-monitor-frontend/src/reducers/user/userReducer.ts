@@ -10,7 +10,7 @@ const cuser = localStorage.getItem('cuser')
 const initialState: initialStateType = cuser
     ? JSON.parse(cuser)
     : {
-          userInfo: { username: '', level: [], nickname: '' },
+          userInfo: { username: '', level: [], nickname: '',theme:'antd-default' },
       }
 
 export default (
