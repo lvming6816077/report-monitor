@@ -225,7 +225,6 @@ const PointAllList: React.FC = () => {
                         pagination={paginationProps}
                         rowKey={'code'}
                     />
-                    ;
                 </div>
                 {contextHolder}
             </div>

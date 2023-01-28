@@ -149,7 +149,6 @@ const ProjectList: React.FC = () => {
                         pagination={paginationProps}
                         rowKey={'code'}
                     />
-                    ;
                 </div>
                 {contextHolder}
             </div>
