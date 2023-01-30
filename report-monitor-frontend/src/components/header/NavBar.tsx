@@ -7,6 +7,7 @@ import {
     UserOutlined,
     DownOutlined,
     PlusSquareOutlined,
+    UnlockOutlined,
 } from '@ant-design/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store'
@@ -114,7 +115,7 @@ export const NavBar: React.FC = () => {
                 {
                     label: '修改密码',
                     key: '/setting/changepass',
-                    icon: <LogoutOutlined />,
+                    icon: <UnlockOutlined />,
                 },
                 {
                     label: '退出登陆',

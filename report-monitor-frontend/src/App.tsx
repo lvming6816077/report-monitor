@@ -25,6 +25,8 @@ type IUser ={
 
 type optional = Partial<IUser>
 
+type myReade = Readonly<IUser>
+
 
 type PickUser = Pick<IUser, "age" | "name">;
 
