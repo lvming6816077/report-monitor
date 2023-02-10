@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Report, ReportDocument } from './schemas/report.schema';
-import { Model } from 'mongoose';
+import { Model, PaginateModel, PaginateResult } from 'mongoose';
 import { PointService } from '../point/point.service';
 import { HttpException } from '@nestjs/common';
 import { DeleteResult } from 'mongodb';
@@ -11,6 +11,11 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { Point, PointDocument } from 'src/point/schemas/point.schema';
 import { Speed, SpeedDocument } from 'src/speed/schemas/speed.schema';
+import { QueryPageDto } from 'src/utils/dto/query-page.dto';
+import { QueryReportDto } from './dto/query-report.dto';
+const parser = require('ua-parser-js');
+const searcher = require('node-ip2region').create();
+
 export type resultVo = {
     list?: Report[];
     desc?: string;
@@ -19,7 +24,7 @@ export type resultVo = {
 export class ReportService {
     constructor(
         @InjectModel(Report.name)
-        private readonly reportModel: Model<ReportDocument>,
+        private readonly reportModel: PaginateModel<ReportDocument>,
         @InjectModel(Point.name)
         private readonly pointModel: Model<PointDocument>,
         @InjectModel(Speed.name)
@@ -39,6 +44,60 @@ export class ReportService {
 
     async deleteOneByPoint(pointid: string): Promise<DeleteResult> {
         return this.reportModel.deleteMany({ point: pointid }).exec();
+    }
+
+    async findAllReportByPointByPage(
+        pageStart = '1',
+        pageSize = '10',
+        query: QueryReportDto,
+    ): Promise<PaginateResult<ReportDocument>> {
+        const data: Point = await this.pointModel.findOne({ code: query.pointCode });
+        if (!data) return null
+        const options = {
+            page: Number(pageStart),
+            limit: Number(pageSize),
+            sort: {
+                create: -1,
+            },
+            
+        };
+        const q: any = { point: data._id,
+            $and: [
+                { create: { $gt: new Date(query.timeStart) } },
+                { create: { $lt: new Date(query.timeEnd) } },
+            ],
+         };
+        // if (query.desc) {
+        //     q.desc = { $regex: query.desc, $options: 'i' };
+        // }
+
+        return await this.reportModel.paginate(q, options);
+    }
+
+    async findAllReportGroupByIp(
+        query: any,
+    ): Promise<Report[]> {
+        const data: Point = await this.pointModel.findOne({ code: query.pointCode });
+
+        if (!data) return null
+
+
+        const result = await this.reportModel
+         .aggregate([
+             {
+                 $match: {
+                     $and: [
+                         { point: (data as any)._id },
+                         { create: { $gt: new Date(query.timeStart) } },
+                         { create: { $lt: new Date(query.timeEnd) } },
+                     ],
+                 },
+             },
+             { $group: { _id: '$ip', count: { $sum: 1 } } },
+         ])
+         .exec();
+
+        return result
     }
 
     // mongoose聚合：https://wohugb.gitbooks.io/mongoose/content/aggregation_group.html
@@ -181,11 +240,13 @@ export class ReportService {
         };
     }
 
-    async create(code: string): Promise<Report> {
+    async create(code: string,ip:string,ua:string): Promise<Report> {
         await this.redisService.lpush(
             'report_monitor_ls',
             JSON.stringify({
                 code: code,
+                ip:ip,
+                ua,
                 create: new Date(),
             }),
         );
@@ -211,7 +272,7 @@ export class ReportService {
 
                 if (res == null) break;
                 res = JSON.parse(res);
-                this.createItem(res.code, res.create);
+                this.createItem(res.code, res.create, res.ip,res.ua);
                 n--;
             }
         } catch (e) {
@@ -237,14 +298,37 @@ export class ReportService {
         }
     }
 
-    private async createItem(code: string, date: Date): Promise<Report> {
+    private async createItem(code: string, date: Date, ip:string,ua:string): Promise<Report> {
         const data: Point = await this.pointModel.findOne({ code: code });
 
         if (data) {
             if (data.isBlock) return;
+            var reg = /((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}/g
+            let city = null
+            let province = null
+            let browser = null
+            let os = null
+            // console.log(ip)
+            if (reg.test(ip)) {
+                let regObj = searcher.btreeSearchSync(ip)
+                city = regObj.region.split('|')[3]
+                province = regObj.region.split('|')[2]
+            }
+
+            var o = parser(ua);
+            if (o) {
+                browser = o.browser.name
+                os = o.os.name
+            }
             const item = await this.reportModel.create({
                 point: (data as any)._id,
                 create: date,
+                city,
+                province,
+                ip,
+                browser,
+                os,
+                ua
             });
 
             return item;

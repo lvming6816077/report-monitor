@@ -17,6 +17,7 @@ import { WarningService } from 'src/warning/warning.service';
 import { setDefaultResultOrder } from 'dns';
 import { CreatePointDto } from './dto/create-point.dto';
 import { QueryTagDto } from './dto/query-tag.dto';
+import { QueryReportDto } from 'src/report/dto/query-report.dto';
 
 export type CURUSER = {
     user: {
@@ -193,6 +194,8 @@ export class PointService {
         // console.log(dto)
         return await this.pointModel.findOneAndUpdate({ _id: id }, dto).exec();
     }
+
+    
     /*async updateUser(userId: string, userUpdates: UpdateUserDto): Promise<User> {
         return this.usersRepository.findOneAndUpdate({ userId }, userUpdates);
     }*/

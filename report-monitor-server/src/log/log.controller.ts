@@ -21,6 +21,7 @@ import { ProjectService } from 'src/project/project.service';
 import { QueryLogDto } from './schemas/query-log.dto';
 import { IpAddress } from 'src/utils/decorator/ip.decorator';
 import axios from 'axios';
+const searcher = require('node-ip2region').create();
 
 @Controller('log')
 export class LogController {
@@ -103,15 +104,28 @@ export class LogController {
 
         // return flatter(list)
     }
+    // @UseGuards(JwtAuthGuard)
+    // @Get('getIpDesc')
+    // async getIpDesc(@Query() query: any, @Request() req: _Request) {
+    //     const result = await axios.get(
+    //         'https://restapi.amap.com/v3/ip?key=b0982e55ca518f770a7978a585dd83b8&ip=' +
+    //             query.ip,
+    //     );
+    //     // console.log(result.data?.province)
+    //     const res = result.data?.province + '-' + result.data?.city;
+
+    //     return res;
+    // }
+
     @UseGuards(JwtAuthGuard)
     @Get('getIpDesc')
     async getIpDesc(@Query() query: any, @Request() req: _Request) {
-        const result = await axios.get(
-            'https://restapi.amap.com/v3/ip?key=b0982e55ca518f770a7978a585dd83b8&ip=' +
-                query.ip,
-        );
-        // console.log(result.data?.province)
-        const res = result.data?.province + '-' + result.data?.city;
+
+        let regObj = searcher.btreeSearchSync(query.ip)
+        let city = regObj.region.split('|')[3]
+        let province = regObj.region.split('|')[2]
+
+        const res = province + '-' + city;
 
         return res;
     }

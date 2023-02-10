@@ -6600,6 +6600,11 @@ node-int64@^0.4.0:
   resolved "https://registry.npmmirror.com/node-int64/-/node-int64-0.4.0.tgz#87a9065cdb355d3182d8f94ce11188b825c68a3b"
   integrity sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==
 
+node-ip2region@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmmirror.com/node-ip2region/-/node-ip2region-1.0.2.tgz#8f359a4f44563e6b593848734c225d6f7cc20a32"
+  integrity sha512-tH/A46cbCSeE+G0w8cwPeQDV3EdVp5D900VLgDbjhC4bH7SKVPBOarpjH1He6QvWFBOam48lIroKTAyVUPC3CA==
+
 node-notifier@^8.0.0:
   version "8.0.2"
   resolved "https://registry.npmmirror.com/node-notifier/-/node-notifier-8.0.2.tgz#f3167a38ef0d2c8a866a83e318c1ba0efeb702c5"
@@ -8729,6 +8734,11 @@ typescript@^4.0.5:
   version "4.7.4"
   resolved "https://registry.npmmirror.com/typescript/-/typescript-4.7.4.tgz#1a88596d1cf47d59507a1bcdfb5b9dfe4d488235"
   integrity sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==
+
+ua-parser-js@^1.0.33:
+  version "1.0.33"
+  resolved "https://registry.npmmirror.com/ua-parser-js/-/ua-parser-js-1.0.33.tgz#f21f01233e90e7ed0f059ceab46eb190ff17f8f4"
+  integrity sha512-RqshF7TPTE0XLYAqmjlu5cLLuGdKrNu9O1KLA/qp39QtbZwuzwv1dT46DZSopoUMsYgXpB3Cv8a03FI8b74oFQ==
 
 uc.micro@^1.0.1:
   version "1.0.6"

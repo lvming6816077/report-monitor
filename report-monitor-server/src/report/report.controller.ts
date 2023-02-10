@@ -5,22 +5,35 @@ import {
     Get,
     Param,
     Post,
-    Injectable,
+    Headers,
 } from '@nestjs/common';
 import { ReportService, resultVo } from './report.service';
 import { formatData, formatSpeedData } from 'src/utils/report/formatReportData';
-import { Report } from './schemas/report.schema';
+import { Report, ReportDocument } from './schemas/report.schema';
 import * as moment from 'moment';
+import { IpAddress } from 'src/utils/decorator/ip.decorator';
+import { QueryPageDto } from 'src/utils/dto/query-page.dto';
+import { PaginateResult } from 'mongoose';
+import { QueryReportDto } from './dto/query-report.dto';
 
-const unit = 1; // 分钟
-const speedUnit = 60;
+enum UnitMap {
+    h = 60,// 分钟
+    m = 1,
+};
+
+const unit = UnitMap.h; 
+const speedUnit = UnitMap.h;
+
+
 @Controller('report')
 export class ReportController {
     constructor(private readonly reportService: ReportService) {}
 
     @Get('create')
-    async create(@Query() query) {
-        return await this.reportService.create(query.code);
+    async create(@Query() query,@IpAddress() clinetIp: string,@Headers() headers,) {
+
+        const ua = headers['user-agent'] || '';
+        return await this.reportService.create(query.code,clinetIp,ua);
     }
 
     @Get('createspeed')
@@ -34,10 +47,32 @@ export class ReportController {
         return this.reportService.findAll();
     }
 
+    @Get('getReportsByPage')
+    async getReportsByPage(
+        @Query() query: QueryReportDto,
+    ): Promise<PaginateResult<ReportDocument>> {
+        
+        return this.reportService.findAllReportByPointByPage(
+            query.pageStart,
+            query.pageSize,
+            query,
+        );
+    }
+
+
+    @Get('getReportsByCount')
+    async getReportsByCount(
+        @Query() query: Pick<QueryReportDto,"pointCode"|"timeStart"|"timeEnd">,
+    ): Promise<Report[]> {
+
+        return this.reportService.findAllReportGroupByIp(query);
+    }
+
     @Post('getReportsGroup')
     async getReportsGroup(@Body() body): Promise<Report[]> {
         const start: string = body.start,
-            end: string = body.end;
+            end: string = body.end,
+            unit:number = body.unit == 'h' ? UnitMap.h:UnitMap.m;
         const data: resultVo = await this.reportService.findAllByCode(
             body.code,
             start,

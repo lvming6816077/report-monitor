@@ -16,6 +16,8 @@ export type PointDocument = Point &
     versionKey: false,
 })
 export class Point {
+    _id:string;
+    
     @Prop()
     desc: string;
 

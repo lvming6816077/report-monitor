@@ -3,6 +3,7 @@ import { Document, Schema as _Schema } from 'mongoose';
 import { Speed } from 'src/speed/schemas/speed.schema';
 
 import { Point, PointSchema } from '../../point/schemas/point.schema';
+import * as mongoosePaginate from 'mongoose-paginate-v2';
 
 export type ReportDocument = Report & Document;
 
@@ -18,11 +19,35 @@ export class Report {
     @Prop()
     d: number; // 时间长度 单位ms
 
+    @Prop()
+    ip: string; // ip地址
+
+    @Prop()
+    city: string;// 市
+
+    @Prop()
+    province: string;// 省
+
+    @Prop()
+    browser: string; // 浏览器
+
+    @Prop()
+    os: string; // 操作系统
+
+    @Prop()
+    ua: string; // user-agent
+
+
+    @Prop({ type: _Schema.Types.Mixed, default: {} }) // 附属信息
+    meta: any;
+
     @Prop({ type: Date, required: true })
     create: string;
 }
 
 export const ReportSchema = SchemaFactory.createForClass(Report);
+
+ReportSchema.plugin(mongoosePaginate);
 
 /*var mongoose = require('mongoose');
 

@@ -25,6 +25,7 @@ import { DeleteResult } from 'mongodb';
 import { UserService } from 'src/user/user.service';
 import { UpdatePointDto } from './dto/update-point.dto';
 import { WarningService } from 'src/warning/warning.service';
+import { QueryReportDto } from 'src/report/dto/query-report.dto';
 
 @Controller('point')
 @UseGuards(JwtAuthGuard)
@@ -129,6 +130,10 @@ export class PointController {
             throw new HttpException('id缺失', 200);
         }
         return await this.pointService.updatePoint(dto._id, dto);
+    }
+    @Get('getPointDetail/:code')
+    async getPointDetail(@Param('code') code: string): Promise<Point> {
+        return this.pointService.findOneByCode(code);
     }
 
     //   @Delete(':id')

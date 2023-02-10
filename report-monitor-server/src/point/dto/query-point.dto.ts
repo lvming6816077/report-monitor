@@ -12,7 +12,7 @@ import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { User } from 'src/user/schemas/user.schema';
 import { Tag } from '../schemas/tag.schema';
 import { Project } from 'src/project/schemas/project.schema';
-export class QueryPointDto implements QueryPageDto, Point {
+export class QueryPointDto implements QueryPageDto {
     project: Project;
     @IsString()
     projectId: string;
