@@ -70,6 +70,11 @@ export const SItem: React.FC<Props> = React.memo(
                     // }
                 },
                 yAxis: {
+                    axisLine:{
+                        lineStyle:{
+                            type:'dashed'
+                        }
+                    },
                     type: 'value',
                     boundaryGap: [0, '100%'],
                     axisLabel: {
@@ -86,7 +91,7 @@ export const SItem: React.FC<Props> = React.memo(
                         symbol: 'none',
                         // sampling: 'lttb',
                         itemStyle: {
-                            color: 'rgb(255, 70, 131)',
+                            color: '#088f81',
                         },
                         smooth: true,
                         areaStyle: {},

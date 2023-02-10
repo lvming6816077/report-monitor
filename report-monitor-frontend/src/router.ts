@@ -99,6 +99,17 @@ export const routes: IRoute[] = [
                 component: CreatePoint,
                 auth: [1],
             },
+            {
+                label: '数据详情',
+                key: '/point/pointdetail',
+                name: 'pointdetail',
+                menu: false,
+                component:  Loadable({
+                    loader: () => import('./pages/point/detail/PointDetail'),
+                    loading: () => null
+                }),
+                auth: [1],
+            },
         ],
         icon: 'PartitionOutlined',
     },

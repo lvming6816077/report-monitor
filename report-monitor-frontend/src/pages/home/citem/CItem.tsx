@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 
 import { DatePicker } from 'antd'
-import { CheckSquareTwoTone, Loading3QuartersOutlined } from '@ant-design/icons'
+import { ArrowRightOutlined, CheckSquareTwoTone, Loading3QuartersOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import moment, { Moment } from 'moment'
+import { useHistory, useLocation } from 'react-router-dom'
 // import * as moment from "moment";
 import { tranNumber } from '@/utils/num.js'
 const RangePicker: any = DatePicker.RangePicker
@@ -25,6 +26,7 @@ export const CItem: React.FC<Props> = React.memo(
         const [showDatePicker, setShowDatePicker] = useState<Boolean>(false)
         const [showLoading, setShowLoading] = useState<Boolean>(false)
         const [total,setTotal] = useState<Number>(0)
+        const history = useHistory()
         // console.log(data)
 
         const initChart = (_data: ChartDataItem[]) => {
@@ -70,6 +72,12 @@ export const CItem: React.FC<Props> = React.memo(
                     // }
                 },
                 yAxis: {
+                    splitLine :{    //网格线
+                        lineStyle:{
+                            type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
+                        },
+                        show:true //隐藏或显示
+                    },
                     type: 'value',
                     boundaryGap: [0, '100%'],
                     axisLabel: {
@@ -86,7 +94,7 @@ export const CItem: React.FC<Props> = React.memo(
                         symbol: 'none',
                         // sampling: 'lttb',
                         itemStyle: {
-                            color: 'rgb(255, 70, 131)',
+                            color: '#088f81',
                         },
 
                         data: yAxis,
@@ -139,7 +147,7 @@ export const CItem: React.FC<Props> = React.memo(
 
         return (
             <div className="c-content">
-                <div className="title">{desc + '(' + code + ')'}</div>
+                <div className="title" onClick={()=>history.push('/point/pointdetail?code='+(code||''))}>{desc + '(' + code + ')'}<ArrowRightOutlined style={{marginLeft:6,fontSize:14}}/></div>
                 <div className="total-count"><>总计：{total}</></div>
                 <div
                     className="inner"
