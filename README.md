@@ -35,17 +35,7 @@
 ## 打点上报使用说明
 ### 浏览器
 
-一行代码上报：
-```javascript
-
-const href = '网站域名'+'/rapi/report/create?code=xxxx'
-
-new Image().src = href
-
-or
-
-navigator.sendBeacon(href)
-```
+参考上报[SDK](https://github.com/lvming6816077/report-monitor/tree/main/report-monitor-sdk)
 
 ### Java
 
