@@ -29,11 +29,19 @@ const speedUnit = UnitMap.h;
 export class ReportController {
     constructor(private readonly reportService: ReportService) {}
 
+    // get请求上报
     @Get('create')
     async create(@Query() query,@IpAddress() clinetIp: string,@Headers() headers,) {
 
         const ua = headers['user-agent'] || '';
         return await this.reportService.create(query.code,clinetIp,ua);
+    }
+    // post请求上报
+    @Post('create')
+    async createpost(@Query() query,@Body() body,@IpAddress() clinetIp: string,@Headers() headers,) {
+
+        const ua = headers['user-agent'] || '';
+        return await this.reportService.create(query.code,clinetIp,ua,body);
     }
 
     @Get('createspeed')

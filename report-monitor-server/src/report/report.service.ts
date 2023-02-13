@@ -240,13 +240,14 @@ export class ReportService {
         };
     }
 
-    async create(code: string,ip:string,ua:string): Promise<Report> {
+    async create(code: string,ip:string,ua:string,meta?:any): Promise<Report> {
         await this.redisService.lpush(
             'report_monitor_ls',
             JSON.stringify({
                 code: code,
                 ip:ip,
                 ua,
+                meta,
                 create: new Date(),
             }),
         );
@@ -272,7 +273,7 @@ export class ReportService {
 
                 if (res == null) break;
                 res = JSON.parse(res);
-                this.createItem(res.code, res.create, res.ip,res.ua);
+                this.createItem(res.code, res.create, res.ip,res.ua,res.meta);
                 n--;
             }
         } catch (e) {
@@ -298,7 +299,7 @@ export class ReportService {
         }
     }
 
-    private async createItem(code: string, date: Date, ip:string,ua:string): Promise<Report> {
+    private async createItem(code: string, date: Date, ip:string,ua:string,meta:any): Promise<Report> {
         const data: Point = await this.pointModel.findOne({ code: code });
 
         if (data) {
@@ -328,6 +329,7 @@ export class ReportService {
                 ip,
                 browser,
                 os,
+                meta,
                 ua
             });
 
