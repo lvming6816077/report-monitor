@@ -99,6 +99,7 @@ npm run build
 ![](https://github.com/lvming6816077/report-monitor-server/blob/main/report-monitor-server/demo/localhost_3002_login1.png)
 ![](https://github.com/lvming6816077/report-monitor-server/blob/main/report-monitor-server/demo/localhost_3002_%20(1).png)
 ![](https://github.com/lvming6816077/report-monitor-server/blob/main/report-monitor-server/demo/localhost_3002_%20(2).png)
+![](https://github.com/lvming6816077/report-monitor-server/blob/main/report-monitor-server/demo/report.nihaoshijie.com.cn_speed_speedlist.png)
 
 ## 交流和建议
 
