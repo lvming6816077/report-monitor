@@ -58,7 +58,8 @@ export const DetailTable: React.FC<Props> = ({ timeEnd, timeStart,code}) => {
         },
         {
             title: '其他数据',
-            dataIndex: 'extra',
+            dataIndex: 'meta',
+            render: (v,r) => JSON.stringify(v),
         },
         // {
         //     title: '操作',
