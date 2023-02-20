@@ -156,11 +156,22 @@ export class UserController {
             throw new HttpException('验证码错误', 200);
         }
 
-        return await this.userService.createUser(
+        const u = await this.userService.createUser(
             body.username,
             body.password,
             body.nickname,
         );
+        
+        // 注册时候绑定项目
+        if (u.userid && body.projectCode) {
+            const p = await this.projectService.findProjectByCode(body.projectCode)
+            if (p._id) {
+                await this.projectService.bindProject(u.userid,p._id)
+            }
+            
+        }
+
+        return u
     }
     @UseGuards(JwtAuthGuard)
     @Post('update')

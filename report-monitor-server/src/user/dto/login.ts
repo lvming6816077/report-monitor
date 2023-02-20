@@ -23,4 +23,8 @@ export class LoginDto {
     @IsOptional()
     @IsBoolean()
     readonly noCapt?: boolean;
+
+    @IsOptional()
+    @IsString()
+    readonly projectCode?: string;
 }
