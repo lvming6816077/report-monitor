@@ -119,7 +119,7 @@ export const MenuBar: React.FC = () => {
             <Menu
                 theme={'light'}
                 onClick={(item) => onClick(item)}
-                style={{ width: 201, height: '100%' }}
+                style={{ width: 200, height: '100%' }}
                 defaultOpenKeys={[getParentKey(items)]}
                 selectedKeys={[current]}
                 mode="inline"

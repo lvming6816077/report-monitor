@@ -33,13 +33,7 @@ export const CreateSpeedTag: React.FC = () => {
     }
     const onFinishFailed = () => {}
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const result = await axios.get('/rapi/point/getPoints')
-    //         setChildren(result.data.data)
-    //     }
-    //     fetchData()
-    // }, [])
+
 
     return (
         <>

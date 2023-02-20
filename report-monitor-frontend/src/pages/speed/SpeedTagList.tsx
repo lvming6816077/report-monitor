@@ -76,7 +76,7 @@ export const SpeedTagList: React.FC = () => {
             title: '确认删除?',
             onOk: async () => {
                 const result = await axios.get(
-                    '/rapi/point/deleteTag/' + item._id
+                    '/rapi/speed/deleteTag/' + item._id
                 )
                 if (result.data.code == 0) {
                     message.success('删除成功')

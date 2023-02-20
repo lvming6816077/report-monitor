@@ -17,6 +17,7 @@ export type DataType = {
     create: string
     _id: string
     name: string
+    u:{nickname:string}
 }
 const ProjectList: React.FC = () => {
     
@@ -36,6 +37,12 @@ const ProjectList: React.FC = () => {
         {
             title: '项目类型',
             dataIndex: 'type',
+        },
+        {
+            title: '创建人',
+            dataIndex: 'create',
+            render: (v, item) =>
+                item.u.nickname,
         },
         {
             title: '创建时间',

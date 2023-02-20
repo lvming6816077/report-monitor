@@ -5,6 +5,7 @@ import {
     BarChartOutlined,
     AreaChartOutlined,
     UserOutlined,
+    MinusSquareOutlined,
     DownOutlined,
     PlusSquareOutlined,
     UnlockOutlined,
@@ -20,7 +21,8 @@ import axios from 'axios'
 
 type ProjectItem = {
     _id: string,
-    name: string
+    name: string,
+    projectCode:string
 }
 
 export const NavBar: React.FC = () => {
@@ -39,7 +41,8 @@ export const NavBar: React.FC = () => {
     const nickname = userInfo?.nickname || randomName.getNickName()
     const shortUsername = nickname[0]
 
-    const handleMenuClick: MenuProps['onClick'] = (e) => {
+    const handleMenuClick: MenuProps['onClick'] =  (e) => {
+
         if (e.key == 'logout') {
             logout()
             return
@@ -84,7 +87,7 @@ export const NavBar: React.FC = () => {
         history.push('/createproject?projectCode=')
     }
     const changeDark = (flag:boolean)=>{
-        console.log(flag)
+        // console.log(flag)
         dispatch({
             type: SET_USER,
             data: {
@@ -99,15 +102,16 @@ export const NavBar: React.FC = () => {
         <Menu
             onClick={handleMenuClick}
             items={[
+
                 {
-                    label: '创建数据点',
-                    key: '/point/createpoint',
+                    label: '创建项目',
+                    key: '/createproject',
                     icon: <PlusSquareOutlined />,
                 },
                 {
-                    label: '创建类目',
-                    key: '/point/createtag',
-                    icon: <PlusSquareOutlined />,
+                    label: '解绑项目',
+                    key: '/createproject?projectId='+userInfo.activePid+'&bindFlag=unbind',
+                    icon: <MinusSquareOutlined />,
                 },
                 {
                     type: 'divider',
@@ -126,7 +130,7 @@ export const NavBar: React.FC = () => {
         />
     )
 
-    const projectItems = projectList.map((d: any) => {
+    const projectItems = projectList.map((d: ProjectItem) => {
         return {
             label: d.name,
             key: d._id,

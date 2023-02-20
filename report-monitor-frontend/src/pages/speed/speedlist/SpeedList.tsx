@@ -43,7 +43,7 @@ export const SpeedList: React.FC = () => {
             render: (v, item) => {
                 return (
                     <Space>
-                        <a onClick={() => deletePoint(item)}>删除</a>{' '}
+                        <a onClick={() => deleteSpeed(item)}>删除</a>{' '}
                         {/* <a onClick={() => warningPoint(item)}>告警规则</a> */}
                     </Space>
                 )
@@ -83,13 +83,13 @@ export const SpeedList: React.FC = () => {
         })()
     }, [page.pageSize, page.pageStart])
 
-    const deletePoint = async (item: DataType) => {
+    const deleteSpeed = async (item: DataType) => {
         modal.confirm({
             title: '确认删除?',
-            content: '删除该数据点会一并删除相关上报数据和告警设置',
+            content: '删除该数据点会一并删除相关上报数据',
             onOk: async () => {
                 const result = await axios.get(
-                    '/rapi/point/deletePoint/' + item._id
+                    '/rapi/speed/deleteSpeed/' + item._id
                 )
                 if (result.data.code == 0) {
                     message.success('删除成功')
@@ -105,9 +105,7 @@ export const SpeedList: React.FC = () => {
         resetList()
     }
 
-    const warningPoint = async (item: DataType) => {
-        childRef.current.showModal(item)
-    }
+
     const getList = async (params = {}, isReset = false) => {
         setLoading(true)
         const p = isReset

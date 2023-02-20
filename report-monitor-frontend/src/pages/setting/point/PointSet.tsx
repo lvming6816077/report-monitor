@@ -19,8 +19,10 @@ const PointSet: React.FC = () => {
 
     const saveData = async () => {
         const result = await axios.post('/rapi/point/savePointSet', {
+            projectId:userInfo.activePid,
             codes: codes?.filter((i) => !isNaN(Number(i))),
         })
+        
         if (result.data.code == 0) {
             message.success('保存成功')
         }
@@ -34,6 +36,7 @@ const PointSet: React.FC = () => {
                 setNoData(true)
                 return
             }
+            
             setTreeData(d.list)
             setCodes(d.pointset.split(','))
         }

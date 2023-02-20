@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Row, Modal, Form, Input, Table, DatePicker, Card, Statistic, Radio, RadioChangeEvent } from 'antd'
+import { Button, Col, Row, Modal, Form, Input, Table, DatePicker, Card, Statistic, Radio, RadioChangeEvent, Space } from 'antd'
 const { RangePicker } = DatePicker;
 import { message } from 'antd'
 import axios from 'axios'
@@ -145,6 +145,29 @@ const PointDetail: React.FC = () => {
         setTotal(t.toString())
 
     }
+    const setFastTime = (t:string)=>{
+        // 前一天
+        if (t == 'd') {
+            form.setFieldsValue({time:[
+                moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')
+            ]})
+        }
+        // 前一周
+        if (t == 'w') {
+            form.setFieldsValue({time:[
+                moment().subtract(7, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')
+            ]})
+        }
+        // 当天
+        if (t == 't') {
+            form.setFieldsValue({time:[
+                moment().startOf('day'), moment().endOf('day')
+            ]})
+        }
+
+        onFinish(form.getFieldsValue())
+        
+    }
     const searchCount = async () => {
         const result = await axios.get('/rapi/report/getReportsByCount?timeStart='+timeStart+'&timeEnd='+timeEnd, {
             params:{
@@ -202,6 +225,13 @@ const PointDetail: React.FC = () => {
                             </Col>
                         </Row>
                     </Form>
+                </div>
+                <div style={{marginBottom:20}}>
+                    <Space>
+                        <Button size={'small'} ghost type={'primary'} onClick={()=>setFastTime('t')}>当天</Button>
+                        <Button size={'small'} ghost type={'primary'} onClick={()=>setFastTime('d')}>前一天</Button>
+                        <Button size={'small'} ghost type={'primary'} onClick={()=>setFastTime('w')}>前一周</Button>
+                    </Space>
                 </div>
                 <Card title="基本信息">
                     <div className="site-card-wrapper">

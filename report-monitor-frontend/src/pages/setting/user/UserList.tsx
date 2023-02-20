@@ -223,7 +223,6 @@ const UserList: React.FC = () => {
                         pagination={paginationProps}
                         rowKey={'_id'}
                     />
-                    ;
                 </div>
             </div>
         </>

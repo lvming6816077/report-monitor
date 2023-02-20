@@ -19,6 +19,7 @@ const SpeedSet: React.FC = () => {
 
     const saveData = async () => {
         const result = await axios.post('/rapi/speed/saveSpeedSet', {
+            projectId:userInfo.activePid,
             codes: codes?.filter((i) => !isNaN(Number(i))),
         })
         if (result.data.code == 0) {

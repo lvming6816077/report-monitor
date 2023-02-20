@@ -21,7 +21,7 @@ axios.interceptors.request.use(
 // http response 拦截器
 axios.interceptors.response.use(
     (response) => {
-        // console.log(response)
+        // console.log(response.data.message)
 
         return response
     },
@@ -29,8 +29,14 @@ axios.interceptors.response.use(
         if (error.response.data.code === 401) {
             window.location.href = '/login'
         }
+        // console.log(error.response.statusText)
         if (error.response.data.code !== 200) {
-            message.error(error.response.data.message)
+            if (error.response.data.message) {
+                message.error(error.response.data.message)
+            } else {
+                message.error(error.response.statusText)
+            }
+            
         }
         return Promise.reject(error)
     }

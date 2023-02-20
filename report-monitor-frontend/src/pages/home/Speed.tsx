@@ -119,7 +119,7 @@ export const Speed: React.FC = () => {
     }
 
     return (
-        <div className="speed-content">
+        <div className="speed-home-content">
             <div className="page-title">数据展示</div>
             <div className="point-select">
                 {!noData ? (

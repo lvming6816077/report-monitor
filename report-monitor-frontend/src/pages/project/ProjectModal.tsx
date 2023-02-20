@@ -19,6 +19,7 @@ type Props = {
 
 export const ProjectModal: React.FC<Props> = ({ updateCallback, onRef }) => {
     const history = useHistory()
+    const [ptype,setPType] = useState('PC')
 
 
     const [form] = Form.useForm()
@@ -39,6 +40,11 @@ export const ProjectModal: React.FC<Props> = ({ updateCallback, onRef }) => {
         form.setFieldsValue({
             ...item,
         })
+    }
+    const onValuesChange = (changedValues:any)=>{
+        if (changedValues.type) {
+            setPType(changedValues.type)
+        }
     }
 
     const handleOk = async () => {
@@ -75,6 +81,7 @@ export const ProjectModal: React.FC<Props> = ({ updateCallback, onRef }) => {
                             wrapperCol={{ span: 16 }}
                             initialValues={{ remember: true }}
                             autoComplete="off"
+                            onValuesChange={onValuesChange}
                         >
                             <Form.Item
                                 label="项目名称"
@@ -102,6 +109,20 @@ export const ProjectModal: React.FC<Props> = ({ updateCallback, onRef }) => {
                             >
                                 <Input placeholder="请输入项目code" disabled/>
                             </Form.Item>
+                            {ptype == 'PC' ? 
+                                <Form.Item
+                                    label="项目域名"
+                                    name="host"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: '请输入项目域名',
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="格式：www.xxx.com" />
+                                </Form.Item>
+                            :null}
                             <Form.Item
                                 label="项目类型"
                                 name="type"

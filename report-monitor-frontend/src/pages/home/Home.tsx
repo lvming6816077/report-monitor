@@ -41,7 +41,7 @@ export const Home: React.FC = () => {
     const renderChartContent = useCallback(() => {
         return chartList?.map((o, index) => {
             return (
-                <Row key={index}>
+                <Row key={index} gutter={16}>
                     {o.map((k) => {
                         return (
                             <Col span={8} key={k.code}>

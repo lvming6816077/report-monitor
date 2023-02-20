@@ -131,6 +131,7 @@ export const CItem: React.FC<Props> = React.memo(
                 start: value[0].startOf('day').format('YYYY-MM-DD HH:mm:ss'),
                 end: value[1].endOf('day').format('YYYY-MM-DD HH:mm:ss'),
                 code: code,
+                unit:'h'
             })
             setShowLoading(false)
             changeData(result.data.data, code)
