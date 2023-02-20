@@ -2,7 +2,7 @@ import { Injectable, Inject, Scope } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Project, ProjectDocument } from './schemas/project.schema';
 
-import mongoose, { Model, PaginateModel, PaginateResult } from 'mongoose';
+import mongoose, { ClientSession, PaginateModel, PaginateResult } from 'mongoose';
 import { UserService } from '../user/user.service';
 import { HttpException } from '@nestjs/common';
 import { DeleteResult } from 'mongodb';
@@ -62,9 +62,9 @@ export class ProjectService {
 
         return await this.projectModel.findById(pid);
     }
-    async unBindProject(uid: string, pid: string): Promise<User> {
+    async unBindProject(uid: string, pid: string,session?:ClientSession): Promise<User> {
         pid = pid.toString()
-        const p = await this.projectModel.findById(pid);
+        const p = await this.projectModel.findById(pid).session(session);
 
         const usersid = p.usersid || [];
         if (usersid.indexOf(uid) > -1) {
@@ -73,7 +73,7 @@ export class ProjectService {
         
 
         await this.projectModel
-            .findOneAndUpdate({ _id: pid }, { usersid })
+            .findOneAndUpdate({ _id: pid }, { usersid }).session(session)
             .exec();
         const u = await this.userService.findUserByUserId(uid);
 
@@ -96,15 +96,20 @@ export class ProjectService {
         return await this.projectModel.findOne({ projectCode: code });
     }
 
+    async deleteProjectById(pid: string,session?:ClientSession): Promise<ProjectDocument> {
+        return await this.projectModel.findOneAndUpdate({ _id: pid },{isDelete:true},{session:session});
+    }
+
     async findAllByPage(
         pageStart = '1',
         pageSize = '10',
     ): Promise<PaginateResult<ProjectDocument>> {
+        // await this.projectModel.updateMany({},{isDelete:false}).exec()
         const options = {
             page: Number(pageStart),
             limit: Number(pageSize),
         };
-        const q: any = {};
+        const q: any = {isDelete:false};
 
         const result = await this.projectModel.paginate(q, options);
 

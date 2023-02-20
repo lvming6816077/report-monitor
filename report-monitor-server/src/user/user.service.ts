@@ -113,4 +113,9 @@ export class UserService {
 
         return result;
     }
+
+    async findAllUser(): Promise<User[]> {
+
+        return await this.userModel.find({}).exec();
+    }
 }

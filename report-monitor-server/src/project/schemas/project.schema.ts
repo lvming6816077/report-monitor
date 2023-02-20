@@ -40,6 +40,9 @@ export class Project {
 
     @Prop({ type: Date, default: Date.now })
     update: string;
+
+    @Prop({ type: Boolean, default: false })
+    isDelete: boolean;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);

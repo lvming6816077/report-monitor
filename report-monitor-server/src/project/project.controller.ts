@@ -20,6 +20,7 @@ import { CreateProjectDto } from './dto/create-projec.dto';
 import { QueryProjectDto } from './dto/query-project.dto';
 import { UserService } from 'src/user/user.service';
 import { UserDocument } from 'src/user/schemas/user.schema';
+import mongoose,{ClientSession} from 'mongoose';
 
 @UseGuards(JwtAuthGuard)
 @Controller('project')
@@ -76,6 +77,38 @@ export class ProjectController {
 
         
         return res.projectsid[0]
+    }
+
+    @Post('deleteProject')
+    async deleteProject(@Body() body: any, @Request() req: any) {
+
+        // const session = await mongoose.connection.startSession()
+
+        // session.startTransaction()
+        const session = null
+
+        try {
+
+        
+            await this.projectService.deleteProjectById(body.id,session)
+
+
+    
+            let list = await this.userService.findAllUser()
+
+            for (var i = 0 ; i < list.length ; i++) {
+                await this.projectService.unBindProject(list[i].userid,body.id,session)
+            }
+            
+            // await session.commitTransaction()
+        }catch(r){
+
+        }finally{
+            // session.endSession()
+        }
+
+        return 'success'
+
     }
 
     @Get('getProjectsList')
