@@ -42,8 +42,11 @@ export class ReportService {
         return this.reportModel.find({}).exec();
     }
 
-    async deleteOneByPoint(pointid: string): Promise<DeleteResult> {
+    async deleteManyByPoint(pointid: string): Promise<DeleteResult> {
         return this.reportModel.deleteMany({ point: pointid }).exec();
+    }
+    async deleteManyBySpeed(speedid: string): Promise<DeleteResult> {
+        return this.reportModel.deleteMany({ speed: speedid }).exec();
     }
 
     async findAllReportByPointByPage(
@@ -240,7 +243,7 @@ export class ReportService {
         };
     }
 
-    async create(code: string,ip:string,ua:string,meta?:any): Promise<Report> {
+    async create(code: string,ip:string,ua:string,referer:string,meta?:any): Promise<Report> {
         await this.redisService.lpush(
             'report_monitor_ls',
             JSON.stringify({
@@ -248,6 +251,7 @@ export class ReportService {
                 ip:ip,
                 ua,
                 meta,
+                referer,
                 create: new Date(),
             }),
         );
@@ -273,7 +277,7 @@ export class ReportService {
 
                 if (res == null) break;
                 res = JSON.parse(res);
-                this.createItem(res.code, res.create, res.ip,res.ua,res.meta);
+                this.createItem(res.code, res.create, res.ip,res.ua,res.referer,res.meta);
                 n--;
             }
         } catch (e) {
@@ -299,7 +303,7 @@ export class ReportService {
         }
     }
 
-    private async createItem(code: string, date: Date, ip:string,ua:string,meta:any): Promise<Report> {
+    private async createItem(code: string, date: Date, ip:string,ua:string,referer:string,meta:any): Promise<Report> {
         const data: Point = await this.pointModel.findOne({ code: code });
 
         if (data) {
@@ -321,6 +325,7 @@ export class ReportService {
                 browser = o.browser.name
                 os = o.os.name
             }
+
             const item = await this.reportModel.create({
                 point: (data as any)._id,
                 create: date,
@@ -330,6 +335,7 @@ export class ReportService {
                 browser,
                 os,
                 meta,
+                referer,
                 ua
             });
 

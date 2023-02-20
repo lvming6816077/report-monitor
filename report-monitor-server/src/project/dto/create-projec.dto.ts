@@ -8,6 +8,7 @@ import {
     IsArray,
     IsPhoneNumber,
     IsEmail,
+    IsFQDN,
 } from 'class-validator';
 
 import { Optional } from '@nestjs/common';
@@ -16,6 +17,10 @@ export class CreateProjectDto {
 
     @IsNotEmpty()
     name: string;
+
+    @IsOptional()
+    @IsFQDN({message:'请输入合法域名'})
+    host: string;
 
     @IsNotEmpty()
     type: string;

@@ -12,6 +12,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { Point, PointDocument } from 'src/point/schemas/point.schema';
 import { CreateProjectDto } from './dto/create-projec.dto';
+import { User } from 'src/user/schemas/user.schema';
 
 export class ProjectService {
     constructor(
@@ -31,6 +32,8 @@ export class ProjectService {
             name: dto.name,
             desc: dto.desc,
             type: dto.type,
+            host:dto.host,
+            createBy:userId,
             projectCode,
         });
         // console.log(p)
@@ -38,6 +41,7 @@ export class ProjectService {
     }
 
     async bindProject(uid: string, pid: string): Promise<Project> {
+        pid = pid.toString()
         const p = await this.projectModel.findById(pid);
         const usersid = p.usersid || [];
         if (usersid.indexOf(uid) > -1) {
@@ -49,14 +53,40 @@ export class ProjectService {
             .findOneAndUpdate({ _id: pid }, { usersid })
             .exec();
         const u = await this.userService.findUserByUserId(uid);
-        const projectsid = u.projectsid || [];
+        const projectsid = (u.projectsid || []).map(i=>i.toString())
         if (projectsid.indexOf(pid) > -1) {
         } else {
             projectsid.push(pid);
         }
-        await this.userService.updateUser(uid, { projectsid, activePid: pid });
+        await this.userService.updateUser(uid, { projectsid, activePid:pid});
 
         return await this.projectModel.findById(pid);
+    }
+    async unBindProject(uid: string, pid: string): Promise<User> {
+        pid = pid.toString()
+        const p = await this.projectModel.findById(pid);
+
+        const usersid = p.usersid || [];
+        if (usersid.indexOf(uid) > -1) {
+            usersid.splice(usersid.indexOf(uid),1)
+        }
+        
+
+        await this.projectModel
+            .findOneAndUpdate({ _id: pid }, { usersid })
+            .exec();
+        const u = await this.userService.findUserByUserId(uid);
+
+        const projectsid = (u.projectsid || []).map(i=>i.toString())
+
+        if (projectsid.indexOf(pid) > -1) {
+            projectsid.splice(projectsid.indexOf(pid),1)
+        }
+
+
+        
+        return await this.userService.updateUser(uid, { projectsid:projectsid});
+
     }
 
     async findProjectById(pid: string): Promise<ProjectDocument> {

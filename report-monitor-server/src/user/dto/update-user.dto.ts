@@ -8,10 +8,11 @@ import {
     IsArray,
     IsPhoneNumber,
     IsEmail,
+    IsObject,
 } from 'class-validator';
 
 import { QueryPageDto } from 'src/utils/dto/query-page.dto';
-import { User } from 'src/user/schemas/user.schema';
+import { PointsetType, User } from 'src/user/schemas/user.schema';
 import { Optional } from '@nestjs/common';
 export class UpdateUserDto {
     @IsString()
@@ -33,13 +34,13 @@ export class UpdateUserDto {
     @IsOptional()
     projectsid?: string[];
 
-    @IsString()
+    @IsObject()
     @IsOptional()
-    pointset?: string;
+    pointset?: PointsetType;
 
-    @IsString()
+    @IsObject()
     @IsOptional()
-    speedset?: string;
+    speedset?: PointsetType;
 
     @IsString()
     userid?: string;

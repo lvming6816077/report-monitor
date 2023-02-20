@@ -162,4 +162,18 @@ export class SpeedService {
         }
         return result;
     }
+
+    async deleteById(id: string): Promise<DeleteResult> {
+        // 删除关联的report
+        await this.reportService.deleteManyBySpeed(id);
+
+
+        return await this.speedModel.deleteOne({ _id: id }).exec();
+    }
+    async deleteTagById(id: string): Promise<DeleteResult> {
+        // 删除关联的point
+        await this.speedModel.deleteMany({ tag: id });
+
+        return this.speedTagModel.deleteOne({ _id: id }).exec();
+    }
 }

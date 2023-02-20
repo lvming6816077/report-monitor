@@ -10,7 +10,7 @@ import {
 
 import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { User } from 'src/user/schemas/user.schema';
-export class QueryUserDto implements QueryPageDto, User {
+export class QueryUserDto implements QueryPageDto {
     speedset: string;
     activePid: string;
     projectsid: string[];
@@ -23,7 +23,6 @@ export class QueryUserDto implements QueryPageDto, User {
     username: string;
     password: string;
     level: [];
-    pointset: string;
 
     @IsString()
     pageStart: string;

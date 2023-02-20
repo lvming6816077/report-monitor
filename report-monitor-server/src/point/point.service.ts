@@ -144,6 +144,7 @@ export class PointService {
     async createTag(desc: string, projectId: string): Promise<Tag> {
         const nanoid = customAlphabet('123456789', 4);
         const code = nanoid(); // 随机且唯一code
+        // console.log(code)
         return await this.tagModel.create({
             desc: desc,
             user: this.req.user.userId,
@@ -177,7 +178,7 @@ export class PointService {
 
     async deleteById(id: string): Promise<DeleteResult> {
         // 删除关联的report
-        await this.reportService.deleteOneByPoint(id);
+        await this.reportService.deleteManyByPoint(id);
 
         // 删除关联的waring
         await this.warningService.deleteByPoint(id);

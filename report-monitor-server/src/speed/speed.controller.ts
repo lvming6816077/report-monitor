@@ -75,11 +75,19 @@ export class SpeedController {
     }
 
     @Post('saveSpeedSet')
-    async saveSpeedSet(@Body() dto: { codes?: string[] }, @Request() req: any) {
+    async saveSpeedSet(@Body() dto: { codes?: string[],projectId:string }, @Request() req: any) {
+        if (!dto.projectId) {
+            throw new HttpException('projectId缺失', 200);
+            
+        }
+        // 查询之前的
+        const { speedset } = await this.userService.findUserByUserId(req.user.userId)
+
+        speedset[dto.projectId] = dto.codes.join(',')
         const u = await this.userService.updateUser(req.user.userId, {
-            speedset: dto.codes.join(','),
+            speedset: speedset,
         });
-        return u.pointset;
+        return u.speedset;
     }
 
     @Get('getSpeedsAndSpeedset')
@@ -91,8 +99,18 @@ export class SpeedController {
 
         const list = await this.speedService.findAll(projectId);
         return {
-            speedset: speedset,
+            speedset: speedset[projectId],
             list,
         };
+    }
+
+    @Get('deleteSpeed/:id')
+    async deletePoint(@Param('id') id: string): Promise<DeleteResult> {
+        return this.speedService.deleteById(id);
+    }
+
+    @Get('deleteTag/:id')
+    async deleteTag(@Param('id') id: string): Promise<DeleteResult> {
+        return this.speedService.deleteTagById(id);
     }
 }

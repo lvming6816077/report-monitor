@@ -1,6 +1,6 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from './schemas/user.schema';
+import { PointsetType, User, UserDocument } from './schemas/user.schema';
 import mongoose, { Model, PaginateModel, PaginateResult } from 'mongoose';
 import { PointService } from '../point/point.service';
 import { HttpException } from '@nestjs/common';
@@ -12,6 +12,7 @@ import { Logger } from 'winston';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RedisInstanceService } from 'src/config/redis-config/redis.service';
 import { SpeedService } from 'src/speed/speed.service';
+import { QueryUserDto } from './dto/query-user.dto';
 
 @Injectable()
 export class UserService {
@@ -74,35 +75,16 @@ export class UserService {
     async findUserByUserEmail(email: string): Promise<User> {
         return await this.userModel.findOne({ email });
     }
-    async findUserPointSet(userid: string): Promise<string> {
+    async findUserPointSet(userid: string): Promise<PointsetType> {
         const { pointset } = await this.userModel.findOne({ userid });
 
-        const arr = pointset?.split(',') || [];
-        const res = [];
-
-        for (let i = 0; i < arr.length; i++) {
-            const p = await this.pointService.findOneByCode(arr[i]);
-            if (p) {
-                res.push(p.code);
-            }
-        }
-
-        return res.join(',');
+        return pointset;
     }
-    async findUserSpeedSet(userid: string): Promise<string> {
+    async findUserSpeedSet(userid: string): Promise<PointsetType> {
         const { speedset } = await this.userModel.findOne({ userid });
 
-        const arr = speedset?.split(',') || [];
-        const res = [];
 
-        for (let i = 0; i < arr.length; i++) {
-            const p = await this.speedService.findOneByCode(arr[i]);
-            if (p) {
-                res.push(p.code);
-            }
-        }
-
-        return res.join(',');
+        return speedset;
     }
 
     async updateUser(userid: string, userDto: UpdateUserDto): Promise<User> {
@@ -113,7 +95,7 @@ export class UserService {
     async findAllByPage(
         pageStart = '1',
         pageSize = '10',
-        query: User,
+        query: QueryUserDto,
     ): Promise<PaginateResult<UserDocument>> {
         const options = {
             page: Number(pageStart),

@@ -3,13 +3,20 @@ import { Document, Schema as _Schema } from 'mongoose';
 
 import * as mongoosePaginate from 'mongoose-paginate-v2';
 
+
 export type UserDocument = User & Document;
+
+export type PointsetType = {
+    [key:string]:string
+}
 
 @Schema({
     timestamps: { createdAt: 'create', updatedAt: 'update' },
     versionKey: false,
 })
 export class User {
+    _id:string;
+    
     @Prop({ required: true, unique: true }) // 用户id
     userid: string;
 
@@ -31,13 +38,13 @@ export class User {
     @Prop({}) // 用户phone
     phone: string;
 
-    @Prop({ default: '' }) // 用户预设point
-    pointset: string;
+    @Prop({ type: _Schema.Types.Mixed, default: {} }) // 用户预设point
+    pointset: PointsetType;
 
-    @Prop({ default: '' }) // 用户预设speed
-    speedset: string;
+    @Prop({ type: _Schema.Types.Mixed, default: {} }) // 用户预设speed
+    speedset: PointsetType;
 
-    @Prop({ default: [] }) // 用户关联的项目
+    @Prop({ type: _Schema.Types.Mixed,default: [] }) // 用户关联的项目
     projectsid: Array<string>;
 
     @Prop() // 用户当前项目

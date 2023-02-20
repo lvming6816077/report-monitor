@@ -37,6 +37,12 @@ export class Report {
     @Prop()
     ua: string; // user-agent
 
+    @Prop()
+    referer: string; // referer
+
+    @Prop()
+    network: string; // 网络
+
 
     @Prop({ type: _Schema.Types.Mixed, default: {} }) // 附属信息
     meta: any;

@@ -40,6 +40,7 @@ export class LogController {
         @IpAddress() clinetIp: string,
         @Param('pcode') pcode: string,
     ) {
+
         if (!pcode) {
             throw new HttpException('pcode缺失', 200);
         }
@@ -47,8 +48,6 @@ export class LogController {
         const p = await this.projectService.findProjectByCode(pcode);
 
         if (!p) return '';
-
-        // console.log(headers)
 
         const meta: any = {};
 

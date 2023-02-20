@@ -11,6 +11,8 @@ import {
 import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { User } from 'src/user/schemas/user.schema';
 export class QueryProjectDto implements QueryPageDto {
+
+    id:string
     @IsString()
     pageStart: string;
     @IsString()

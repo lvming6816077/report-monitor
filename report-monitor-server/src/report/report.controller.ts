@@ -34,14 +34,16 @@ export class ReportController {
     async create(@Query() query,@IpAddress() clinetIp: string,@Headers() headers,) {
 
         const ua = headers['user-agent'] || '';
-        return await this.reportService.create(query.code,clinetIp,ua);
+        const referer = headers['referer'] || '';
+        return await this.reportService.create(query.code,clinetIp,ua,referer);
     }
     // post请求上报
     @Post('create')
     async createpost(@Query() query,@Body() body,@IpAddress() clinetIp: string,@Headers() headers,) {
-
+        console.log(headers)
         const ua = headers['user-agent'] || '';
-        return await this.reportService.create(query.code,clinetIp,ua,body);
+        const referer = headers['referer'] || '';
+        return await this.reportService.create(query.code,clinetIp,ua,referer,body);
     }
 
     @Get('createspeed')

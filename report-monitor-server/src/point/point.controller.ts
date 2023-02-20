@@ -48,9 +48,17 @@ export class PointController {
         return await this.pointService.createTag(dto.desc, dto.projectId);
     }
     @Post('savePointSet')
-    async savePointSet(@Body() dto: { codes?: string[] }, @Request() req: any) {
+    async savePointSet(@Body() dto: { codes: string[],projectId:string }, @Request() req: any) {
+        if (!dto.projectId) {
+            throw new HttpException('projectId缺失', 200);
+        }
+
+        // 查询之前的
+        const { pointset } = await this.userService.findUserByUserId(req.user.userId)
+
+        pointset[dto.projectId] = dto.codes.join(',')
         const u = await this.userService.updateUser(req.user.userId, {
-            pointset: dto.codes.join(','),
+            pointset: pointset,
         });
         return u.pointset;
     }
@@ -69,7 +77,7 @@ export class PointController {
 
         const list = await this.pointService.findAll(projectId);
         return {
-            pointset: pointset,
+            pointset: pointset[projectId],
             list,
         };
     }
