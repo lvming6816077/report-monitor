@@ -9,6 +9,7 @@ import {
     DownOutlined,
     PlusSquareOutlined,
     UnlockOutlined,
+    BlockOutlined,
 } from '@ant-design/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store'
@@ -108,10 +109,15 @@ export const NavBar: React.FC = () => {
                     key: '/createproject',
                     icon: <PlusSquareOutlined />,
                 },
+                // {
+                //     label: '解绑项目',
+                //     key: '/createproject?projectId='+userInfo.activePid+'&bindFlag=unbind',
+                //     icon: <MinusSquareOutlined />,
+                // },
                 {
-                    label: '解绑项目',
-                    key: '/createproject?projectId='+userInfo.activePid+'&bindFlag=unbind',
-                    icon: <MinusSquareOutlined />,
+                    label: '绑定项目',
+                    key: '/createproject?&bindFlag=bind',
+                    icon: <BlockOutlined />,
                 },
                 {
                     type: 'divider',

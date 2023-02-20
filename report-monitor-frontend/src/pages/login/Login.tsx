@@ -59,10 +59,11 @@ export const Login: React.FC = () => {
             password: values.password,
             checkcode: values.checkcode,
             nickname: randomName.getNickName(),
+            projectCode
         })
         if (result.data.code == 0) {
             message.success('注册成功，请登陆')
-            history.push('/login?projectCode='+(projectCode||''))
+            history.push('/login')
         } else {
             message.error(result.data.message)
         }
@@ -82,6 +83,8 @@ export const Login: React.FC = () => {
                 type: actionTypes.SET_USER,
                 data: {...result.data.data.user,theme:'antd-default'},
             })
+
+            history.push('/')
             // 查询项目列表
             const projectList = await axios.get('/rapi/user/getUserProjects?id='+result.data.data.user.userid)
             if (projectList.data.code == 0) {
@@ -93,7 +96,7 @@ export const Login: React.FC = () => {
                     history.push('/')
                 } else {
                     // 跳转去绑定项目
-                    history.push('/createproject?projectCode='+(projectCode||''))
+                    history.push('/createproject')
                 }
                 
             }
