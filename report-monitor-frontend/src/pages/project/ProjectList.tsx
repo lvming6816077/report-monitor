@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Button, Col, Row, Modal, Form, Input, Table, Switch } from 'antd'
+import { Button, Col, Row, Modal, Form, Input, Table, Switch, Space } from 'antd'
 import { message } from 'antd'
 import axios from 'axios'
 import moment from 'moment'
 import './ProjectList.less'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { PlusSquareOutlined } from '@ant-design/icons'
+import { ExclamationCircleFilled, PlusSquareOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/lib/table'
 import { WarningType } from '@/pages/point/pointlist/WarningModal'
 import { ProjectModal } from './ProjectModal'
@@ -54,7 +54,7 @@ const ProjectList: React.FC = () => {
             title: '操作',
             dataIndex: 'action',
             render: (v, item) => {
-                return <a onClick={() => edit(item)}>编辑</a>
+                return <Space><a onClick={() => edit(item)}>编辑</a><a style={{color:'#ff4d4f'}} onClick={() => deleteF(item)}>删除</a></Space>
             },
         },
     ]
@@ -96,6 +96,31 @@ const ProjectList: React.FC = () => {
     const edit = async (item: DataType) => {
 
         childRef.current.showModal(item)
+    }
+    const deleteF = (item: DataType)=>{
+        modal.confirm({
+            title: '是否确认操作?',
+            icon: <ExclamationCircleFilled />,
+            // content: '是否确认操作',
+            okText: '是',
+            okType: 'danger',
+            cancelText: '否',
+            onOk: async ()=> {
+                const result = await axios.post('/rapi/project/deleteProject', {
+                    id: item._id
+                })
+
+                
+                if (result.data.code == 0) {
+                    updateCallback()
+                } else {
+                    message.error('操作失败')
+                }
+            },
+            onCancel() {
+
+            },
+        });
     }
     const getList = async (params = {}, isReset = false) => {
         const p = isReset
