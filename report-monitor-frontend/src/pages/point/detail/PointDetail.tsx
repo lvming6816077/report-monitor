@@ -12,6 +12,7 @@ import { ColumnsType } from 'antd/lib/table'
 import queryString from 'query-string'
 import { RootState } from '@/store'
 import { DetailTable } from './DetailTable';
+import { DetailMap } from './DetailMap';
 import { ChartDataItem } from '@/pages/home/citem/CItem';
 import { tranNumber } from '@/utils/num.js'
 
@@ -48,11 +49,18 @@ const PointDetail: React.FC = () => {
 
         form.resetFields()
     }
-    const initChart = (_data: ChartDataItem[]) => {
-        const xAxis = _data.map((i: ChartDataItem) => {
+    const initChart = (today_data: ChartDataItem[],yes_data: ChartDataItem[]) => {
+        const xAxis = today_data.map((i: ChartDataItem) => {
             return i.time
         })
-        const yAxis = _data
+        const yAxisToday = today_data
+            .filter((i: ChartDataItem) => {
+                return moment().isAfter(moment(i.time))
+            })
+            .map((i: ChartDataItem) => {
+                return i.total
+            })
+        const yAxisYestoday = yes_data
             .filter((i: ChartDataItem) => {
                 return moment().isAfter(moment(i.time))
             })
@@ -61,6 +69,9 @@ const PointDetail: React.FC = () => {
             })
 
         const option = {
+            legend: {
+                data: ['昨日次数', '今日次数',]
+            },
             tooltip: {
                 trigger: 'axis',
                 position: function (pt: any[]) {
@@ -108,15 +119,25 @@ const PointDetail: React.FC = () => {
 
             series: [
                 {
-                    name: '次数',
+                    name: '今日次数',
                     type: 'line',
-                    symbol: 'none',
-                    // sampling: 'lttb',
+                    // smooth:true,
+                    showSymbol: false,
                     itemStyle: {
                         color: '#088f81',
                     },
 
-                    data: yAxis,
+                    data: yAxisToday,
+                },
+                {
+                    name: '昨日次数',
+                    type: 'line',
+                    showSymbol: false,
+                    itemStyle: {
+                        color: '#FF9800',
+                    },
+
+                    data: yAxisYestoday,
                 },
             ],
         }
@@ -128,18 +149,26 @@ const PointDetail: React.FC = () => {
     }
     const searchChart = async () => {
 
-        const result = await axios.post('/rapi/report/getReportsGroup', {
+        const result1 = await axios.post('/rapi/report/getReportsGroup', {
             
             start: timeStart,
             end: timeEnd,
             code: code,
             unit:unit
         })
-        const d:ChartDataItem[] = result.data.data
+        const result2 = await axios.post('/rapi/report/getReportsGroup', {
+            
+            start: moment(timeStart).subtract(1, 'days').startOf('day'),
+            end: moment(timeEnd).subtract(1, 'days').endOf('day'),
+            code: code,
+            unit:unit
+        })
+        const today:ChartDataItem[] = result1.data.data
+        const yestoday:ChartDataItem[] = result2.data.data
 
-        initChart(d)
+        initChart(today,yestoday)
 
-        let t = d.reduce((prev,cur)=>{
+        let t = today.reduce((prev,cur)=>{
             return prev+cur.total
         },0)
         setTotal(t.toString())
@@ -176,6 +205,7 @@ const PointDetail: React.FC = () => {
         })
         setUv(result?.data?.data?.length)
     }
+
     const searchDetail = async () => {
         const result = await axios.get('/rapi/point/getPointDetail/'+code)
         setTitle(result?.data?.data?.desc)
@@ -257,6 +287,9 @@ const PointDetail: React.FC = () => {
                 <Card title="实时数据">
                     <Radio.Group options={[{ label: '小时', value: 'h' },{ label: '分钟', value: 'm' }]} onChange={(v:RadioChangeEvent)=>setUnit(v.target.value)} value={unit} optionType="button" className='radio-btn'/>
                     <div id={code as string} className="chart-i"></div>
+                </Card>
+                <Card title="地区分布">
+                    <DetailMap timeStart={timeStart} timeEnd={timeEnd} code={code as string}></DetailMap>
                 </Card>
                 <Card title="数据明细">
                     <DetailTable timeStart={timeStart} timeEnd={timeEnd} code={code as string}></DetailTable>

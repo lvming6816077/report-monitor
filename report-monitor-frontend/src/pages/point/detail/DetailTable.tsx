@@ -23,7 +23,7 @@ type Props = {
     timeStart: string
     code:string
 }
-export const DetailTable: React.FC<Props> = ({ timeEnd, timeStart,code}) => {
+export const DetailTable: React.FC<Props> = React.memo(({ timeEnd, timeStart,code}) => {
     const userInfo = useSelector((state: RootState) => state.user.userInfo)
     const columns: ColumnsType<DataType> = [
 
@@ -160,4 +160,4 @@ export const DetailTable: React.FC<Props> = ({ timeEnd, timeStart,code}) => {
             </div>
         </>
     )
-}
+})
