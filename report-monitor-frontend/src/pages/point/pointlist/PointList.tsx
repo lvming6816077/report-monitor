@@ -45,6 +45,7 @@ export const PointList: React.FC = () => {
             render: (v, item) => {
                 return (
                     <Space>
+                        <a onClick={()=>history.push('/point/pointdetail?code='+(item.code||''))}>查看</a>
                         <a onClick={() => deletePoint(item)}>删除</a>{' '}
                         <a onClick={() => warningPoint(item)}>告警规则</a>
                     </Space>

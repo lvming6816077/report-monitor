@@ -65,11 +65,9 @@ export const CItem: React.FC<Props> = React.memo(
                     type: 'category',
                     boundaryGap: false,
                     data: xAxis,
-                    // axisLabel: {
-                    //     formatter: (v:string)=>{
-                    //         return v.split(' ')[1]
-                    //     },
-                    // }
+                    axisLabel: {
+                        fontSize:11,
+                    }
                 },
                 yAxis: {
                     splitLine :{    //网格线
@@ -80,7 +78,9 @@ export const CItem: React.FC<Props> = React.memo(
                     },
                     type: 'value',
                     boundaryGap: [0, '100%'],
+                    
                     axisLabel: {
+                        fontSize:11,
                         formatter: (v: string) => {
                             return tranNumber(v, 2)
                         },
