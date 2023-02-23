@@ -84,7 +84,7 @@ export function useScroll() {
 
 
 // 自定义一个初始不更新的hook
-export function useUpdateEffect(fn: Function, inputs: any[]) {
+export function useUpdateEffect(fn: React.EffectCallback, inputs?: React.DependencyList) {
     const didMountRef = useRef(false);
     useEffect(() => {
       if (didMountRef.current) fn();
