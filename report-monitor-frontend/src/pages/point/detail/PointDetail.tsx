@@ -15,6 +15,7 @@ import { DetailTable } from './DetailTable';
 import { DetailMap } from './DetailMap';
 import { ChartDataItem } from '@/pages/home/citem/CItem';
 import { tranNumber } from '@/utils/num.js'
+import { useUpdateEffect } from '@/utils/hooks';
 
 
 const PointDetail: React.FC = () => {
@@ -70,7 +71,7 @@ const PointDetail: React.FC = () => {
 
         const option = {
             legend: {
-                data: ['昨日次数', '今日次数',]
+                data: ['当天次数', '当天前一日次数',]
             },
             tooltip: {
                 trigger: 'axis',
@@ -119,7 +120,7 @@ const PointDetail: React.FC = () => {
 
             series: [
                 {
-                    name: '今日次数',
+                    name: '当天次数',
                     type: 'line',
                     // smooth:true,
                     showSymbol: false,
@@ -130,7 +131,7 @@ const PointDetail: React.FC = () => {
                     data: yAxisToday,
                 },
                 {
-                    name: '昨日次数',
+                    name: '当天前一日次数',
                     type: 'line',
                     showSymbol: false,
                     itemStyle: {
@@ -216,7 +217,7 @@ const PointDetail: React.FC = () => {
         searchDetail()
     },[timeStart,timeEnd])
 
-    useEffect(()=>{
+    useUpdateEffect(()=>{
         searchChart()
     },[unit])
 

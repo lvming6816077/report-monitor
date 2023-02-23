@@ -81,3 +81,15 @@ export function useScroll() {
 
     return useThrottle(value, 100)
 }
+
+
+// 自定义一个初始不更新的hook
+export function useUpdateEffect(fn: Function, inputs: any[]) {
+    const didMountRef = useRef(false);
+    useEffect(() => {
+      if (didMountRef.current) fn();
+      else didMountRef.current = true;
+    }, inputs);
+};
+ 
+ 

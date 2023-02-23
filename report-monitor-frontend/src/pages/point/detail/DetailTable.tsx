@@ -9,6 +9,7 @@ import { useHistory } from 'react-router-dom'
 import { PlusSquareOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/lib/table'
 import { RootState } from '@/store'
+import { useUpdateEffect } from '@/utils/hooks'
 
 type DataType = {
     desc?: string
@@ -95,7 +96,7 @@ export const DetailTable: React.FC<Props> = React.memo(({ timeEnd, timeStart,cod
         showSizeChanger: false,
     }
 
-    useEffect(() => {
+    useUpdateEffect(() => {
         ;(async function fn() {
             await getList()
         })()
