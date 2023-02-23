@@ -41,7 +41,7 @@ export class ProjectController {
 
         const p = await this.projectService.findProjectByCode(body.code);
 
-        if (!p._id) {
+        if (!p) {
             throw new HttpException('项目不存在', 200);
         }
 
@@ -60,9 +60,11 @@ export class ProjectController {
     async unbind(@Body() body: any, @Request() req: any) {
         const userid = req.user.userId;
 
+        const f:{[key:string]:any} = {'a':1}
+
         const p = await this.projectService.findProjectByCode(body.code);
 
-        if (!p._id) {
+        if (!p) {
             throw new HttpException('项目不存在', 200);
         }
 
@@ -88,12 +90,9 @@ export class ProjectController {
         const session = null
 
         try {
-
         
             await this.projectService.deleteProjectById(body.id,session)
 
-
-    
             let list = await this.userService.findAllUser()
 
             for (var i = 0 ; i < list.length ; i++) {

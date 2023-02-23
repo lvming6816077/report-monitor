@@ -6,6 +6,7 @@ import {
     Param,
     Post,
     Headers,
+    HttpException,
 } from '@nestjs/common';
 import { ReportService, resultVo } from './report.service';
 import { formatData, formatSpeedData } from 'src/utils/report/formatReportData';
@@ -20,6 +21,8 @@ enum UnitMap {
     h = 60,// 分钟
     m = 1,
 };
+
+export type GroupReportType = Pick<QueryReportDto,"pointCode"|"timeStart"|"timeEnd">
 
 const unit = UnitMap.h; 
 const speedUnit = UnitMap.h;
@@ -72,7 +75,7 @@ export class ReportController {
 
     @Get('getReportsByCount')
     async getReportsByCount(
-        @Query() query: Pick<QueryReportDto,"pointCode"|"timeStart"|"timeEnd">,
+        @Query() query: GroupReportType,
     ): Promise<Report[]> {
 
         return this.reportService.findAllReportGroupByIp(query);
@@ -165,6 +168,17 @@ export class ReportController {
     @Get(':id')
     async getReportById(@Param('id') id: string): Promise<Report> {
         return this.reportService.findOne(id);
+    }
+
+    @Post('getReportsGroupProvince')
+    async getReportsGroupProvince(@Body() query:GroupReportType): Promise<any> {
+        const code: string = query.pointCode;
+        // console.log(query)
+        if (!code) {
+            throw new HttpException('pointCode缺失', 200);
+        }
+
+        return await this.reportService.findAllReportGroupByProvince(query)
     }
 
     //   @Delete(':id')

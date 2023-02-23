@@ -13,6 +13,7 @@ import { Point, PointDocument } from 'src/point/schemas/point.schema';
 import { Speed, SpeedDocument } from 'src/speed/schemas/speed.schema';
 import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { QueryReportDto } from './dto/query-report.dto';
+import { GroupReportType } from './report.controller';
 const parser = require('ua-parser-js');
 const searcher = require('node-ip2region').create();
 
@@ -99,6 +100,33 @@ export class ReportService {
              { $group: { _id: '$ip', count: { $sum: 1 } } },
          ])
          .exec();
+
+        return result
+    }
+
+    async findAllReportGroupByProvince(
+        query: GroupReportType,
+    ): Promise<Report[]> {
+        const data: Point = await this.pointModel.findOne({ code: query.pointCode });
+
+        if (!data) return null
+
+
+        const result = await this.reportModel
+         .aggregate([
+             {
+                 $match: {
+                     $and: [
+                         { point: (data as any)._id },
+                         { create: { $gt: new Date(query.timeStart) } },
+                         { create: { $lt: new Date(query.timeEnd) } },
+                     ],
+                 },
+             },
+             { $group: { _id: '$province',count: { $sum: 1 }  } },
+         ])
+         .exec();
+
 
         return result
     }
@@ -244,6 +272,7 @@ export class ReportService {
     }
 
     async create(code: string,ip:string,ua:string,referer:string,meta?:any): Promise<Report> {
+
         await this.redisService.lpush(
             'report_monitor_ls',
             JSON.stringify({
