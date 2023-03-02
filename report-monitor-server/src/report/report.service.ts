@@ -136,9 +136,36 @@ export class ReportService {
         code: string,
         start: string,
         end: string,
-        unit: number,
+        unit: any,
     ): Promise<resultVo> {
         const data: Point = await this.pointModel.findOne({ code: code });
+        let dateStr = unit == 'd' ? {$dateToString: { format: "%Y-%m-%d", date: "$create" }} : {
+            year: { $year: '$create' },
+            month: { $month: '$create' },
+            day: {
+                $dayOfMonth: {
+                    date: '$create',
+                    timezone: '+08:00',
+                },
+            },
+            hour: {
+                $hour: {
+                    date: '$create',
+                    timezone: '+08:00',
+                },
+            },
+            minute: {
+                $subtract: [
+                    { $minute: '$create' },
+                    {
+                        $mod: [
+                            { $minute: '$create' },
+                            unit,
+                        ],
+                    },
+                ],
+            },
+        }
 
         // let r = await this.reportModel.find({$and: [{ point: (data as any)._id }, { create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]}).exec()
 
@@ -156,39 +183,15 @@ export class ReportService {
                     },
                     {
                         $project: {
-                            dateStr: {
-                                year: { $year: '$create' },
-                                month: { $month: '$create' },
-                                day: {
-                                    $dayOfMonth: {
-                                        date: '$create',
-                                        timezone: '+08:00',
-                                    },
-                                },
-                                hour: {
-                                    $hour: {
-                                        date: '$create',
-                                        timezone: '+08:00',
-                                    },
-                                },
-                                minute: {
-                                    $subtract: [
-                                        { $minute: '$create' },
-                                        {
-                                            $mod: [
-                                                { $minute: '$create' },
-                                                unit,
-                                            ],
-                                        },
-                                    ],
-                                },
-                            },
+                            dateStr: dateStr,
                         },
                     },
                     { $group: { _id: '$dateStr', count: { $sum: 1 } } },
                     { $sort: { _id: 1 } },
                 ])
                 .exec();
+
+
             return {
                 list: result,
                 desc: data.desc,

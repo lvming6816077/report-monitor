@@ -17,9 +17,10 @@ import { QueryPageDto } from 'src/utils/dto/query-page.dto';
 import { PaginateResult } from 'mongoose';
 import { QueryReportDto } from './dto/query-report.dto';
 
-enum UnitMap {
-    h = 60,// 分钟
-    m = 1,
+const UnitMap = {
+    h: 60,// 分钟
+    m: 1,// 分钟
+    d: 'd',// 天
 };
 
 export type GroupReportType = Pick<QueryReportDto,"pointCode"|"timeStart"|"timeEnd">
@@ -85,7 +86,7 @@ export class ReportController {
     async getReportsGroup(@Body() body): Promise<Report[]> {
         const start: string = body.start,
             end: string = body.end,
-            unit:number = body.unit == 'h' ? UnitMap.h:UnitMap.m;
+            unit:any = UnitMap[body.unit];
         const data: resultVo = await this.reportService.findAllByCode(
             body.code,
             start,

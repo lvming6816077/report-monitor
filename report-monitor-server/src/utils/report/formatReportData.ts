@@ -1,3 +1,4 @@
+import e from 'express';
 import * as moment from 'moment';
 const parser = require('cron-parser');
 
@@ -5,11 +6,11 @@ export const formatData = (
     data: any[],
     currentDate: string,
     endDate: string,
-    unit: number,
+    unit: any,
 ) => {
     if (data.length == 0) return [];
 
-    const map = {};
+    let map = {};
     data.forEach((item) => {
         const key =
             item._id.year +
@@ -24,31 +25,64 @@ export const formatData = (
         map[key] = item.count;
     });
 
-    const options = {
-        currentDate: moment(new Date(currentDate)).toDate(),
-        endDate: moment(new Date(endDate)).add(unit, 'minute').toDate(),
-        //   iterator: true,
-    };
 
-    let cur = options.currentDate;
+
+    
     const list = [];
-    while (cur < options.endDate) {
-        const endStr = moment(cur).format('YYYY-MM-DD HH:mm');
-        cur = moment(cur).add(unit, 'minute').toDate();
-
-        if (map[endStr]) {
-            list.push({
-                time: endStr,
-                total: map[endStr],
-            });
-        } else {
-            // 没有数据补0
-            list.push({
-                time: endStr,
-                total: 0,
-            });
+    if (unit == 'd') {
+        console.log(data)
+        data.forEach(item=>{
+            map[item._id] = item.count
+        })
+        const options = {
+            currentDate: moment(new Date(currentDate)).toDate(),
+            endDate: moment(new Date(endDate)).toDate(),
+            //   iterator: true,
+        };
+        let cur = options.currentDate;
+        while (cur < options.endDate) {
+            const endStr = moment(cur).format('YYYY-MM-DD');
+            cur = moment(cur).add(1, 'day').toDate();
+    
+            if (map[endStr]) {
+                list.push({
+                    time: endStr,
+                    total: map[endStr],
+                });
+            } else {
+                // 没有数据补0
+                list.push({
+                    time: endStr,
+                    total: 0,
+                });
+            }
+        }
+    } else {
+        const options = {
+            currentDate: moment(new Date(currentDate)).toDate(),
+            endDate: moment(new Date(endDate)).add(unit, 'minute').toDate(),
+            //   iterator: true,
+        };
+        let cur = options.currentDate;
+        while (cur < options.endDate) {
+            const endStr = moment(cur).format('YYYY-MM-DD HH:mm');
+            cur = moment(cur).add(unit, 'minute').toDate();
+    
+            if (map[endStr]) {
+                list.push({
+                    time: endStr,
+                    total: map[endStr],
+                });
+            } else {
+                // 没有数据补0
+                list.push({
+                    time: endStr,
+                    total: 0,
+                });
+            }
         }
     }
+
     // const interval = parser.parseExpression('0 */' + unit + ' * * * *', options);
 
     // while (true) { // eslint-disable-line

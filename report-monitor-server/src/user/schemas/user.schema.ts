@@ -13,6 +13,7 @@ export type PointsetType = {
 @Schema({
     timestamps: { createdAt: 'create', updatedAt: 'update' },
     versionKey: false,
+    minimize: false
 })
 export class User {
     _id:string;
@@ -38,7 +39,7 @@ export class User {
     @Prop({}) // 用户phone
     phone: string;
 
-    @Prop({ type: _Schema.Types.Mixed, default: {} }) // 用户预设point
+    @Prop({ type: _Schema.Types.Mixed, required: true,default: {} }) // 用户预设point
     pointset: PointsetType;
 
     @Prop({ type: _Schema.Types.Mixed, default: {} }) // 用户预设speed
