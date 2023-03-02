@@ -86,7 +86,7 @@ export const DetailMap: React.FC<Props> = ({ timeEnd, timeStart,code}) => {
                 mapData.push(element as never)
             }
         })
-        console.log(mapData)
+        // console.log(mapData)
         option.series[0].data = mapData
         chartmei.setOption(option)
     }
@@ -98,7 +98,7 @@ export const DetailMap: React.FC<Props> = ({ timeEnd, timeStart,code}) => {
         )
         
         searchMap()
-    },[])
+    },[timeStart,timeEnd])
 
     return (
         <>

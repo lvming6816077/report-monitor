@@ -78,7 +78,7 @@ export const NavBar: React.FC = () => {
 
             name = n ? n.name+'（'+n.projectCode+'）' : ''
         } else {
-            name = projectList[0]?.name+'（'+projectList[0].projectCode+'）'
+            name = projectList[0]?.name+'（'+projectList[0]?.projectCode+'）'
         }
         // console.log(name,activePid)
         setActiveName(name)

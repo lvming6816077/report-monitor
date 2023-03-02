@@ -72,7 +72,7 @@ export const CreateSpeed: React.FC = () => {
                             {tagList.length == 0 ? (
                                 <div className="tips">
                                     还没有类目，先去
-                                    <Link to={'/speed/createtag'}>创建</Link>?
+                                    <Link to={'/speed/createspeedtag'}>创建</Link>?
                                 </div>
                             ) : null}
                             <Form.Item

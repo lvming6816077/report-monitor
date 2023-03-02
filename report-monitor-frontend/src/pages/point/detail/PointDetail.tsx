@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Row, Modal, Form, Input, Table, DatePicker, Card, Statistic, Radio, RadioChangeEvent, Space } from 'antd'
+import { Button, Col, Row, Modal, Form, Input, Table, DatePicker, Card, Statistic, Radio, RadioChangeEvent, Space, CheckboxOptionType } from 'antd'
 const { RangePicker } = DatePicker;
 import { message } from 'antd'
 import axios from 'axios'
@@ -21,6 +21,9 @@ import { useUpdateEffect } from '@/utils/hooks';
 const PointDetail: React.FC = () => {
     const userInfo = useSelector((state: RootState) => state.user.userInfo)
 
+    const radioData1:CheckboxOptionType[] = [{ label: '天', value: 'd' },{ label: '小时', value: 'h' },{ label: '分钟', value: 'm' }]
+    const radioData2:CheckboxOptionType[]  = [{ label: '小时', value: 'h' },{ label: '分钟', value: 'm' }]
+
     const dateFormat = 'YYYY-MM-DD HH:mm:ss'
     const history = useHistory()
     const [modal, contextHolder] = Modal.useModal()
@@ -30,6 +33,7 @@ const PointDetail: React.FC = () => {
     const [uv,setUv] = useState<string>('0')
     const [title,setTitle] = useState<string>('')
     const [unit,setUnit] = useState<string>('h')
+    const [radioData,setRadioData] = useState<CheckboxOptionType[]>(radioData2)
 
     const [form] = Form.useForm()
 
@@ -71,7 +75,7 @@ const PointDetail: React.FC = () => {
 
         const option = {
             legend: {
-                data: ['当天次数', '当天前一日次数',]
+                data: yes_data.length > 0 ? ['当日次数', '当天前一日次数',]:[]
             },
             tooltip: {
                 trigger: 'axis',
@@ -120,7 +124,7 @@ const PointDetail: React.FC = () => {
 
             series: [
                 {
-                    name: '当天次数',
+                    name: '当日次数',
                     type: 'line',
                     // smooth:true,
                     showSymbol: false,
@@ -150,6 +154,8 @@ const PointDetail: React.FC = () => {
     }
     const searchChart = async () => {
 
+        const diff = moment(timeEnd).diff(moment(timeStart),'days');
+
         const result1 = await axios.post('/rapi/report/getReportsGroup', {
             
             start: timeStart,
@@ -157,15 +163,23 @@ const PointDetail: React.FC = () => {
             code: code,
             unit:unit
         })
-        const result2 = await axios.post('/rapi/report/getReportsGroup', {
-            
-            start: moment(timeStart).subtract(1, 'days').startOf('day'),
-            end: moment(timeEnd).subtract(1, 'days').endOf('day'),
-            code: code,
-            unit:unit
-        })
+        
         const today:ChartDataItem[] = result1.data.data
-        const yestoday:ChartDataItem[] = result2.data.data
+        let yestoday:ChartDataItem[] = []
+        if (diff < 1) {
+            const result2 = await axios.post('/rapi/report/getReportsGroup', {
+            
+                start: moment(timeStart).subtract(1, 'days').startOf('day'),
+                end: moment(timeEnd).subtract(1, 'days').endOf('day'),
+                code: code,
+                unit:unit
+            })
+            yestoday = result2.data.data
+            setRadioData(radioData2)
+        }else {
+            setRadioData(radioData1)
+        }
+
 
         initChart(today,yestoday)
 
@@ -212,6 +226,7 @@ const PointDetail: React.FC = () => {
         setTitle(result?.data?.data?.desc)
     }
     useEffect(()=>{
+        setUnit('h')
         searchChart()
         searchCount()
         searchDetail()
@@ -286,7 +301,7 @@ const PointDetail: React.FC = () => {
                     </div>
                 </Card>
                 <Card title="实时数据">
-                    <Radio.Group options={[{ label: '小时', value: 'h' },{ label: '分钟', value: 'm' }]} onChange={(v:RadioChangeEvent)=>setUnit(v.target.value)} value={unit} optionType="button" className='radio-btn'/>
+                    <Radio.Group options={radioData} onChange={(v:RadioChangeEvent)=>setUnit(v.target.value)} value={unit} optionType="button" className='radio-btn'/>
                     <div id={code as string} className="chart-i"></div>
                 </Card>
                 <Card title="地区分布">
