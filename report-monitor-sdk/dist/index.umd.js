@@ -68,14 +68,14 @@
             var reportLogUrl = this.option.reportLogUrl;
             this.sendPost(reportLogUrl + '/' + appid, data);
         };
-        ReportSDK.prototype.reportEvent = function (data) {
-            var reportUrl = this.option.reportUrl;
+        ReportSDK.prototype.reportEvent = function (code, data) {
+            var reportUrl = this.option.reportUrl + '?code=' + code;
             // 带数据的统计上报
-            if (data.data) {
-                this.sendPost(reportUrl, data.data);
+            if (data) {
+                this.sendPost(reportUrl, data);
             }
             else {
-                this.sendImage(reportUrl + '?code=' + data.code);
+                this.sendImage(reportUrl);
             }
         };
         ReportSDK.prototype.reportSpeed = function (data) {

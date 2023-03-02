@@ -18,11 +18,8 @@ const reportUtil = new ReportSDK({appid:'xxx',host:'www.xx.com'})
 
 reportUtil.reportLog(data:any) // 日志上报
 
-EventCodeType {
-    code: string; // 数据点code
-    data?:any；  // 额外数据 
-}
-reportUtil.reportEvent(EventCodeType) // 自定义事件上报
+
+reportUtil.reportEvent(code:string,data?:any) // 自定义事件上报
 
 SpeedCodeType {
     code: string;
