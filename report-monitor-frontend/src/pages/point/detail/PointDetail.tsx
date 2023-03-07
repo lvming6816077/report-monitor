@@ -152,7 +152,7 @@ const PointDetail: React.FC = () => {
         )
         chartmei.setOption(option)
     }
-    const searchChart = async () => {
+    const searchPvChart = async () => {
 
         const diff = moment(timeEnd).diff(moment(timeStart),'days');
 
@@ -189,6 +189,78 @@ const PointDetail: React.FC = () => {
         setTotal(t.toString())
 
     }
+    const searchUvChart = async () => {
+
+
+        const result = await axios.post('/rapi/report/getReportsByUV', {
+            
+            timeStart: timeStart,
+            timeEnd: timeEnd,
+            pointCode: code,
+        })
+
+        let d = result.data.data||[]
+        
+        const xAxis = d.map((i: ChartDataItem) => {
+            return i.time
+        })
+        const option = {
+
+            tooltip: {
+                trigger: 'axis',
+                position: function (pt: any[]) {
+                    return [pt[0], '10%']
+                },
+            },
+            title: {
+                left: 'center',
+            },
+
+            xAxis: {
+                type: 'category',
+                // boundaryGap: false,
+                data: xAxis,
+            },
+            yAxis: {
+                splitLine :{    //网格线
+                    lineStyle:{
+                        type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
+                    },
+                    show:true //隐藏或显示
+                },
+                type: 'value',
+                boundaryGap: [0, '100%'],
+                axisLabel: {
+                    formatter: (v: string) => {
+                        return tranNumber(v, 2)
+                    },
+                },
+            },
+
+            series: [
+                {
+                    name: '人数',
+                    type: 'bar',
+                    barWidth:25,
+                    itemStyle: {
+                        color: '#088f81',
+                    },
+
+                    data: d.map((i:ChartDataItem)=>{
+                        return {...i,value:i.total}
+                    }),
+                },
+            ],
+        }
+
+        const chartmei = (window as any).echarts.init(
+            document.getElementById('uvChart')
+        )
+        chartmei.setOption(option)
+
+
+
+    }
     const setFastTime = (t:string)=>{
         // 前一天
         if (t == 'd') {
@@ -213,6 +285,7 @@ const PointDetail: React.FC = () => {
         
     }
     const searchCount = async () => {
+        // return
         const result = await axios.get('/rapi/report/getReportsByCount?timeStart='+timeStart+'&timeEnd='+timeEnd, {
             params:{
                 pointCode: code,
@@ -227,13 +300,14 @@ const PointDetail: React.FC = () => {
     }
     useEffect(()=>{
         setUnit('h')
-        searchChart()
+        searchPvChart()
         searchCount()
         searchDetail()
+        searchUvChart()
     },[timeStart,timeEnd])
 
     useUpdateEffect(()=>{
-        searchChart()
+        searchPvChart()
     },[unit])
 
     return (
@@ -300,9 +374,12 @@ const PointDetail: React.FC = () => {
                         </Row>
                     </div>
                 </Card>
-                <Card title="实时数据">
+                <Card title="实时数据PV">
                     <Radio.Group options={radioData} onChange={(v:RadioChangeEvent)=>setUnit(v.target.value)} value={unit} optionType="button" className='radio-btn'/>
                     <div id={code as string} className="chart-i"></div>
+                </Card>
+                <Card title="实时数据UV">
+                    <div id={'uvChart'} className="chart-i"></div>
                 </Card>
                 <Card title="地区分布">
                     <DetailMap timeStart={timeStart} timeEnd={timeEnd} code={code as string}></DetailMap>
