@@ -24,6 +24,10 @@ const UnitMap = {
 };
 
 export type GroupReportType = Pick<QueryReportDto,"pointCode"|"timeStart"|"timeEnd">
+export type UVResultVo = {
+    time:string,
+    total:number
+}
 
 const unit = UnitMap.h; 
 const speedUnit = UnitMap.h;
@@ -80,6 +84,34 @@ export class ReportController {
     ): Promise<Report[]> {
 
         return this.reportService.findAllReportGroupByIp(query);
+    }
+
+    @Post('getReportsByUV')
+    async getReportsByUV(
+        @Body() body: GroupReportType,
+    ): Promise<UVResultVo[]> {
+        const diff = moment(body.timeEnd).diff(moment(body.timeStart),'days');
+        // console.log(diff)
+        // 小于1天，直接取一天内数据
+        if (diff < 1) {
+            var r = await this.reportService.findAllReportGroupByIp(body);
+            return [{time:moment(body.timeStart).format('YYYY-MM-DD'),total:r.length}]
+        } else {
+            var list:UVResultVo[] = []
+            var cur = moment(body.timeStart).toDate()
+            while(cur < moment(body.timeEnd).toDate()) {
+                var r = await this.reportService.findAllReportGroupByIp({timeStart:cur.toString(),timeEnd:moment(cur).endOf('day').toString(),pointCode:body.pointCode});
+                
+                var o = {
+                    time:moment(cur).format('YYYY-MM-DD'),
+                    total:r.length
+                }
+                list.push(o)
+                cur = moment(cur).add(1,'days').startOf('day').toDate()
+            }
+            return list
+        }
+        
     }
 
     @Post('getReportsGroup')

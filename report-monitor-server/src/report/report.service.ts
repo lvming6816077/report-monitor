@@ -79,12 +79,13 @@ export class ReportService {
     }
 
     async findAllReportGroupByIp(
-        query: any,
+        query: GroupReportType,
     ): Promise<Report[]> {
         const data: Point = await this.pointModel.findOne({ code: query.pointCode });
 
         if (!data) return null
 
+        // console.log(query)
 
         const result = await this.reportModel
          .aggregate([
@@ -165,6 +166,7 @@ export class ReportService {
                     },
                 ],
             },
+            // ip: '$ip',
         }
 
         // let r = await this.reportModel.find({$and: [{ point: (data as any)._id }, { create: { $gt: new Date(start) } }, { create: { $lt: new Date(end) } }]}).exec()
@@ -184,13 +186,15 @@ export class ReportService {
                     {
                         $project: {
                             dateStr: dateStr,
+                            ip:1
                         },
                     },
-                    { $group: { _id: '$dateStr', count: { $sum: 1 } } },
+                    // { $group: { _id: '$ip', count: { $sum: 1 } } },
+                    { $group: { _id: '$dateStr', count: { $sum: 1 } }},
+                    
                     { $sort: { _id: 1 } },
                 ])
                 .exec();
-
 
             return {
                 list: result,
@@ -262,7 +266,6 @@ export class ReportService {
                     { $sort: { _id: 1 } },
                 ])
                 .exec();
-            console.log(result);
             return {
                 list: result,
                 desc: data.desc,
