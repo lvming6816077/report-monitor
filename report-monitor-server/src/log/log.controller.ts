@@ -107,7 +107,7 @@ export class LogController {
     // @Get('getIpDesc')
     // async getIpDesc(@Query() query: any, @Request() req: _Request) {
     //     const result = await axios.get(
-    //         'https://restapi.amap.com/v3/ip?key=b0982e55ca518f770a7978a585dd83b8&ip=' +
+    //         'https://restapi.amap.com/v3/ip?key=ccc&ip=' +
     //             query.ip,
     //     );
     //     // console.log(result.data?.province)
